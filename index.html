@@ -1,0 +1,2721 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP & ATP Generator - BSKAP No. 046 Tahun 2025</title>
+    <style>
+        /* ==========================================
+           1. VARIABEL CSS & CONFIGURATION
+           ========================================== */
+        :root {
+            --primary-color: #1e40af;       /* Blue 800 */
+            --primary-hover: #1d4ed8;       /* Blue 700 */
+            --secondary-color: #0f172a;     /* Slate 900 */
+            --accent-color: #16a34a;        /* Green 600 */
+            --accent-hover: #15803d;        /* Green 700 */
+            --danger-color: #dc2626;        /* Red 600 */
+            --danger-hover: #b91c1c;        /* Red 700 */
+            --warning-color: #ea580c;       /* Orange 600 */
+            --background-color: #f1f5f9;    /* Slate 100 */
+            --card-background: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(226, 232, 240, 0.8);
+            --text-main: #0f172a;           /* Slate 900 */
+            --text-muted: #475569;          /* Slate 600 */
+            --input-background: #ffffff;
+            --input-border: #cbd5e1;        /* Slate 300 */
+            --sidebar-width: 260px;
+            --sidebar-background: #0f172a;  /* Slate 900 */
+            --sidebar-text: #f1f5f9;
+            --sidebar-hover: #1e293b;
+            --sidebar-active: #1e40af;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+            --glass-blur: blur(8px);
+            --font-scale: 100%;
+        }
+
+        /* Dark Mode Override */
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;       /* Blue 500 */
+            --primary-hover: #60a5fa;       /* Blue 400 */
+            --secondary-color: #f8fafc;     /* Slate 50 */
+            --accent-color: #22c55e;        /* Green 500 */
+            --accent-hover: #4ade80;        /* Green 400 */
+            --danger-color: #ef4444;        /* Red 500 */
+            --danger-hover: #f87171;        /* Red 400 */
+            --warning-color: #f97316;       /* Orange 500 */
+            --background-color: #0b1120;    /* Dark navy background */
+            --card-background: rgba(17, 24, 39, 0.95); /* Slate 900 */
+            --card-border: rgba(31, 41, 55, 0.8);      /* Slate 800 */
+            --text-main: #f1f5f9;           /* Slate 100 */
+            --text-muted: #94a3b8;          /* Slate 400 */
+            --input-background: #1f2937;    /* Slate 800 */
+            --input-border: #374151;        /* Slate 700 */
+            --sidebar-background: #111827;
+            --sidebar-hover: #1f2937;
+        }
+
+        /* High Contrast Mode Override */
+        [data-contrast="high"] {
+            --primary-color: #0000ff;
+            --primary-hover: #000099;
+            --secondary-color: #000000;
+            --accent-color: #008000;
+            --background-color: #ffffff;
+            --card-background: #ffffff;
+            --card-border: #000000;
+            --text-main: #000000;
+            --text-muted: #000000;
+            --input-background: #ffffff;
+            --input-border: #000000;
+            --shadow-sm: none;
+            --shadow-md: none;
+            --shadow-lg: none;
+        }
+
+        /* ==========================================
+           2. RESET & STYLES DASAR LAYOUT
+           ========================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-main);
+            font-size: var(--font-scale);
+            line-height: 1.5;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Struktur Layout Utama */
+        .app-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ==========================================
+           3. SIDEBAR STYLES
+           ========================================== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-background);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-brand h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+        }
+
+        .sidebar-brand p {
+            font-size: 0.75rem;
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            text-align: left;
+            width: 100%;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background-color: var(--sidebar-active);
+            color: #ffffff;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .menu-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Area Konten Utama */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 30px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            transition: margin-left 0.3s ease;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Header Konten */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .content-header h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        /* Hamburger Menu (Mobile Only) */
+        .mobile-header {
+            display: none;
+            background-color: var(--sidebar-background);
+            color: white;
+            padding: 15px 20px;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 101;
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-toggle {
+            background: transparent;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Kontrol Tab Visibilitas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==========================================
+           4. KARTU & PANEL (Glassmorphism & Material)
+           ========================================== */
+        .card {
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* ==========================================
+           5. FORM & MASUKAN DOKUMEN
+           ========================================== */
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background-color: var(--input-background);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
+        }
+
+        .image-preview-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1.5px dashed var(--input-border);
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--input-background);
+        }
+
+        .image-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: contain;
+            background-color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px solid var(--input-border);
+        }
+
+        /* ==========================================
+           6. TOMBOL & AKSI
+           ========================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        .btn-success { background-color: var(--accent-color); }
+        .btn-success:hover { background-color: var(--accent-hover); }
+
+        .btn-danger { background-color: var(--danger-color); }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+
+        .btn-warning { background-color: var(--warning-color); }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover { background-color: var(--card-border); }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        /* ==========================================
+           7. TABEL INTERAKTIF & DRAG-DROP
+           ========================================== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .main-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--card-border);
+            white-space: nowrap;
+        }
+
+        .main-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--card-border);
+            background-color: var(--input-background);
+            color: var(--text-main);
+        }
+
+        .main-table tbody tr:hover td {
+            background-color: rgba(30, 64, 175, 0.04);
+        }
+
+        .draggable-row { cursor: grab; }
+        .draggable-row:active { cursor: grabbing; }
+        .drag-over { border-top: 3px solid var(--primary-color) !important; }
+
+        .editable-cell {
+            min-height: 40px;
+            padding: 6px;
+            border-radius: 4px;
+            outline: none;
+            word-wrap: break-word;
+            max-width: 400px;
+        }
+
+        .editable-cell:focus {
+            background-color: rgba(30, 64, 175, 0.08);
+            border: 1px solid var(--primary-color);
+        }
+
+        /* ==========================================
+           8. DASHBOARD STATISTIK
+           ========================================== */
+        .stat-card {
+            background-color: var(--input-background);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: var(--card-border);
+            border-radius: 9999px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--accent-color);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* ==========================================
+           9. FILTER & SORTING BAR
+           ========================================== */
+        .filter-bar {
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* ==========================================
+           10. IKLAN VALIDASI & NOTIFIKASI
+           ========================================== */
+        .validation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+
+        .validation-valid {
+            background-color: rgba(22, 163, 74, 0.1);
+            color: #16a34a;
+        }
+
+        .validation-invalid {
+            background-color: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: var(--secondary-color);
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 99;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* ==========================================
+           11. MODAL & DIALOGS
+           ========================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-muted);
+        }
+
+        /* Modal Pratinjau Dokumen Cetak */
+        .modal-preview-lg {
+            max-width: 1000px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            background-color: #f8fafc;
+        }
+
+        /* Lembaran Dokumen A4 dalam Pratinjau */
+        .sheet-a4 {
+            background-color: #ffffff;
+            color: #000000;
+            box-shadow: var(--shadow-lg);
+            border-radius: 8px;
+            padding: 40px;
+            margin-top: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 1100px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Drag handle icon */
+        .drag-handle {
+            cursor: grab;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           12. SPECIAL MEDIA QUERIES (RESPONSIVENESS)
+           ========================================== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding-top: 80px; /* beri ruang untuk mobile header */
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+        }
+
+        /* ==========================================
+           13. SPECIAL PRINT & LAYOUT CETAK A4
+           ========================================== */
+        @media print {
+            body {
+                background-color: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 10pt !important;
+                display: block !important;
+            }
+
+            .sidebar, .mobile-header, .no-print, .accessibility-bar, .modal {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+
+            /* Saat cetak, paksa TAMPILKAN semua seksi tab agar tidak tersembunyi */
+            .tab-content {
+                display: block !important;
+                margin-bottom: 30px;
+                page-break-inside: avoid;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin-bottom: 20px !important;
+                background-color: transparent !important;
+            }
+
+            .print-header {
+                display: flex !important;
+                align-items: center;
+                justify-content: space-between;
+                border-bottom: 3px double #000;
+                padding-bottom: 10px;
+                margin-bottom: 20px;
+            }
+
+            .print-logo {
+                width: 70px;
+                height: 70px;
+                object-fit: contain;
+            }
+
+            .print-title {
+                text-align: center;
+                flex: 1;
+                padding: 0 15px;
+            }
+
+            .print-title h2 {
+                font-size: 14pt;
+                font-weight: 700;
+                margin: 0;
+            }
+
+            .print-title p {
+                font-size: 10pt;
+                margin: 2px 0 0 0;
+            }
+
+            .print-identity-grid {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px;
+                margin-bottom: 20px;
+                font-size: 9pt;
+                border: 1px solid #000;
+                padding: 10px;
+            }
+
+            .identity-item {
+                display: flex;
+            }
+
+            .identity-label {
+                width: 150px;
+                font-weight: bold;
+            }
+
+            .identity-val {
+                flex: 1;
+            }
+
+            .main-table {
+                width: 100% !important;
+                border: 1px solid #000 !important;
+                font-size: 8.5pt !important;
+            }
+
+            .main-table th {
+                background-color: #f1f5f9 !important;
+                color: black !important;
+                border: 1px solid #000 !important;
+                font-weight: bold !important;
+            }
+
+            .main-table td {
+                border: 1px solid #000 !important;
+                background-color: transparent !important;
+                color: black !important;
+            }
+
+            .signature-section {
+                display: flex !important;
+                justify-content: space-between;
+                margin-top: 40px;
+                page-break-inside: avoid;
+            }
+
+            .signature-box {
+                text-align: center;
+                width: 250px;
+            }
+
+            .signature-space {
+                height: 60px;
+            }
+
+            .footer-print {
+                display: block !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 8pt;
+                border-top: 1px solid #ddd;
+                padding-top: 5px;
+            }
+        }
+
+        /* Sembunyikan elemen khusus cetak di layar biasa */
+        .print-header, .print-identity-grid, .signature-section, .footer-print {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================
+       A. MOBILE NAVIGATION HEADER
+       ========================================== -->
+    <div class="mobile-header no-print">
+        <div style="font-weight:800; font-size:1.1rem; letter-spacing:0.5px;">TP-ATP GENERATOR</div>
+        <button class="menu-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Menu">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+    </div>
+
+    <div class="app-layout">
+
+        <!-- ==========================================
+           B. SIDEBAR MENU (PERSISTENT / COLLAPSIBLE)
+           ========================================== -->
+        <aside class="sidebar" id="app-sidebar">
+            <div class="sidebar-brand">
+                <h2>TP & ATP Generator</h2>
+                <p>BSKAP No. 046/2025</p>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <button class="menu-item active" onclick="switchTab('dashboard', this)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z"></path>
+                    </svg>
+                    Dashboard Utama
+                </button>
+                <button class="menu-item" onclick="switchTab('identitas', this)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Identitas Dokumen
+                </button>
+                <button class="menu-item" onclick="switchTab('input-cp', this)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Input CP Elemen
+                </button>
+                <button class="menu-item" onclick="switchTab('output-tp', this)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    Hasil TP & Validasi
+                </button>
+                <button class="menu-item" onclick="switchTab('output-atp', this)">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                    Alur Tujuan Pembelajaran (ATP)
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <!-- Kontrol Aksesibilitas Mini di Sidebar -->
+                <div style="display:flex; justify-content:space-between; gap:6px;">
+                    <button class="btn-icon" onclick="adjustFont(-10)" title="Kecilkan Huruf" style="width:30px; height:30px; font-size:11px;">A-</button>
+                    <button class="btn-icon" onclick="adjustFont(10)" title="Besarkan Huruf" style="width:30px; height:30px; font-size:11px;">A+</button>
+                    <button class="btn-icon" onclick="toggleContrast()" title="Kontras Tinggi" style="width:30px; height:30px; font-size:11px;">🌓</button>
+                    <button class="btn-icon" onclick="toggleTheme()" title="Tema Gelap/Terang" style="width:30px; height:30px; font-size:11px;">💡</button>
+                </div>
+                <div style="display:flex; justify-content:space-between; gap:6px;">
+                    <button class="btn btn-outline btn-sm" onclick="triggerUndo()" id="btn-undo" style="flex:1; padding: 6px 0;">↩️ Undo</button>
+                    <button class="btn btn-outline btn-sm" onclick="triggerRedo()" id="btn-redo" style="flex:1; padding: 6px 0;">Redo ↪️</button>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="resetAll()" style="width:100%; font-size:11px;">🧹 Reset Semua Data</button>
+            </div>
+        </aside>
+
+        <!-- ==========================================
+           C. KONTEN UTAMA (Kanan / Tengah)
+           ========================================== -->
+        <main class="main-content">
+
+            <!-- Print Header Tersembunyi (Akan aktif saat cetak halaman) -->
+            <div class="print-header">
+                <img id="print-logo-kiri" class="print-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>" alt="Logo Kiri">
+                <div class="print-title">
+                    <h2 id="print-txt-sekolah">NAMA INSTANSI SEKOLAH</h2>
+                    <p id="print-txt-alamat">Alamat Instansi, Kabupaten/Kota, Provinsi</p>
+                    <h2 style="margin-top:10px; font-size:11pt; border-top:1.5px solid #000; padding-top:5px;">
+                        DOKUMEN DEKONSTRUKSI CAPAIAN PEMBELAJARAN (CP) & TUJUAN PEMBELAJARAN (TP)
+                    </h2>
+                    <p style="font-size:9pt;">Tahun Pelajaran: <span id="print-txt-tapel">-</span> | Fase: <span id="print-txt-fase">-</span> | Mapel: <span id="print-txt-mapel">-</span></p>
+                </div>
+                <img id="print-logo-kanan" class="print-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2316a34a'/><path d='M30,50 L45,65 L70,35' stroke='white' stroke-width='8' fill='none'/></svg>" alt="Logo Kanan">
+            </div>
+
+            <div class="print-identity-grid" id="print-identity-block"></div>
+
+            <!-- Header Konten Live (Tidak Dicetak) -->
+            <div class="content-header no-print">
+                <div>
+                    <h1 id="current-tab-title">Dashboard Utama</h1>
+                    <p style="font-size:0.85rem; color:var(--text-muted);">Sistem Otomasi Perumusan TP & ATP BSKAP 046 Tahun 2025</p>
+                </div>
+                <div>
+                    <span class="btn btn-primary btn-sm" style="pointer-events: none; text-transform: uppercase;">Kurikulum Merdeka 2025</span>
+                </div>
+            </div>
+
+            <!-- ==========================================
+               TAB 1: DASHBOARD & TEMPLATE
+               ========================================== -->
+            <div class="tab-content active" id="tab-dashboard">
+                <!-- Dashboard Statistik Card -->
+                <div class="card">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                        Dashboard Statistik & Metrik Analisis
+                    </div>
+                    <div class="grid-4">
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-total-cp">0</div>
+                            <div class="stat-label">Jumlah Elemen CP</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-total-tp">0</div>
+                            <div class="stat-label">Jumlah TP Terbentuk</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-total-kompetensi">0</div>
+                            <div class="stat-label">Kompetensi Unik</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="stat-valid-percent">0%</div>
+                            <div class="stat-label">TP Lulus Validasi</div>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="stat-progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Template Pemrosesan Cepat -->
+                <div class="card no-print">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+                        Pilih Contoh Template Mata Pelajaran (BSKAP 046/2025)
+                    </div>
+                    <p style="font-size:0.85rem; margin-bottom:15px; color:var(--text-muted);">
+                        Silakan pilih salah satu mata pelajaran di bawah ini untuk memuat deskripsi elemen dan rumusan Capaian Pembelajaran standar nasional secara otomatis.
+                    </p>
+                    <div class="grid-3">
+                        <button class="btn btn-outline" onclick="loadTemplate('matematika')" style="justify-content:flex-start;">📐 Matematika (Fase D)</button>
+                        <button class="btn btn-outline" onclick="loadTemplate('indonesia')" style="justify-content:flex-start;">✍️ Bahasa Indonesia (Fase D)</button>
+                        <button class="btn btn-outline" onclick="loadTemplate('ipas')" style="justify-content:flex-start;">🔬 IPAS (Fase C)</button>
+                        <button class="btn btn-outline" onclick="loadTemplate('pancasila')" style="justify-content:flex-start;">🇮🇩 Pendidikan Pancasila (Fase D)</button>
+                        <button class="btn btn-outline" onclick="loadTemplate('seni')" style="justify-content:flex-start;">🎨 Seni Rupa (Fase D)</button>
+                        <button class="btn btn-outline" onclick="loadTemplate('inggris')" style="justify-content:flex-start;">🗣️ Bahasa Inggris (Fase D)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+               TAB 2: FORM IDENTITAS DOKUMEN
+               ========================================== -->
+            <div class="tab-content" id="tab-identitas">
+                <div class="card">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                        Identitas Dokumen & Kurikulum Sekolah
+                    </div>
+                    <div class="grid-4">
+                        <div class="form-group">
+                            <label>Penyusun</label>
+                            <input type="text" class="form-control" id="doc-penyusun" value="Budi Santoso, S.Pd.">
+                        </div>
+                        <div class="form-group">
+                            <label>NIP Penyusun</label>
+                            <input type="text" class="form-control" id="doc-nip" value="198706122015041002">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Sekolah</label>
+                            <input type="text" class="form-control" id="doc-sekolah" value="SMP Negeri 1 Garuda">
+                        </div>
+                        <div class="form-group">
+                            <label>NPSN</label>
+                            <input type="text" class="form-control" id="doc-npsn" value="10234567">
+                        </div>
+                    </div>
+
+                    <div class="grid-4" style="margin-top:10px;">
+                        <div class="form-group">
+                            <label>Mata Pelajaran</label>
+                            <input type="text" class="form-control" id="doc-mapel" value="Matematika">
+                        </div>
+                        <div class="form-group">
+                            <label>Fase</label>
+                            <select class="form-control" id="doc-fase">
+                                <option value="A">Fase A (Kelas 1-2 SD)</option>
+                                <option value="B">Fase B (Kelas 3-4 SD)</option>
+                                <option value="C">Fase C (Kelas 5-6 SD)</option>
+                                <option value="D" selected>Fase D (Kelas 7-9 SMP)</option>
+                                <option value="E">Fase E (Kelas 10 SMA)</option>
+                                <option value="F">Fase F (Kelas 11-12 SMA)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kelas</label>
+                            <input type="text" class="form-control" id="doc-kelas" value="VII (Tujuh)">
+                        </div>
+                        <div class="form-group">
+                            <label>Semester</label>
+                            <select class="form-control" id="doc-semester">
+                                <option value="1">Semester Ganjil (1)</option>
+                                <option value="2">Semester Genap (2)</option>
+                                <option value="1 & 2" selected>Semester 1 & 2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid-4" style="margin-top:10px;">
+                        <div class="form-group">
+                            <label>Tahun Pelajaran</label>
+                            <input type="text" class="form-control" id="doc-tapel" value="2026/2027">
+                        </div>
+                        <div class="form-group">
+                            <label>Kabupaten/Kota</label>
+                            <input type="text" class="form-control" id="doc-kabupaten" value="Kota Bandung">
+                        </div>
+                        <div class="form-group">
+                            <label>Kepala Sekolah</label>
+                            <input type="text" class="form-control" id="doc-kepsek" value="Dr. H. Ahmad Wijaya, M.Pd.">
+                        </div>
+                        <div class="form-group">
+                            <label>NIP Kepala Sekolah</label>
+                            <input type="text" class="form-control" id="doc-nip-kepsek" value="197503112000031001">
+                        </div>
+                    </div>
+
+                    <div class="grid-4" style="margin-top:10px;">
+                        <div class="form-group">
+                            <label>Upload Logo Sekolah</label>
+                            <div class="image-preview-container">
+                                <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah', 'print-logo-kiri')">
+                                <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-sekolah').click()">Pilih Logo</button>
+                                <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Logo Pemerintah</label>
+                            <div class="image-preview-container">
+                                <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah', 'print-logo-kanan')">
+                                <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-pemerintah').click()">Pilih Logo</button>
+                                <img id="preview-pemerintah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2316a34a'/><path d='M30,50 L45,65 L70,35' stroke='white' stroke-width='8' fill='none'/></svg>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Format Kode TP</label>
+                            <select class="form-control" id="doc-kode-format">
+                                <option value="prefix">TP-01, TP-02, ...</option>
+                                <option value="numeric">7.1.1, 7.1.2, ... (Fase.Materi.No)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Penyusunan</label>
+                            <input type="date" class="form-control" id="doc-tanggal" value="2026-07-04">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+               TAB 3: INPUT CAPAIAN PEMBELAJARAN
+               ========================================== -->
+            <div class="tab-content" id="tab-input-cp">
+                <div class="card">
+                    <div class="card-title">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        Input Capaian Pembelajaran (CP) Elemen
+                    </div>
+                    <div class="button-group" style="justify-content: space-between;">
+                        <div>
+                            <button class="btn btn-primary btn-sm" onclick="addRowCP()">➕ Tambah Baris Elemen</button>
+                            <button class="btn btn-outline btn-sm" onclick="openImportModal()">📥 Import CSV / Paste Excel</button>
+                            <button class="btn btn-outline btn-sm" style="color:var(--danger-color)" onclick="clearCPTable()">🗑️ Kosongkan Semua Baris</button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="main-table" id="table-cp-input">
+                            <thead>
+                                <tr>
+                                    <th width="50" style="text-align: center;">No</th>
+                                    <th width="200">Elemen / Materi Pokok</th>
+                                    <th>Deskripsi Capaian Pembelajaran (CP)</th>
+                                    <th width="150" style="text-align: center;">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-cp-input">
+                                <!-- Diisi secara dinamis oleh JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div style="text-align: right; margin-top:15px;">
+                        <button class="btn btn-success" style="padding: 12px 24px; box-shadow: var(--shadow-lg);" onclick="generateTP()">
+                            ⚙️ ANALISIS & GENERATE TUJUAN PEMBELAJARAN (TP)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+               TAB 4: OUTPUT DEKONSTRUKSI & TP
+               ========================================== -->
+            <div class="tab-content" id="tab-output-tp">
+                <!-- Filter & Sorting Bar -->
+                <div class="filter-bar no-print">
+                    <div style="flex:1; min-width:200px;">
+                        <input type="text" class="form-control" id="search-box" placeholder="🔎 Cari Tujuan Pembelajaran, Konten atau Elemen..." oninput="filterAndRenderOutput()">
+                    </div>
+                    <div>
+                        <select class="form-control" id="filter-elemen" onchange="filterAndRenderOutput()">
+                            <option value="">Semua Elemen</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select class="form-control" id="filter-status" onchange="filterAndRenderOutput()">
+                            <option value="">Semua Status Validasi</option>
+                            <option value="Valid">Hanya Valid</option>
+                            <option value="Invalid">Hanya Perlu Koreksi</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select class="form-control" id="sort-order" onchange="sortAndRenderOutput()">
+                            <option value="default">Urutan Default</option>
+                            <option value="elemen-asc">Elemen (A-Z)</option>
+                            <option value="kode-asc">Kode TP (Terkecil)</option>
+                            <option value="kompetensi-asc">Kompetensi (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Hasil Output Utama -->
+                <div class="card" id="output-section">
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            Tabel Hasil Analisis Dekonstruksi & Alur Tujuan Pembelajaran
+                        </span>
+                        <div class="no-print button-group" style="margin-bottom:0;">
+                            <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
+                            <button class="btn btn-outline btn-sm" onclick="copyToClipboard()">📋 Copy</button>
+                            <button class="btn btn-outline btn-sm" onclick="exportToCSV()">📊 Excel (.csv)</button>
+                            <button class="btn btn-outline btn-sm" onclick="exportToWord()">📝 Word (.doc)</button>
+                            <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / Simpan PDF</button>
+                        </div>
+                    </div>
+
+                    <p class="no-print" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
+                        💡 <b>Tips Edit:</b> Klik dua kali (*double-click*) pada kolom **Kompetensi, Konten, atau TP** untuk melakukan perubahan instan (*inline editing*). Data disimpan otomatis!
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="main-table" id="table-tp-output">
+                            <thead>
+                                <tr>
+                                    <th width="40" style="text-align: center;">No</th>
+                                    <th width="140">Elemen / Topik</th>
+                                    <th width="180">Capaian Pembelajaran (CP)</th>
+                                    <th width="120">Kompetensi</th>
+                                    <th width="140">Konten (Materi Inti)</th>
+                                    <th>Tujuan Pembelajaran (TP) hasil Dekonstruksi</th>
+                                    <th width="80" style="text-align: center;">Kode</th>
+                                    <th width="100" style="text-align: center;" class="no-print">Validasi</th>
+                                    <th width="80" style="text-align: center;" class="no-print">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-tp-output">
+                                <tr>
+                                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                        Belum ada data dianalisis. Masukkan draf CP pada menu <b>Input CP Elemen</b> lalu jalankan pemrosesan.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==========================================
+               TAB 5: OUTPUT ALUR TUJUAN PEMBELAJARAN (ATP)
+               ========================================== -->
+            <div class="tab-content" id="tab-output-atp">
+                <div class="card" id="atp-section">
+                    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                            Alur Tujuan Pembelajaran (ATP) Mandiri
+                        </span>
+                        <div class="no-print button-group" style="margin-bottom:0;">
+                            <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
+                            <button class="btn btn-outline btn-sm" onclick="exportATPToCSV()">📊 Excel ATP (.csv)</button>
+                            <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / Simpan PDF</button>
+                        </div>
+                    </div>
+
+                    <p class="no-print" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
+                        💡 <b>Rancang Alur Pembelajaran:</b> Tentukan nomor pada kolom **Urutan ATP** untuk mengatur prioritas pengajaran materi. Tabel akan otomatis mengurutkan baris dari urutan terkecil ke terbesar. Klik dua kali pada **Dimensi Profil Lulusan** untuk menyesuaikan dimensi Profil Pelajar Pancasila.
+                    </p>
+
+                    <div class="table-responsive">
+                        <table class="main-table" id="table-atp-output">
+                            <thead>
+                                <tr>
+                                    <th width="100" style="text-align: center;">Urutan ATP</th>
+                                    <th width="120" style="text-align: center;">Kode TP</th>
+                                    <th width="180">Materi Pokok Referensi</th>
+                                    <th>Rumusan Tujuan Pembelajaran (TP)</th>
+                                    <th width="200">Dimensi Profil Lulusan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-atp-output">
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                        Belum ada data ATP. Selesaikan analisis CP pada menu <b>Input CP Elemen</b> terlebih dahulu.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tanda Tangan Cetakan Dokumen (Hanya Muncul Saat Print) -->
+            <div class="signature-section" id="print-signature-block"></div>
+
+            <!-- Footer Dokumen Cetakan -->
+            <div class="footer-print">
+                Aplikasi TP & ATP Generator BSKAP 046/2025 - Diolah secara digital dari browser guru.
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ==========================================
+       D. MODAL PRATINJAU DOKUMEN (Live Document Preview)
+       ========================================== -->
+    <div class="modal no-print" id="preview-modal" style="background-color: rgba(15, 23, 42, 0.75);">
+        <div class="modal-content modal-preview-lg">
+            <span class="modal-close" onclick="closePreviewModal()">&times;</span>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--card-border); padding-bottom: 15px;">
+                <div>
+                    <h3 style="color: var(--primary-color); font-weight: 800; font-size: 1.4rem;">Pratinjau Dokumen Cetak</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted);">Menampilkan layout dokumen final A4 yang siap dicetak ke printer atau disimpan ke PDF.</p>
+                </div>
+                <button class="btn btn-success" onclick="triggerPrintFromPreview()">🖨️ Cetak Sekarang</button>
+            </div>
+
+            <div class="sheet-a4" id="sheet-preview-content">
+                <!-- Konten Lembaran A4 akan digenerate secara dinamis oleh JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+       E. MODAL IMPORT & PASTE DATA
+       ========================================== -->
+    <div class="modal no-print" id="import-modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeImportModal()">&times;</span>
+            <h3 style="margin-bottom:15px; color:var(--primary-color);">Import Data Capaian Pembelajaran</h3>
+            <p style="font-size:0.85rem; margin-bottom:10px; color:var(--text-muted);">
+                Tempelkan data langsung dari Microsoft Excel atau Spreadsheet lainnya ke area teks di bawah ini.
+            </p>
+            <div class="form-group">
+                <label>Format: Kolom 1 (Elemen) dan Kolom 2 (Deskripsi CP)</label>
+                <textarea class="form-control" id="import-text" rows="8" placeholder="Bilangan	Murid mampu memahami konsep bilangan bulat...&#10;Geometri	Murid mampu menentukan luas daerah..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top:15px; display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn btn-outline" onclick="closeImportModal()">Batal</button>
+                <button class="btn btn-success" onclick="processImportText()">Proses & Masukkan Tabel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast-notif">
+        <span id="toast-message">Pemberitahuan berhasil disimpan!</span>
+    </div>
+
+    <!-- ==========================================
+       F. JAVASCRIPT UTAMA
+       ========================================== -->
+    <script>
+        // ==========================================
+        // 1. DATA MASTER & STATE MANAGEMENT
+        // ==========================================
+        let appState = {
+            cpInputs: [
+                { id: 1, elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional dalam menyelesaikan masalah." },
+                { id: 2, elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, dan menggunakan sifat-sifat operasi untuk menyelesaikan persamaan dan pertidaksamaan linear satu variabel." }
+            ],
+            tpOutputs: [],
+            history: [],
+            historyIndex: -1,
+            maxHistory: 15
+        };
+
+        // KKO Berdasarkan Taksonomi Bloom Direvisi & Kurikulum Nasional
+        const DICTIONARY_KKO = [
+            "memahami", "menentukan", "menganalisis", "menyelesaikan", "mengidentifikasi", "mengomunikasikan",
+            "membandingkan", "menerapkan", "mengevaluasi", "membaca", "menulis", "menyatakan", "menggunakan",
+            "menyajikan", "memformulasikan", "mengonstruksi", "memodelkan", "menjelaskan", "mengklasifikasi",
+            "menemukan", "merancang", "menciptakan", "menghitung", "memperkirakan", "menaksir", "mengukur",
+            "membuktikan", "menyusun", "membuat", "menceritakan", "membedakan", "menunjukkan", "menghargai"
+        ];
+
+        // Daftar Dimensi Profil Pelajar Pancasila (PPP)
+        const DIMENSI_PPP = [
+            "Bernalar Kritis",
+            "Kreatif",
+            "Mandiri",
+            "Gotong Royong",
+            "Berkebinekaan Global",
+            "Beriman, Bertakwa kepada Tuhan YME, dan Berakhlak Mulia"
+        ];
+
+        // Contoh-contoh Indikator SMART agar rumusan TP bernilai kontekstual & terukur
+        const INDIKATOR_SMART = [
+            "secara logis dan kritis",
+            "melalui penyelesaian masalah kontekstual",
+            "secara tepat dan mandiri",
+            "secara kreatif dalam kehidupan sehari-hari",
+            "dengan menggunakan representasi matematika yang sesuai",
+            "secara kolaboratif dalam kerja kelompok",
+            "dengan sistematis berdasarkan bukti ilmiah"
+        ];
+
+        // ==========================================
+        // 2. LIFECYCLE & INITIALIZATION
+        // ==========================================
+        window.onload = function() {
+            // Load state dari localStorage jika ada
+            const savedState = localStorage.getItem('tp_generator_state_v1');
+            if (savedState) {
+                try {
+                    appState = JSON.parse(savedState);
+                    if(!appState.history) {
+                        appState.history = [];
+                        appState.historyIndex = -1;
+                    }
+                } catch(e) {
+                    console.error("Gagal meload cache data", e);
+                }
+            } else {
+                saveToHistory();
+            }
+
+            // Inisialisasi Form Identitas dari Dokumen
+            loadIdentitasFromDOM();
+            
+            // Render Tabel Input CP, Output TP & ATP
+            renderCPTable();
+            renderOutputTable();
+            renderATPTable();
+            updateStatistics();
+            populateElementFilter();
+
+            // Set default date picker ke hari ini jika kosong
+            const dateInput = document.getElementById('doc-tanggal');
+            if(!dateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
+
+            // Registrasi Auto-save pada perubahan input form identitas dokumen
+            const formInputs = document.querySelectorAll('.form-control, #doc-tanggal');
+            formInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    saveStateToLocalStorage();
+                });
+            });
+
+            showToast("Sistem navigasi siap. BSKAP 046/2025 aktif!");
+        };
+
+        // ==========================================
+        // 3. TAB NAVIGATION CONTROL
+        // ==========================================
+        function switchTab(tabId, menuBtn) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            menuBtn.classList.add('active');
+
+            const titles = {
+                'dashboard': 'Dashboard Utama',
+                'identitas': 'Identitas Dokumen',
+                'input-cp': 'Penyusunan CP Elemen',
+                'output-tp': 'Hasil Dekonstruksi & TP',
+                'output-atp': 'Alur Tujuan Pembelajaran (ATP)'
+            };
+            document.getElementById('current-tab-title').innerText = titles[tabId] || 'Dashboard';
+
+            const sidebar = document.getElementById('app-sidebar');
+            sidebar.classList.remove('mobile-open');
+        }
+
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('app-sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // ==========================================
+        // 4. UTILITY FUNCTIONS & LOCAL STORAGE
+        // ==========================================
+        function saveStateToLocalStorage() {
+            localStorage.setItem('tp_generator_state_v1', JSON.stringify({
+                cpInputs: appState.cpInputs,
+                tpOutputs: appState.tpOutputs
+            }));
+            updateStatistics();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast-notif');
+            document.getElementById('toast-message').innerText = message;
+            toast.style.display = 'flex';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Undo - Redo History Manager
+        function saveToHistory() {
+            if (appState.historyIndex < appState.history.length - 1) {
+                appState.history = appState.history.slice(0, appState.historyIndex + 1);
+            }
+            
+            appState.history.push({
+                cpInputs: JSON.parse(JSON.stringify(appState.cpInputs)),
+                tpOutputs: JSON.parse(JSON.stringify(appState.tpOutputs))
+            });
+
+            if (appState.history.length > appState.maxHistory) {
+                appState.history.shift();
+            }
+            appState.historyIndex = appState.history.length - 1;
+            updateUndoRedoButtons();
+        }
+
+        function triggerUndo() {
+            if (appState.historyIndex > 0) {
+                appState.historyIndex--;
+                restoreHistoryState();
+                showToast("Urungkan berhasil (Undo)");
+            } else {
+                showToast("Tidak ada perubahan untuk diurungkan");
+            }
+        }
+
+        function triggerRedo() {
+            if (appState.historyIndex < appState.history.length - 1) {
+                appState.historyIndex++;
+                restoreHistoryState();
+                showToast("Ulangi berhasil (Redo)");
+            } else {
+                showToast("Tidak ada perubahan untuk diulangi");
+            }
+        }
+
+        function restoreHistoryState() {
+            const targetState = appState.history[appState.historyIndex];
+            appState.cpInputs = JSON.parse(JSON.stringify(targetState.cpInputs));
+            appState.tpOutputs = JSON.parse(JSON.stringify(targetState.tpOutputs));
+            
+            renderCPTable();
+            renderOutputTable();
+            renderATPTable();
+            updateStatistics();
+            populateElementFilter();
+            updateUndoRedoButtons();
+            saveStateToLocalStorage();
+        }
+
+        function updateUndoRedoButtons() {
+            document.getElementById('btn-undo').style.opacity = appState.historyIndex > 0 ? "1" : "0.4";
+            document.getElementById('btn-redo').style.opacity = appState.historyIndex < appState.history.length - 1 ? "1" : "0.4";
+        }
+
+        function resetAll() {
+            if(confirm("Apakah Anda yakin ingin menghapus seluruh data dan mereset sistem ke setelan awal?")) {
+                localStorage.removeItem('tp_generator_state_v1');
+                appState.cpInputs = [];
+                appState.tpOutputs = [];
+                appState.history = [];
+                appState.historyIndex = -1;
+                
+                renderCPTable();
+                renderOutputTable();
+                renderATPTable();
+                updateStatistics();
+                populateElementFilter();
+                showToast("Semua data berhasil dibersihkan");
+            }
+        }
+
+        // Aksesibilitas
+        function adjustFont(percentChange) {
+            let current = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            current += percentChange;
+            if(current >= 80 && current <= 140) {
+                document.documentElement.style.setProperty('--font-scale', current + '%');
+                showToast(`Ukuran font disesuaikan menjadi ${current}%`);
+            }
+        }
+
+        function toggleContrast() {
+            const body = document.documentElement;
+            if (body.getAttribute('data-contrast') === 'high') {
+                body.removeAttribute('data-contrast');
+                showToast("Mode Kontras Normal");
+            } else {
+                body.setAttribute('data-contrast', 'high');
+                showToast("Mode Kontras Tinggi Diaktifkan");
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.documentElement;
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                showToast("Mode Terang Aktif");
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                showToast("Mode Gelap Aktif");
+            }
+        }
+
+        // Preview Image Reader
+        function previewImage(input, previewId, printId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById(previewId).src = e.target.result;
+                    document.getElementById(printId).src = e.target.result;
+                    showToast("Logo berhasil diperbarui!");
+                    saveStateToLocalStorage();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // ==========================================
+        // 5. TEMPLATE MANAGEMENT (BSKAP 046/2025)
+        // ==========================================
+        const MATAPEL_TEMPLATES = {
+            matematika: {
+                mapel: "Matematika", fase: "D", kelas: "VII",
+                elemen: [
+                    { elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional, bilangan dalam notasi ilmiah dalam menyelesaikan masalah." },
+                    { elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, menggunakan sifat-sifat operasi untuk menyederhanakan bentuk aljabar, serta menyelesaikan persamaan dan pertidaksamaan linear satu variabel." },
+                    { elemen: "Geometri", deskripsi: "Murid dapat membuat jaring-jaring, mengonstruksi, dan mengurai bangun ruang (kubus, balok, prisma, dan limas) serta menghitung luas permukaan dan volumenya untuk menyelesaikan masalah." }
+                ]
+            },
+            indonesia: {
+                mapel: "Bahasa Indonesia", fase: "D", kelas: "VIII",
+                elemen: [
+                    { elemen: "Membaca dan Memirsa", deskripsi: "Murid memahami informasi berupa gagasan, pikiran, pandangan, arahan atau pesan dari teks narasi, eksposisi, dan deskripsi baik visual maupun audiovisual untuk menemukan makna tersurat dan tersirat." },
+                    { elemen: "Menulis", deskripsi: "Murid mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertulis untuk berbagai tujuan secara logis, kritis, dan kreatif dalam bentuk teks narasi, deskripsi, eksposisi, maupun laporan hasil observasi." }
+                ]
+            },
+            ipas: {
+                mapel: "Ilmu Pengetahuan Alam dan Sosial (IPAS)", fase: "C", kelas: "V",
+                elemen: [
+                    { elemen: "Pemahaman IPAS", deskripsi: "Murid menganalisis hubungan antara bentuk serta fungsi bagian tubuh pada manusia, serta mendeskripsikan siklus air dan dampaknya bagi kelangsungan hidup makhluk hidup dalam kehidupan sehari-hari." },
+                    { elemen: "Keterampilan Proses", deskripsi: "Murid merencanakan dan melakukan penyelidikan terstruktur, mengamati, mengumpulkan data secara akurat, serta membuat kesimpulan ilmiah berdasarkan bukti hasil percobaan." }
+                ]
+            },
+            pancasila: {
+                mapel: "Pendidikan Pancasila", fase: "D", kelas: "VII",
+                elemen: [
+                    { elemen: "Pancasila", deskripsi: "Murid mampu menganalisis proses perumusan dan penetapan Pancasila sebagai dasar negara, serta menerapkan nilai-nilai luhur Pancasila dalam kehidupan sehari-hari di lingkungan sekolah dan masyarakat." },
+                    { elemen: "Undang-Undang Dasar NKRI 1945", deskripsi: "Murid menganalisis norma, hak, dan kewajiban warga negara dalam kehidupan bermasyarakat dan bernegara sesuai dengan ketentuan konstitusi negara." }
+                ]
+            },
+            seni: {
+                mapel: "Seni Rupa", fase: "D", kelas: "IX",
+                elemen: [
+                    { elemen: "Mengalami", deskripsi: "Murid mampu mengamati, mengenali, dan menganalisis unsur rupa, prinsip seni, dan medium seni rupa dari berbagai karya seni rupa dua dimensi dan tiga dimensi di lingkungan sekitar secara mandiri." },
+                    { elemen: "Menciptakan", deskripsi: "Murid mampu menciptakan karya seni rupa dua dimensi yang menunjukkan keterampilan teknis penggunaan alat gambar, warna, dan proporsi secara kreatif." }
+                ]
+            },
+            inggris: {
+                mapel: "Bahasa Inggris", fase: "D", kelas: "VII",
+                elemen: [
+                    { elemen: "Menyimak - Berbicara", deskripsi: "Murid menggunakan bahasa Inggris untuk berinteraksi dan saling bertukar ide, pengalaman, minat, pendapat, dan pandangan dengan guru dan teman sebaya dalam berbagai situasi familiar formal dan informal." },
+                    { elemen: "Membaca - Memirsa", deskripsi: "Murid membaca dan merespons berbagai macam teks seperti narasi, deskripsi, dan prosedur yang ditulis dalam bahasa Inggris sederhana untuk menemukan informasi rinci." }
+                ]
+            }
+        };
+
+        function loadTemplate(key) {
+            const data = MATAPEL_TEMPLATES[key];
+            if (data) {
+                document.getElementById('doc-mapel').value = data.mapel;
+                document.getElementById('doc-fase').value = data.fase;
+                document.getElementById('doc-kelas').value = data.kelas;
+
+                appState.cpInputs = data.elemen.map((el, index) => {
+                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi };
+                });
+
+                renderCPTable();
+                saveToHistory();
+                saveStateToLocalStorage();
+                
+                const cpTabBtn = document.querySelectorAll('.menu-item')[2];
+                switchTab('input-cp', cpTabBtn);
+                showToast(`Template ${data.mapel} Berhasil Dimuat!`);
+            }
+        }
+
+
+        // ==========================================
+        // 6. INPUT CP TABLE INTERACTIVE (CRUD & EVENTS)
+        // ==========================================
+        function renderCPTable() {
+            const tbody = document.getElementById('tbody-cp-input');
+            tbody.innerHTML = '';
+
+            if(appState.cpInputs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                            Tidak ada baris data. Tekan "Tambah Baris" atau pilih Template di Dashboard.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            appState.cpInputs.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "draggable-row";
+                tr.draggable = true;
+                tr.dataset.index = index;
+
+                tr.addEventListener('dragstart', handleDragStart);
+                tr.addEventListener('dragover', handleDragOver);
+                tr.addEventListener('dragleave', handleDragLeave);
+                tr.addEventListener('drop', handleDrop);
+                tr.addEventListener('dragend', handleDragEnd);
+
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: bold;">
+                        <span class="drag-handle" title="Tarik untuk memindahkan urutan">☰</span><br>
+                        ${index + 1}
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" value="${escapeHtml(item.elemen)}" 
+                            onchange="updateCPData(${index}, 'elemen', this.value)" placeholder="Nama Elemen">
+                    </td>
+                    <td>
+                        <textarea class="form-control" rows="3" 
+                            onchange="updateCPData(${index}, 'deskripsi', this.value)" placeholder="Tuliskan Rumusan Capaian Pembelajaran..."></textarea>
+                    </td>
+                    <td style="text-align: center;">
+                        <div style="display:flex; gap:5px; justify-content:center;">
+                            <button class="btn btn-outline btn-sm" onclick="duplicateRow(${index})" title="Duplikat">📋</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteRow(${index})" title="Hapus">🗑️</button>
+                        </div>
+                    </td>
+                `;
+                
+                tr.querySelector('textarea').value = item.deskripsi;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addRowCP() {
+            const newId = appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1;
+            appState.cpInputs.push({
+                id: newId,
+                elemen: "",
+                deskripsi: ""
+            });
+            renderCPTable();
+            saveToHistory();
+            saveStateToLocalStorage();
+        }
+
+        function updateCPData(index, field, value) {
+            appState.cpInputs[index][field] = value;
+            saveStateToLocalStorage();
+        }
+
+        function duplicateRow(index) {
+            const original = appState.cpInputs[index];
+            appState.cpInputs.splice(index + 1, 0, {
+                id: Math.max(...appState.cpInputs.map(o => o.id)) + 1,
+                elemen: original.elemen + " (Salinan)",
+                deskripsi: original.deskripsi
+            });
+            renderCPTable();
+            saveToHistory();
+            saveStateToLocalStorage();
+            showToast("Baris berhasil diduplikasi");
+        }
+
+        function deleteRow(index) {
+            appState.cpInputs.splice(index, 1);
+            renderCPTable();
+            saveToHistory();
+            saveStateToLocalStorage();
+            showToast("Baris berhasil dihapus");
+        }
+
+        function clearCPTable() {
+            if(confirm("Apakah Anda yakin ingin mengosongkan tabel input CP?")) {
+                appState.cpInputs = [];
+                renderCPTable();
+                saveToHistory();
+                saveStateToLocalStorage();
+            }
+        }
+
+        // Drag and Drop
+        let dragSrcEl = null;
+
+        function handleDragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.style.opacity = '0.4';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            this.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (dragSrcEl !== this) {
+                const srcIndex = parseInt(dragSrcEl.dataset.index);
+                const targetIndex = parseInt(this.dataset.index);
+
+                const draggedItem = appState.cpInputs[srcIndex];
+                appState.cpInputs.splice(srcIndex, 1);
+                appState.cpInputs.splice(targetIndex, 0, draggedItem);
+
+                renderCPTable();
+                saveToHistory();
+                saveStateToLocalStorage();
+                showToast("Urutan baris berhasil diubah!");
+            }
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+            const rows = document.querySelectorAll('.draggable-row');
+            rows.forEach(row => row.classList.remove('drag-over'));
+        }
+
+
+        // ==========================================
+        // 7. ALGORITMA ANALISIS OTOMATIS (NLP ENGINE)
+        // ==========================================
+        function generateTP() {
+            let activeInputs = appState.cpInputs.filter(item => item.elemen.trim() !== "" && item.deskripsi.trim() !== "");
+            
+            if (activeInputs.length === 0) {
+                alert("Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
+                return;
+            }
+
+            appState.tpOutputs = [];
+            const formatKode = document.getElementById('doc-kode-format').value;
+            const fase = document.getElementById('doc-fase').value;
+
+            activeInputs.forEach((item, indexCP) => {
+                const elemenClean = item.elemen.trim();
+                const textCP = item.deskripsi.trim();
+                
+                const hasilDekonstruksi = dekonstruksiTextCP(textCP);
+                
+                hasilDekonstruksi.forEach((tpData, indexTP) => {
+                    const idTP = appState.tpOutputs.length + 1;
+                    
+                    let kodeTP = "";
+                    if (formatKode === "prefix") {
+                        kodeTP = `TP-${String(idTP).padStart(2, '0')}`;
+                    } else {
+                        kodeTP = `${fase}.${indexCP + 1}.${indexTP + 1}`;
+                    }
+
+                    const indikatorAcak = INDIKATOR_SMART[(indexCP + indexTP) % INDIKATOR_SMART.length];
+                    const rumusanTPOtomatis = `Murid mampu ${tpData.kompetensi.toLowerCase()} ${tpData.konten} ${indikatorAcak}.`;
+
+                    const validasi = lakukanValidasiTP(rumusanTPOtomatis, tpData.kompetensi, tpData.konten);
+
+                    // Berikan default dimensi profil lulusan berdasarkan KKO/Kompetensi
+                    let defaultProfil = "Bernalar Kritis";
+                    const kompLower = tpData.kompetensi.toLowerCase();
+                    if (kompLower.includes("rancang") || kompLower.includes("cipta") || kompLower.includes("buat") || kompLower.includes("susun")) {
+                        defaultProfil = "Kreatif";
+                    } else if (kompLower.includes("selesai") || kompLower.includes("mampu") || kompLower.includes("tentu")) {
+                        defaultProfil = "Mandiri";
+                    } else if (kompLower.includes("komunikasi") || kompLower.includes("saji")) {
+                        defaultProfil = "Gotong Royong";
+                    }
+
+                    appState.tpOutputs.push({
+                        id: idTP,
+                        elemen: elemenClean,
+                        cpOriginal: textCP,
+                        kompetensi: tpData.kompetensi,
+                        konten: tpData.konten,
+                        tujuanPembelajaran: rumusanTPOtomatis,
+                        dimensiProfil: defaultProfil,
+                        kode: kodeTP,
+                        urutanAtp: idTP, 
+                        validasi: validasi,
+                        catatan: "Terbentuk otomatis."
+                    });
+                });
+            });
+
+            renderOutputTable();
+            renderATPTable();
+            populateElementFilter();
+            saveToHistory();
+            saveStateToLocalStorage();
+            
+            const outputTabBtn = document.querySelectorAll('.menu-item')[3];
+            switchTab('output-tp', outputTabBtn);
+            showToast("Sukses: TP & Alur ATP berhasil dirumuskan!");
+        }
+
+        function dekonstruksiTextCP(text) {
+            let matches = [];
+            const kalimat = text.split(/[,.;]/);
+
+            kalimat.forEach(part => {
+                const cleanedPart = part.trim();
+                if (cleanedPart.length < 15) return;
+
+                let kompetensiDitemukan = "";
+                let kontenDitemukan = "";
+
+                for (let kko of DICTIONARY_KKO) {
+                    const regex = new RegExp(`\\b${kko}\\w*\\b`, 'i');
+                    if (regex.test(cleanedPart)) {
+                        kompetensiDitemukan = kko.charAt(0).toUpperCase() + kko.slice(1);
+                        
+                        const indexKKO = cleanedPart.toLowerCase().indexOf(kko);
+                        let sisaTeks = cleanedPart.slice(indexKKO + kko.length).trim();
+                        sisaTeks = sisaTeks.replace(/^(dan|atau|dalam|dengan|secara|yang|pada|untuk)\b/i, "").trim();
+                        
+                        if (sisaTeks.length > 5) {
+                            kontenDitemukan = sisaTeks;
+                        }
+                        break;
+                    }
+                }
+
+                if (!kompetensiDitemukan) kompetensiDitemukan = "Memahami";
+
+                if (!kontenDitemukan) {
+                    kontenDitemukan = cleanedPart.replace(/peserta didik|murid/gi, "").trim();
+                }
+
+                if(kontenDitemukan.length > 80) {
+                    kontenDitemukan = kontenDitemukan.substring(0, 80) + "...";
+                }
+
+                if (kontenDitemukan.length > 3) {
+                    matches.push({
+                        kompetensi: kompetensiDitemukan,
+                        konten: kontenDitemukan
+                    });
+                }
+            });
+
+            if (matches.length === 0) {
+                matches.push({
+                    kompetensi: "Memahami",
+                    konten: text.length > 50 ? text.substring(0, 50) + "..." : text
+                });
+            }
+
+            return matches;
+        }
+
+        function lakukanValidasiTP(tpText, kompetensi, konten) {
+            let checks = {
+                memilikiKKO: false,
+                panjangSesuai: false,
+                sesuaiKompetensi: false,
+                memilikiKonten: false,
+                formatBenar: false
+            };
+
+            const tpLower = tpText.toLowerCase();
+            checks.memilikiKKO = DICTIONARY_KKO.some(kko => tpLower.includes(kko));
+            checks.panjangSesuai = tpText.length >= 20 && tpText.length <= 250;
+
+            if (kompetensi) {
+                checks.sesuaiKompetensi = tpLower.includes(kompetensi.toLowerCase());
+            }
+
+            if (konten) {
+                const kontenClean = konten.toLowerCase().replace(/[^\w\s]/g, '');
+                const kataKonten = kontenClean.split(' ');
+                checks.memilikiKonten = kataKonten.some(word => word.length > 3 && tpLower.includes(word));
+            }
+
+            checks.formatBenar = tpLower.startsWith("murid");
+
+            const totalLolos = Object.values(checks).filter(Boolean).length;
+            const valid = totalLolos === 5;
+
+            return {
+                isValid: valid,
+                details: checks,
+                score: totalLolos
+            };
+        }
+
+
+        // ==========================================
+        // 8. INTERACTIVE OUTPUT TABLES (TP & ATP)
+        // ==========================================
+        function populateElementFilter() {
+            const filter = document.getElementById('filter-elemen');
+            filter.innerHTML = '<option value="">Semua Elemen</option>';
+            
+            const elemenList = [...new Set(appState.tpOutputs.map(item => item.elemen))];
+            elemenList.forEach(el => {
+                if(el) {
+                    const opt = document.createElement('option');
+                    opt.value = el;
+                    opt.innerText = el;
+                    filter.appendChild(opt);
+                }
+            });
+        }
+
+        function filterAndRenderOutput() {
+            const query = document.getElementById('search-box').value.toLowerCase();
+            const selectedElemen = document.getElementById('filter-elemen').value;
+            const selectedStatus = document.getElementById('filter-status').value;
+
+            let filteredData = appState.tpOutputs.filter(item => {
+                const matchSearch = item.tujuanPembelajaran.toLowerCase().includes(query) || 
+                                    item.elemen.toLowerCase().includes(query) || 
+                                    item.konten.toLowerCase().includes(query) ||
+                                    item.kompetensi.toLowerCase().includes(query);
+                
+                const matchElemen = selectedElemen === "" || item.elemen === selectedElemen;
+                
+                let matchStatus = true;
+                if (selectedStatus === "Valid") {
+                    matchStatus = item.validasi.isValid;
+                } else if (selectedStatus === "Invalid") {
+                    matchStatus = !item.validasi.isValid;
+                }
+
+                return matchSearch && matchElemen && matchStatus;
+            });
+
+            renderOutputTable(filteredData);
+        }
+
+        function sortAndRenderOutput() {
+            const order = document.getElementById('sort-order').value;
+            let sorted = [...appState.tpOutputs];
+
+            if (order === "elemen-asc") {
+                sorted.sort((a, b) => a.elemen.localeCompare(b.elemen));
+            } else if (order === "kode-asc") {
+                sorted.sort((a, b) => a.kode.localeCompare(b.kode));
+            } else if (order === "kompetensi-asc") {
+                sorted.sort((a, b) => a.kompetensi.localeCompare(b.kompetensi));
+            }
+
+            renderOutputTable(sorted);
+        }
+
+        function renderOutputTable(customData = null) {
+            const tbody = document.getElementById('tbody-tp-output');
+            tbody.innerHTML = '';
+
+            const dataToRender = customData || appState.tpOutputs;
+
+            if (dataToRender.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                            Tidak ada data dekonstruksi yang cocok dengan penyaringan.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            dataToRender.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const badgeClass = item.validasi.isValid ? "validation-valid" : "validation-invalid";
+                const badgeIcon = item.validasi.isValid ? "✓ Lolos SMART" : "⚠ Koreksi";
+                
+                const tooltipText = `
+                    <b>Skor Validasi: ${item.validasi.score}/5</b><br>
+                    ${item.validasi.details.memilikiKKO ? '✓' : '✗'} Memiliki KKO<br>
+                    ${item.validasi.details.panjangSesuai ? '✓' : '✗'} Panjang Kalimat Ideal<br>
+                    ${item.validasi.details.sesuaiKompetensi ? '✓' : '✗'} Mengandung Kompetensi<br>
+                    ${item.validasi.details.memilikiKonten ? '✓' : '✗'} Memiliki Konten Esensial<br>
+                    ${item.validasi.details.formatBenar ? '✓' : '✗'} Format BSKAP (Murid...)
+                `;
+
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: bold;">${index + 1}</td>
+                    <td><b>${escapeHtml(item.elemen)}</b></td>
+                    <td style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(item.cpOriginal.substring(0, 80))}${item.cpOriginal.length > 80 ? '...' : ''}</td>
+                    
+                    <td contenteditable="true" class="editable-cell" 
+                        onblur="saveInlineEdit(${item.id}, 'kompetensi', this.innerText)"
+                        onkeydown="handleInlineKey(event)">${escapeHtml(item.kompetensi)}</td>
+                    
+                    <td contenteditable="true" class="editable-cell" 
+                        onblur="saveInlineEdit(${item.id}, 'konten', this.innerText)"
+                        onkeydown="handleInlineKey(event)">${escapeHtml(item.konten)}</td>
+                    
+                    <td contenteditable="true" class="editable-cell" style="font-weight: 500;" 
+                        onblur="saveInlineEdit(${item.id}, 'tujuanPembelajaran', this.innerText)"
+                        onkeydown="handleInlineKey(event)">${escapeHtml(item.tujuanPembelajaran)}</td>
+                    
+                    <td style="text-align: center;">
+                        <input type="text" class="form-control" style="padding: 2px 5px; text-align:center; font-weight:bold; min-width:60px;" 
+                            value="${escapeHtml(item.kode)}" onchange="updateRowKode(${item.id}, this.value)">
+                    </td>
+                    
+                    <td class="no-print" style="text-align: center;">
+                        <div class="tooltip">
+                            <span class="validation-badge ${badgeClass}">${badgeIcon}</span>
+                            <span class="tooltiptext">${tooltipText}</span>
+                        </div>
+                    </td>
+                    
+                    <td class="no-print" style="text-align: center;">
+                        <button class="btn btn-danger btn-sm" onclick="deleteOutputTP(${item.id})" title="Hapus">🗑️</button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- SISTEM ATP TABLE CONTROLLER ---
+        function renderATPTable() {
+            const tbody = document.getElementById('tbody-atp-output');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            // Urutkan data secara numerik berdasarkan kolom 'urutanAtp' ascending
+            const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
+                return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
+            });
+
+            if (sortedATPData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                            Belum ada data ATP. Selesaikan analisis CP pada menu <b>Input CP Elemen</b> terlebih dahulu.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            sortedATPData.forEach((item) => {
+                const tr = document.createElement('tr');
+                
+                // Menyiapkan opsi dropdown atau edit untuk Dimensi Profil
+                tr.innerHTML = `
+                    <td style="text-align: center;">
+                        <input type="number" class="form-control" style="padding: 4px 8px; text-align:center; font-weight:bold; width:90px; margin: 0 auto;" 
+                            value="${item.urutanAtp}" onchange="updateRowUrutanAtp(${item.id}, this.value)">
+                    </td>
+                    <td style="text-align: center; font-weight: bold; color: var(--primary-color);">${escapeHtml(item.kode)}</td>
+                    <td contenteditable="true" class="editable-cell" 
+                        onblur="saveInlineEdit(${item.id}, 'konten', this.innerText)">${escapeHtml(item.konten)}</td>
+                    <td contenteditable="true" class="editable-cell" style="font-weight: 500;" 
+                        onblur="saveInlineEdit(${item.id}, 'tujuanPembelajaran', this.innerText)">${escapeHtml(item.tujuanPembelajaran)}</td>
+                    <td contenteditable="true" class="editable-cell" style="color: var(--warning-color); font-weight: 600;"
+                        onblur="saveInlineEdit(${item.id}, 'dimensiProfil', this.innerText)"
+                        title="Edit Dimensi Profil Pancasila">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateRowUrutanAtp(id, newUrutan) {
+            const index = appState.tpOutputs.findIndex(item => item.id === id);
+            if (index !== -1) {
+                appState.tpOutputs[index].urutanAtp = parseInt(newUrutan) || 0;
+                saveStateToLocalStorage();
+                renderATPTable(); 
+                showToast("Urutan Alur Pembelajaran (ATP) diperbarui!");
+            }
+        }
+
+        function handleInlineKey(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                e.target.blur();
+            }
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                renderOutputTable();
+                renderATPTable();
+                showToast("Edit dibatalkan");
+            }
+        }
+
+        function saveInlineEdit(id, field, newValue) {
+            const index = appState.tpOutputs.findIndex(item => item.id === id);
+            if (index !== -1) {
+                const oldVal = appState.tpOutputs[index][field];
+                const cleanValue = newValue.trim().replace(/\n/g, " ");
+
+                if (oldVal !== cleanValue) {
+                    appState.tpOutputs[index][field] = cleanValue;
+                    
+                    const tpText = appState.tpOutputs[index].tujuanPembelajaran;
+                    const komp = appState.tpOutputs[index].kompetensi;
+                    const kont = appState.tpOutputs[index].konten;
+                    
+                    appState.tpOutputs[index].validasi = lakukanValidasiTP(tpText, komp, kont);
+                    
+                    saveToHistory();
+                    saveStateToLocalStorage();
+                    renderOutputTable();
+                    renderATPTable();
+                    showToast("Perubahan berhasil disimpan!");
+                }
+            }
+        }
+
+        function updateRowKode(id, newKode) {
+            const index = appState.tpOutputs.findIndex(item => item.id === id);
+            if (index !== -1) {
+                appState.tpOutputs[index].kode = newKode;
+                saveStateToLocalStorage();
+                renderOutputTable();
+                renderATPTable();
+                showToast("Kode diperbarui!");
+            }
+        }
+
+        function deleteOutputTP(id) {
+            appState.tpOutputs = appState.tpOutputs.filter(item => item.id !== id);
+            renderOutputTable();
+            renderATPTable();
+            saveToHistory();
+            saveStateToLocalStorage();
+            showToast("TP Dihapus");
+        }
+
+
+        // ==========================================
+        // 9. DASHBOARD STATISTIK
+        // ==========================================
+        function updateStatistics() {
+            const cpCount = appState.cpInputs.filter(item => item.elemen.trim() !== "").length;
+            document.getElementById('stat-total-cp').innerText = cpCount;
+
+            const tpCount = appState.tpOutputs.length;
+            document.getElementById('stat-total-tp').innerText = tpCount;
+
+            const uniqueKomp = [...new Set(appState.tpOutputs.map(item => item.kompetensi.toLowerCase().trim()))].filter(Boolean).length;
+            document.getElementById('stat-total-kompetensi').innerText = uniqueKomp;
+
+            const validCount = appState.tpOutputs.filter(item => item.validasi.isValid).length;
+            
+            let percent = 0;
+            if (tpCount > 0) {
+                percent = Math.round((validCount / tpCount) * 100);
+            }
+            
+            document.getElementById('stat-valid-percent').innerText = `${percent}%`;
+            document.getElementById('stat-progress-bar').style.width = `${percent}%`;
+        }
+
+
+        // ==========================================
+        // 10. MODAL IMPORT & PASTE SYSTEM
+        // ==========================================
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'flex';
+        }
+
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+        }
+
+        function processImportText() {
+            const text = document.getElementById('import-text').value.trim();
+            if(!text) {
+                alert("Kotak teks kosong. Silakan paste data terlebih dahulu.");
+                return;
+            }
+
+            const baris = text.split('\n');
+            let importData = [];
+
+            baris.forEach(line => {
+                if(line.trim() === '') return;
+                
+                let pemisah = '\t';
+                if (!line.includes('\t')) {
+                    pemisah = line.includes(';') ? ';' : ',';
+                }
+
+                const kolom = line.split(pemisah);
+                if (kolom.length >= 2) {
+                    importData.push({
+                        elemen: kolom[0].trim(),
+                        deskripsi: kolom.slice(1).join(pemisah).trim()
+                    });
+                }
+            });
+
+            if (importData.length > 0) {
+                if(confirm(`Mendeteksi ${importData.length} elemen. Gabungkan dengan data input yang ada?`)) {
+                    importData.forEach(item => {
+                        appState.cpInputs.push({
+                            id: appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1,
+                            elemen: item.elemen,
+                            deskripsi: item.deskripsi
+                        });
+                    });
+                } else {
+                    appState.cpInputs = importData.map((item, idx) => ({
+                        id: idx + 1,
+                        elemen: item.elemen,
+                        deskripsi: item.deskripsi
+                    }));
+                }
+
+                renderCPTable();
+                saveToHistory();
+                saveStateToLocalStorage();
+                closeImportModal();
+                document.getElementById('import-text').value = '';
+                showToast(`Sukses memuat ${importData.length} Baris CP baru!`);
+            } else {
+                alert("Format data tidak sesuai. Gunakan minimal dua kolom terpisah oleh TAB atau koma.");
+            }
+        }
+
+
+        // ==========================================
+        // 11. PRATINJAU DOKUMEN MODAL CONTROLLER
+        // ==========================================
+        function openPreviewModal() {
+            loadIdentitasFromDOM();
+            const previewModal = document.getElementById('preview-modal');
+            const previewContent = document.getElementById('sheet-preview-content');
+
+            // Susun data tabel TP untuk cetak pratinjau
+            let tpRowsHtml = '';
+            if(appState.tpOutputs.length === 0) {
+                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">Belum ada data TP.</td></tr>`;
+            } else {
+                appState.tpOutputs.forEach((item, index) => {
+                    tpRowsHtml += `
+                        <tr>
+                            <td style="text-align:center; border:1px solid #000; padding:6px;">${index + 1}</td>
+                            <td style="border:1px solid #000; padding:6px;"><b>${escapeHtml(item.elemen)}</b></td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.kompetensi)}</td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:6px; font-weight:bold;">${escapeHtml(item.kode)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Susun data tabel ATP tersortir untuk pratinjau
+            let atpRowsHtml = '';
+            const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
+                return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
+            });
+
+            if(sortedATPData.length === 0) {
+                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666;">Belum ada data ATP.</td></tr>`;
+            } else {
+                sortedATPData.forEach((item) => {
+                    atpRowsHtml += `
+                        <tr>
+                            <td style="text-align:center; border:1px solid #000; padding:6px; font-weight:bold;">${item.urutanAtp}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:6px; font-weight:bold; color:#1e40af;">${escapeHtml(item.kode)}</td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="border:1px solid #000; padding:6px; font-weight:600; color:#475569;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const tglSelesai = document.getElementById('doc-tanggal').value;
+            const formattedDate = formatIndonesianDate(tglSelesai);
+
+            // Bangun simulasi lembaran A4 dokumen final dinamis
+            previewContent.innerHTML = `
+                <!-- Kop Surat Preview -->
+                <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:3px double #000; padding-bottom:10px; margin-bottom:20px;">
+                    <img style="width:65px; height:65px; object-fit:contain;" src="${document.getElementById('preview-sekolah').src}" alt="Logo Kiri">
+                    <div style="text-align:center; flex:1; padding:0 15px;">
+                        <h2 style="font-size:14pt; font-weight:700; margin:0; text-transform:uppercase;">${document.getElementById('doc-sekolah').value}</h2>
+                        <p style="font-size:9pt; margin:2px 0 0 0; color:#333;">NPSN: ${document.getElementById('doc-npsn').value} | Kabupaten/Kota: ${document.getElementById('doc-kabupaten').value}</p>
+                        <h2 style="margin-top:8px; font-size:11pt; border-top:1px solid #000; padding-top:5px; font-weight:800; letter-spacing:0.5px;">
+                            ANALISIS DEKONSTRUKSI CP & ALUR TUJUAN PEMBELAJARAN (ATP)
+                        </h2>
+                    </div>
+                    <img style="width:65px; height:65px; object-fit:contain;" src="${document.getElementById('preview-pemerintah').src}" alt="Logo Kanan">
+                </div>
+
+                <!-- Grid Identitas Dokumen -->
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; font-size:9pt; border:1px solid #000; padding:10px; background-color:#fafafa;">
+                    <div><b>Penyusun:</b> ${document.getElementById('doc-penyusun').value}</div>
+                    <div><b>Mata Pelajaran:</b> ${document.getElementById('doc-mapel').value}</div>
+                    <div><b>NIP Penyusun:</b> ${document.getElementById('doc-nip').value}</div>
+                    <div><b>Fase / Kelas:</b> Fase ${document.getElementById('doc-fase').value} / Kelas ${document.getElementById('doc-kelas').value}</div>
+                    <div><b>Sekolah:</b> ${document.getElementById('doc-sekolah').value}</div>
+                    <div><b>Semester / Tahun Pelajaran:</b> Semester ${document.getElementById('doc-semester').value} / TA ${document.getElementById('doc-tapel').value}</div>
+                </div>
+
+                <!-- Bagian 1: Tabel Dekonstruksi TP -->
+                <h3 style="font-size:10pt; font-weight:bold; margin-bottom:8px; border-left:3px solid #1e40af; padding-left:8px; text-transform:uppercase; color:#1e40af;">
+                    I. Hasil Dekonstruksi Capaian Pembelajaran (CP) ke Tujuan Pembelajaran (TP)
+                </h3>
+                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:25px;">
+                    <thead>
+                        <tr style="background-color:#f1f5f9;">
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:30px;">No</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:100px;">Elemen</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:90px;">Kompetensi</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:120px;">Materi (Konten)</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:65px;">Kode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tpRowsHtml}
+                    </tbody>
+                </table>
+
+                <!-- Bagian 2: Tabel Alur Tujuan Pembelajaran (ATP) -->
+                <h3 style="font-size:10pt; font-weight:bold; margin-bottom:8px; border-left:3px solid #1e40af; padding-left:8px; text-transform:uppercase; color:#1e40af;">
+                    II. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pembelajaran
+                </h3>
+                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:30px;">
+                    <thead>
+                        <tr style="background-color:#f1f5f9;">
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:80px; text-align:center;">Urutan ATP</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:80px; text-align:center;">Kode TP</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:150px;">Materi Pokok Referensi</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:180px;">Dimensi Profil Lulusan (Pancasila)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${atpRowsHtml}
+                    </tbody>
+                </table>
+
+                <!-- Bagian 3: Tanda Tangan Basah -->
+                <div style="display:flex; justify-content:space-between; margin-top:35px; font-size:9pt; page-break-inside:avoid;">
+                    <div style="text-align:center; width:220px;">
+                        <p>Mengetahui,</p>
+                        <p style="font-weight:600;">Kepala ${document.getElementById('doc-sekolah').value}</p>
+                        <div style="height:55px;"></div>
+                        <p><b><u>${document.getElementById('doc-kepsek').value}</u></b></p>
+                        <p>NIP. ${document.getElementById('doc-nip-kepsek').value}</p>
+                    </div>
+                    <div style="text-align:center; width:240px;">
+                        <p>${document.getElementById('doc-kabupaten').value}, ${formattedDate}</p>
+                        <p style="font-weight:600;">Guru Mata Pelajaran,</p>
+                        <div style="height:55px;"></div>
+                        <p><b><u>${document.getElementById('doc-penyusun').value}</u></b></p>
+                        <p>NIP. ${document.getElementById('doc-nip').value}</p>
+                    </div>
+                </div>
+            `;
+
+            previewModal.style.display = 'flex';
+        }
+
+        function closePreviewModal() {
+            document.getElementById('preview-modal').style.display = 'none';
+        }
+
+        function triggerPrintFromPreview() {
+            closePreviewModal();
+            triggerPrint();
+        }
+
+        // ==========================================
+        // 12. EXPORT SYSTEM
+        // ==========================================
+        function copyToClipboard() {
+            let clipboardText = "No\tElemen\tKompetensi\tKonten\tTujuan Pembelajaran (TP)\tKode TP\tStatus\n";
+            appState.tpOutputs.forEach((item, index) => {
+                clipboardText += `${index + 1}\t${item.elemen}\t${item.kompetensi}\t${item.konten}\t${item.tujuanPembelajaran}\t${item.kode}\t${item.validasi.isValid ? 'Valid' : 'Koreksi'}\n`;
+            });
+
+            const textarea = document.createElement("textarea");
+            textarea.value = clipboardText;
+            textarea.style.position = "fixed";
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if(successful) {
+                    showToast("Tabel disalin ke Clipboard!");
+                } else {
+                    showToast("Gagal menyalin data.");
+                }
+            } catch (err) {
+                console.error('Error', err);
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function exportToCSV() {
+            if(appState.tpOutputs.length === 0) {
+                alert("Tidak ada data TP untuk diekspor");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "No;Elemen;Kompetensi;Konten;Tujuan Pembelajaran (TP);Kode TP;Status Validasi\n";
+
+            appState.tpOutputs.forEach((item, index) => {
+                const row = [
+                    index + 1,
+                    `"${item.elemen.replace(/"/g, '""')}"`,
+                    `"${item.kompetensi.replace(/"/g, '""')}"`,
+                    `"${item.konten.replace(/"/g, '""')}"`,
+                    `"${item.tujuanPembelajaran.replace(/"/g, '""')}"`,
+                    `"${item.kode.replace(/"/g, '""')}"`,
+                    item.validasi.isValid ? 'Valid' : 'Koreksi'
+                ];
+                csvContent += row.join(";") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            const mapel = document.getElementById('doc-mapel').value || 'Materi';
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `TP_Generator_BSKAP_${mapel.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("CSV TP berhasil diunduh!");
+        }
+
+        // Ekspor mandiri khusus untuk tabel ATP sesuai struktur baru
+        function exportATPToCSV() {
+            if(appState.tpOutputs.length === 0) {
+                alert("Tidak ada data Alur Tujuan Pembelajaran untuk diekspor");
+                return;
+            }
+
+            const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
+                return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
+            });
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Urutan ATP;Kode TP;Materi Pokok Referensi;Rumusan Tujuan Pembelajaran;Dimensi Profil Lulusan\n";
+
+            sortedATPData.forEach((item) => {
+                const row = [
+                    item.urutanAtp,
+                    `"${item.kode.replace(/"/g, '""')}"`,
+                    `"${item.konten.replace(/"/g, '""')}"`,
+                    `"${item.tujuanPembelajaran.replace(/"/g, '""')}"`,
+                    `"${(item.dimensiProfil || "Bernalar Kritis").replace(/"/g, '""')}"`
+                ];
+                csvContent += row.join(";") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            const mapel = document.getElementById('doc-mapel').value || 'Materi';
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `ATP_Alur_Belajar_${mapel.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("CSV ATP berhasil diunduh!");
+        }
+
+        function exportToWord() {
+            if(appState.tpOutputs.length === 0) {
+                alert("Tidak ada data untuk diekspor ke Word.");
+                return;
+            }
+
+            const mapel = document.getElementById('doc-mapel').value || 'Mata Pelajaran';
+            const sekolah = document.getElementById('doc-sekolah').value || 'Sekolah';
+            const penyusun = document.getElementById('doc-penyusun').value || 'Guru';
+
+            let htmlContent = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><title>Dekonstruksi CP & TP BSKAP 046</title>
+                <style>
+                    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.4; }
+                    h2 { color: #1e40af; text-align: center; }
+                    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+                    th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 10pt; }
+                    th { background-color: #f2f2f2; font-weight: bold; }
+                </style>
+                </head>
+                <body>
+                    <h2>DOKUMEN DEKONSTRUKSI CP & TUJUAN PEMBELAJARAN</h2>
+                    <p><b>Mata Pelajaran:</b> ${mapel}<br>
+                    <b>Sekolah:</b> ${sekolah}<br>
+                    <b>Penyusun:</b> ${penyusun}<br>
+                    <b>Dasar Hukum:</b> BSKAP Nomor 046 Tahun 2025</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Elemen</th>
+                                <th>Kompetensi</th>
+                                <th>Konten Pokok</th>
+                                <th>Rumusan Tujuan Pembelajaran (TP)</th>
+                                <th>Kode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            appState.tpOutputs.forEach((item, index) => {
+                htmlContent += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><b>${escapeHtml(item.elemen)}</b></td>
+                        <td>${escapeHtml(item.kompetensi)}</td>
+                        <td>${escapeHtml(item.konten)}</td>
+                        <td>${escapeHtml(item.tujuanPembelajaran)}</td>
+                        <td><b>${escapeHtml(item.kode)}</b></td>
+                    </tr>
+                `;
+            });
+
+            htmlContent += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/msword' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Dokumen_TP_BSKAP_${mapel.replace(/\s+/g, '_')}.doc`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Dokumen MS Word (.doc) berhasil diunduh!");
+        }
+
+        function loadIdentitasFromDOM() {
+            const mapel = document.getElementById('doc-mapel').value;
+            const sekolah = document.getElementById('doc-sekolah').value;
+            const alamat = `Kabupaten/Kota: ${document.getElementById('doc-kabupaten').value}`;
+            
+            document.getElementById('print-txt-sekolah').innerText = sekolah.toUpperCase();
+            document.getElementById('print-txt-alamat').innerText = alamat;
+            document.getElementById('print-txt-tapel').innerText = document.getElementById('doc-tapel').value;
+            document.getElementById('print-txt-fase').innerText = document.getElementById('doc-fase').value;
+            document.getElementById('print-txt-mapel').innerText = mapel;
+        }
+
+        function triggerPrint() {
+            loadIdentitasFromDOM();
+
+            const identitasGrid = document.getElementById('print-identity-block');
+            identitasGrid.innerHTML = `
+                <div class="identity-item"><span class="identity-label">Nama Penyusun</span><span class="identity-val">: ${document.getElementById('doc-penyusun').value}</span></div>
+                <div class="identity-item"><span class="identity-label">Sekolah / NPSN</span><span class="identity-val">: ${document.getElementById('doc-sekolah').value} / ${document.getElementById('doc-npsn').value}</span></div>
+                <div class="identity-item"><span class="identity-label">NIP Penyusun</span><span class="identity-val">: ${document.getElementById('doc-nip').value}</span></div>
+                <div class="identity-item"><span class="identity-label">Tahun Pelajaran</span><span class="identity-val">: ${document.getElementById('doc-tapel').value}</span></div>
+                <div class="identity-item"><span class="identity-label">Fase / Kelas</span><span class="identity-val">: ${document.getElementById('doc-fase').value} / ${document.getElementById('doc-kelas').value}</span></div>
+                <div class="identity-item"><span class="identity-label">Semester / Mapel</span><span class="identity-val">: Semester ${document.getElementById('doc-semester').value} / ${document.getElementById('doc-mapel').value}</span></div>
+            `;
+
+            const tglSelesai = document.getElementById('doc-tanggal').value;
+            const formattedDate = formatIndonesianDate(tglSelesai);
+            const signatureGrid = document.getElementById('print-signature-block');
+            
+            signatureGrid.innerHTML = `
+                <div class="signature-box">
+                    <p>Mengetahui,</p>
+                    <p>Kepala ${document.getElementById('doc-sekolah').value}</p>
+                    <div class="signature-space"></div>
+                    <p><b><u>${document.getElementById('doc-kepsek').value}</u></b></p>
+                    <p>NIP. ${document.getElementById('doc-nip-kepsek').value}</p>
+                </div>
+                <div class="signature-box">
+                    <p>${document.getElementById('doc-kabupaten').value}, ${formattedDate}</p>
+                    <p>Guru Mata Pelajaran,</p>
+                    <div class="signature-space"></div>
+                    <p><b><u>${document.getElementById('doc-penyusun').value}</u></b></p>
+                    <p>NIP. ${document.getElementById('doc-nip').value}</p>
+                </div>
+            `;
+
+            window.print();
+        }
+
+        function formatIndonesianDate(dateStr) {
+            if(!dateStr) return "-";
+            const parts = dateStr.split('-');
+            if(parts.length !== 3) return dateStr;
+            
+            const listBulan = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const tgl = parseInt(parts[2]);
+            const bln = listBulan[parseInt(parts[1]) - 1];
+            const thn = parts[0];
+            
+            return `${tgl} ${bln} ${thn}`;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
