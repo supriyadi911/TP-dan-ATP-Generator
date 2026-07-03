@@ -699,149 +699,192 @@
         }
 
         /* ==========================================
-           13. SPECIAL PRINT & LAYOUT CETAK A4
+           13. SHARED PRINT & PREVIEW STYLE CLASSES
            ========================================== */
+        .print-document-container {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #000000;
+            background-color: #ffffff;
+            line-height: 1.4;
+        }
+
+        .print-header-clean {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            border-bottom: 3px double #000000 !important;
+            padding-bottom: 12px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .print-logo-clean {
+            width: 65px !important;
+            height: 65px !important;
+            object-fit: contain !important;
+        }
+
+        .print-title-clean {
+            text-align: center !important;
+            flex: 1 !important;
+            padding: 0 15px !important;
+        }
+
+        .print-title-clean h2 {
+            font-size: 13pt !important;
+            font-weight: 700 !important;
+            margin: 0 !important;
+            text-transform: uppercase !important;
+            color: #000000 !important;
+        }
+
+        .print-title-clean p {
+            font-size: 8.5pt !important;
+            margin: 4px 0 0 0 !important;
+            color: #333333 !important;
+        }
+
+        .print-identity-clean {
+            display: grid !important;
+            grid-template-columns: 1fr 1fr !important;
+            gap: 10px !important;
+            margin-bottom: 20px !important;
+            font-size: 9pt !important;
+            border: 1px solid #000000 !important;
+            padding: 12px !important;
+            background-color: #f8fafc !important;
+        }
+
+        .print-identity-item-clean {
+            display: flex !important;
+        }
+
+        .print-identity-label-clean {
+            width: 140px !important;
+            font-weight: bold !important;
+            color: #000000 !important;
+        }
+
+        .print-identity-val-clean {
+            flex: 1 !important;
+            color: #000000 !important;
+        }
+
+        .print-section-title {
+            font-size: 10pt !important;
+            font-weight: bold !important;
+            margin-top: 25px !important;
+            margin-bottom: 10px !important;
+            border-left: 4px solid #1e40af !important;
+            padding-left: 8px !important;
+            text-transform: uppercase !important;
+            color: #1e40af !important;
+        }
+
+        .print-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin-top: 10px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .print-table th, .print-table td {
+            border: 1px solid #000000 !important;
+            padding: 8px !important;
+            font-size: 9pt !important;
+            color: #000000 !important;
+            text-align: left !important;
+        }
+
+        .print-table th {
+            background-color: #f1f5f9 !important;
+            font-weight: bold !important;
+            text-transform: uppercase !important;
+        }
+
+        .print-signature-clean {
+            display: flex !important;
+            justify-content: space-between !important;
+            margin-top: 40px !important;
+        }
+
+        .print-signature-box-clean {
+            text-align: center !important;
+            width: 240px !important;
+            font-size: 9.5pt !important;
+            color: #000000 !important;
+        }
+
+        .print-signature-space-clean {
+            height: 60px !important;
+        }
+
+        .footer-print-clean {
+            margin-top: 30px !important;
+            text-align: center !important;
+            font-size: 8pt !important;
+            border-top: 1px solid #e2e8f0 !important;
+            padding-top: 8px !important;
+            color: #64748b !important;
+        }
+
+        /* ==========================================
+           14. MEDIA PRINT LAYOUT OVERRIDES
+           ========================================== */
+        #print-area {
+            display: none;
+        }
+
         @media print {
             body {
                 background-color: white !important;
-                color: black !important;
+                color: #000000 !important;
                 padding: 0 !important;
                 margin: 0 !important;
                 font-size: 10pt !important;
                 display: block !important;
             }
 
-            .sidebar, .mobile-header, .no-print, .accessibility-bar, .modal {
+            /* Sembunyikan seluruh layout aplikasi web */
+            .app-layout, .mobile-header, .no-print, .accessibility-bar, .modal, .toast {
                 display: none !important;
             }
 
-            .main-content {
-                margin-left: 0 !important;
-                padding: 0 !important;
-                width: 100% !important;
-            }
-
-            /* Saat cetak, paksa TAMPILKAN semua seksi tab agar tidak tersembunyi */
-            .tab-content {
+            /* Tampilkan area khusus cetak */
+            #print-area {
                 display: block !important;
-                margin-bottom: 30px;
-                page-break-inside: avoid;
-            }
-
-            .card {
-                border: none !important;
+                background-color: white !important;
+                color: black !important;
+                padding: 10mm !important;
+                margin: 0 !important;
+                width: 100% !important;
                 box-shadow: none !important;
-                padding: 0 !important;
-                margin-bottom: 20px !important;
-                background-color: transparent !important;
             }
 
-            .print-header {
-                display: flex !important;
-                align-items: center;
-                justify-content: space-between;
-                border-bottom: 3px double #000;
-                padding-bottom: 10px;
-                margin-bottom: 20px;
+            .print-table tr {
+                page-break-inside: avoid !important;
             }
 
-            .print-logo {
-                width: 70px;
-                height: 70px;
-                object-fit: contain;
+            .print-signature-clean {
+                page-break-inside: avoid !important;
             }
 
-            .print-title {
-                text-align: center;
-                flex: 1;
-                padding: 0 15px;
+            .footer-print-clean {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 10mm !important;
+                right: 10mm !important;
+                border-top: 1px solid #000000 !important;
+                color: #000000 !important;
+                margin-top: 0 !important;
+                padding-top: 5px !important;
+                background: white !important;
             }
 
-            .print-title h2 {
-                font-size: 14pt;
-                font-weight: 700;
-                margin: 0;
+            /* Paksa rendering warna latar belakang di Chrome, Edge & Safari */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
-
-            .print-title p {
-                font-size: 10pt;
-                margin: 2px 0 0 0;
-            }
-
-            .print-identity-grid {
-                display: grid !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 10px;
-                margin-bottom: 20px;
-                font-size: 9pt;
-                border: 1px solid #000;
-                padding: 10px;
-            }
-
-            .identity-item {
-                display: flex;
-            }
-
-            .identity-label {
-                width: 150px;
-                font-weight: bold;
-            }
-
-            .identity-val {
-                flex: 1;
-            }
-
-            .main-table {
-                width: 100% !important;
-                border: 1px solid #000 !important;
-                font-size: 8.5pt !important;
-            }
-
-            .main-table th {
-                background-color: #f1f5f9 !important;
-                color: black !important;
-                border: 1px solid #000 !important;
-                font-weight: bold !important;
-            }
-
-            .main-table td {
-                border: 1px solid #000 !important;
-                background-color: transparent !important;
-                color: black !important;
-            }
-
-            .signature-section {
-                display: flex !important;
-                justify-content: space-between;
-                margin-top: 40px;
-                page-break-inside: avoid;
-            }
-
-            .signature-box {
-                text-align: center;
-                width: 250px;
-            }
-
-            .signature-space {
-                height: 60px;
-            }
-
-            .footer-print {
-                display: block !important;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                text-align: center;
-                font-size: 8pt;
-                border-top: 1px solid #ddd;
-                padding-top: 5px;
-            }
-        }
-
-        /* Sembunyikan elemen khusus cetak di layar biasa */
-        .print-header, .print-identity-grid, .signature-section, .footer-print {
-            display: none;
         }
     </style>
 </head>
@@ -923,22 +966,6 @@
            C. KONTEN UTAMA (Kanan / Tengah)
            ========================================== -->
         <main class="main-content">
-
-            <!-- Print Header Tersembunyi (Akan aktif saat cetak halaman) -->
-            <div class="print-header">
-                <img id="print-logo-kiri" class="print-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>" alt="Logo Kiri">
-                <div class="print-title">
-                    <h2 id="print-txt-sekolah">NAMA INSTANSI SEKOLAH</h2>
-                    <p id="print-txt-alamat">Alamat Instansi, Kabupaten/Kota, Provinsi</p>
-                    <h2 style="margin-top:10px; font-size:11pt; border-top:1.5px solid #000; padding-top:5px;">
-                        DOKUMEN DEKONSTRUKSI CAPAIAN PEMBELAJARAN (CP) & TUJUAN PEMBELAJARAN (TP)
-                    </h2>
-                    <p style="font-size:9pt;">Tahun Pelajaran: <span id="print-txt-tapel">-</span> | Fase: <span id="print-txt-fase">-</span> | Mapel: <span id="print-txt-mapel">-</span></p>
-                </div>
-                <img id="print-logo-kanan" class="print-logo" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2316a34a'/><path d='M30,50 L45,65 L70,35' stroke='white' stroke-width='8' fill='none'/></svg>" alt="Logo Kanan">
-            </div>
-
-            <div class="print-identity-grid" id="print-identity-block"></div>
 
             <!-- Header Konten Live (Tidak Dicetak) -->
             <div class="content-header no-print">
@@ -1082,20 +1109,21 @@
                     </div>
 
                     <div class="grid-4" style="margin-top:10px;">
-                        <div class="form-group">
-                            <label>Upload Logo Sekolah</label>
-                            <div class="image-preview-container">
-                                <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah', 'print-logo-kiri')">
-                                <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-sekolah').click()">Pilih Logo</button>
-                                <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>">
-                            </div>
-                        </div>
+                        <!-- Posisi penempatan preview upload ditukar sesuai letak barunya -->
                         <div class="form-group">
                             <label>Upload Logo Pemerintah</label>
                             <div class="image-preview-container">
-                                <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah', 'print-logo-kanan')">
+                                <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah', 'preview-pemerintah')">
                                 <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-pemerintah').click()">Pilih Logo</button>
                                 <img id="preview-pemerintah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2316a34a'/><path d='M30,50 L45,65 L70,35' stroke='white' stroke-width='8' fill='none'/></svg>">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Upload Logo Sekolah</label>
+                            <div class="image-preview-container">
+                                <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah', 'preview-sekolah')">
+                                <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-sekolah').click()">Pilih Logo</button>
+                                <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>">
                             </div>
                         </div>
                         <div class="form-group">
@@ -1190,7 +1218,7 @@
                     <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
                         <span style="display:flex; align-items:center; gap:8px;">
                             <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                            Tabel Hasil Analisis Dekonstruksi & Alur Tujuan Pembelajaran
+                            Tabel Hasil Analisis & Tujuan Pembelajaran (TP)
                         </span>
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
@@ -1214,7 +1242,7 @@
                                     <th width="180">Capaian Pembelajaran (CP)</th>
                                     <th width="120">Kompetensi</th>
                                     <th width="140">Konten (Materi Inti)</th>
-                                    <th>Tujuan Pembelajaran (TP) hasil Dekonstruksi</th>
+                                    <th>Tujuan Pembelajaran (TP)</th>
                                     <th width="80" style="text-align: center;">Kode</th>
                                     <th width="100" style="text-align: center;" class="no-print">Validasi</th>
                                     <th width="80" style="text-align: center;" class="no-print">Aksi</th>
@@ -1278,14 +1306,6 @@
                 </div>
             </div>
 
-            <!-- Tanda Tangan Cetakan Dokumen (Hanya Muncul Saat Print) -->
-            <div class="signature-section" id="print-signature-block"></div>
-
-            <!-- Footer Dokumen Cetakan -->
-            <div class="footer-print">
-                Aplikasi TP & ATP Generator BSKAP 046/2025 - Diolah secara digital dari browser guru.
-            </div>
-
         </main>
     </div>
 
@@ -1334,6 +1354,13 @@
     <!-- Toast Notification -->
     <div class="toast" id="toast-notif">
         <span id="toast-message">Pemberitahuan berhasil disimpan!</span>
+    </div>
+
+    <!-- ==========================================
+       G. SISTEM CETAK SEBENARNYA (PRINT ENGINE CONTAINER)
+       ========================================== -->
+    <div id="print-area">
+        <!-- JS akan menyuntikkan template layout cetak A4 yang sama persis dengan preview ke sini -->
     </div>
 
     <!-- ==========================================
@@ -1388,7 +1415,6 @@
         // 2. LIFECYCLE & INITIALIZATION
         // ==========================================
         window.onload = function() {
-            // Load state dari localStorage jika ada
             const savedState = localStorage.getItem('tp_generator_state_v1');
             if (savedState) {
                 try {
@@ -1404,24 +1430,20 @@
                 saveToHistory();
             }
 
-            // Inisialisasi Form Identitas dari Dokumen
             loadIdentitasFromDOM();
             
-            // Render Tabel Input CP, Output TP & ATP
             renderCPTable();
             renderOutputTable();
             renderATPTable();
             updateStatistics();
             populateElementFilter();
 
-            // Set default date picker ke hari ini jika kosong
             const dateInput = document.getElementById('doc-tanggal');
             if(!dateInput.value) {
                 const today = new Date().toISOString().split('T')[0];
                 dateInput.value = today;
             }
 
-            // Registrasi Auto-save pada perubahan input form identitas dokumen
             const formInputs = document.querySelectorAll('.form-control, #doc-tanggal');
             formInputs.forEach(input => {
                 input.addEventListener('change', () => {
@@ -1449,7 +1471,7 @@
                 'dashboard': 'Dashboard Utama',
                 'identitas': 'Identitas Dokumen',
                 'input-cp': 'Penyusunan CP Elemen',
-                'output-tp': 'Hasil Dekonstruksi & TP',
+                'output-tp': 'Hasil TP & Validasi',
                 'output-atp': 'Alur Tujuan Pembelajaran (ATP)'
             };
             document.getElementById('current-tab-title').innerText = titles[tabId] || 'Dashboard';
@@ -1536,8 +1558,10 @@
         }
 
         function updateUndoRedoButtons() {
-            document.getElementById('btn-undo').style.opacity = appState.historyIndex > 0 ? "1" : "0.4";
-            document.getElementById('btn-redo').style.opacity = appState.historyIndex < appState.history.length - 1 ? "1" : "0.4";
+            const btnUndo = document.getElementById('btn-undo');
+            const btnRedo = document.getElementById('btn-redo');
+            if (btnUndo) btnUndo.style.opacity = appState.historyIndex > 0 ? "1" : "0.4";
+            if (btnRedo) btnRedo.style.opacity = appState.historyIndex < appState.history.length - 1 ? "1" : "0.4";
         }
 
         function resetAll() {
@@ -1567,6 +1591,13 @@
             }
         }
 
+        // ==========================================
+        // 4a. LOAD IDENTITAS FROM FORM INPUT TO DOM
+        // ==========================================
+        function loadIdentitasFromDOM() {
+            // Safe placeholder as compileA4DocumentHTML() dynamically compiles from form inputs
+        }
+
         function toggleContrast() {
             const body = document.documentElement;
             if (body.getAttribute('data-contrast') === 'high') {
@@ -1594,8 +1625,8 @@
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
-                    document.getElementById(previewId).src = e.target.result;
-                    document.getElementById(printId).src = e.target.result;
+                    const previewElement = document.getElementById(previewId);
+                    if (previewElement) previewElement.src = e.target.result;
                     showToast("Logo berhasil diperbarui!");
                     saveStateToLocalStorage();
                 };
@@ -1603,82 +1634,22 @@
             }
         }
 
-        // ==========================================
-        // 5. TEMPLATE MANAGEMENT (BSKAP 046/2025)
-        // ==========================================
-        const MATAPEL_TEMPLATES = {
-            matematika: {
-                mapel: "Matematika", fase: "D", kelas: "VII",
-                elemen: [
-                    { elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional, bilangan dalam notasi ilmiah dalam menyelesaikan masalah." },
-                    { elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, menggunakan sifat-sifat operasi untuk menyederhanakan bentuk aljabar, serta menyelesaikan persamaan dan pertidaksamaan linear satu variabel." },
-                    { elemen: "Geometri", deskripsi: "Murid dapat membuat jaring-jaring, mengonstruksi, dan mengurai bangun ruang (kubus, balok, prisma, dan limas) serta menghitung luas permukaan dan volumenya untuk menyelesaikan masalah." }
-                ]
-            },
-            indonesia: {
-                mapel: "Bahasa Indonesia", fase: "D", kelas: "VIII",
-                elemen: [
-                    { elemen: "Membaca dan Memirsa", deskripsi: "Murid memahami informasi berupa gagasan, pikiran, pandangan, arahan atau pesan dari teks narasi, eksposisi, dan deskripsi baik visual maupun audiovisual untuk menemukan makna tersurat dan tersirat." },
-                    { elemen: "Menulis", deskripsi: "Murid mampu menulis gagasan, pikiran, pandangan, arahan atau pesan tertulis untuk berbagai tujuan secara logis, kritis, dan kreatif dalam bentuk teks narasi, deskripsi, eksposisi, maupun laporan hasil observasi." }
-                ]
-            },
-            ipas: {
-                mapel: "Ilmu Pengetahuan Alam dan Sosial (IPAS)", fase: "C", kelas: "V",
-                elemen: [
-                    { elemen: "Pemahaman IPAS", deskripsi: "Murid menganalisis hubungan antara bentuk serta fungsi bagian tubuh pada manusia, serta mendeskripsikan siklus air dan dampaknya bagi kelangsungan hidup makhluk hidup dalam kehidupan sehari-hari." },
-                    { elemen: "Keterampilan Proses", deskripsi: "Murid merencanakan dan melakukan penyelidikan terstruktur, mengamati, mengumpulkan data secara akurat, serta membuat kesimpulan ilmiah berdasarkan bukti hasil percobaan." }
-                ]
-            },
-            pancasila: {
-                mapel: "Pendidikan Pancasila", fase: "D", kelas: "VII",
-                elemen: [
-                    { elemen: "Pancasila", deskripsi: "Murid mampu menganalisis proses perumusan dan penetapan Pancasila sebagai dasar negara, serta menerapkan nilai-nilai luhur Pancasila dalam kehidupan sehari-hari di lingkungan sekolah dan masyarakat." },
-                    { elemen: "Undang-Undang Dasar NKRI 1945", deskripsi: "Murid menganalisis norma, hak, dan kewajiban warga negara dalam kehidupan bermasyarakat dan bernegara sesuai dengan ketentuan konstitusi negara." }
-                ]
-            },
-            seni: {
-                mapel: "Seni Rupa", fase: "D", kelas: "IX",
-                elemen: [
-                    { elemen: "Mengalami", deskripsi: "Murid mampu mengamati, mengenali, dan menganalisis unsur rupa, prinsip seni, dan medium seni rupa dari berbagai karya seni rupa dua dimensi dan tiga dimensi di lingkungan sekitar secara mandiri." },
-                    { elemen: "Menciptakan", deskripsi: "Murid mampu menciptakan karya seni rupa dua dimensi yang menunjukkan keterampilan teknis penggunaan alat gambar, warna, dan proporsi secara kreatif." }
-                ]
-            },
-            inggris: {
-                mapel: "Bahasa Inggris", fase: "D", kelas: "VII",
-                elemen: [
-                    { elemen: "Menyimak - Berbicara", deskripsi: "Murid menggunakan bahasa Inggris untuk berinteraksi dan saling bertukar ide, pengalaman, minat, pendapat, dan pandangan dengan guru dan teman sebaya dalam berbagai situasi familiar formal dan informal." },
-                    { elemen: "Membaca - Memirsa", deskripsi: "Murid membaca dan merespons berbagai macam teks seperti narasi, deskripsi, dan prosedur yang ditulis dalam bahasa Inggris sederhana untuk menemukan informasi rinci." }
-                ]
-            }
-        };
+        // --- HANDLER DRAG & DROP UNTUK STRUKTUR BARIS TABEL CP ---
+        let dragSrcEl = null;
 
-        function loadTemplate(key) {
-            const data = MATAPEL_TEMPLATES[key];
-            if (data) {
-                document.getElementById('doc-mapel').value = data.mapel;
-                document.getElementById('doc-fase').value = data.fase;
-                document.getElementById('doc-kelas').value = data.kelas;
-
-                appState.cpInputs = data.elemen.map((el, index) => {
-                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi };
-                });
-
-                renderCPTable();
-                saveToHistory();
-                saveStateToLocalStorage();
-                
-                const cpTabBtn = document.querySelectorAll('.menu-item')[2];
-                switchTab('input-cp', cpTabBtn);
-                showToast(`Template ${data.mapel} Berhasil Dimuat!`);
-            }
+        function handleDragStart(e) {
+            dragSrcEl = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            this.style.opacity = '0.4';
         }
-
 
         // ==========================================
         // 6. INPUT CP TABLE INTERACTIVE (CRUD & EVENTS)
         // ==========================================
         function renderCPTable() {
             const tbody = document.getElementById('tbody-cp-input');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             if(appState.cpInputs.length === 0) {
@@ -1730,6 +1701,47 @@
             });
         }
 
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            this.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (dragSrcEl !== this) {
+                const srcIndex = parseInt(dragSrcEl.dataset.index);
+                const targetIndex = parseInt(this.dataset.index);
+
+                // Tukar urutan di array data
+                const draggedItem = appState.cpInputs[srcIndex];
+                appState.cpInputs.splice(srcIndex, 1);
+                appState.cpInputs.splice(targetIndex, 0, draggedItem);
+
+                renderCPTable();
+                saveToHistory();
+                saveStateToLocalStorage();
+                showToast("Urutan baris berhasil diubah!");
+            }
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+            const rows = document.querySelectorAll('.draggable-row');
+            rows.forEach(row => row.classList.remove('drag-over'));
+        }
+
         function addRowCP() {
             const newId = appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1;
             appState.cpInputs.push({
@@ -1776,57 +1788,6 @@
                 saveStateToLocalStorage();
             }
         }
-
-        // Drag and Drop
-        let dragSrcEl = null;
-
-        function handleDragStart(e) {
-            dragSrcEl = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-            this.style.opacity = '0.4';
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-            this.classList.add('drag-over');
-            e.dataTransfer.dropEffect = 'move';
-            return false;
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('drag-over');
-        }
-
-        function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
-
-            if (dragSrcEl !== this) {
-                const srcIndex = parseInt(dragSrcEl.dataset.index);
-                const targetIndex = parseInt(this.dataset.index);
-
-                const draggedItem = appState.cpInputs[srcIndex];
-                appState.cpInputs.splice(srcIndex, 1);
-                appState.cpInputs.splice(targetIndex, 0, draggedItem);
-
-                renderCPTable();
-                saveToHistory();
-                saveStateToLocalStorage();
-                showToast("Urutan baris berhasil diubah!");
-            }
-            return false;
-        }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-            const rows = document.querySelectorAll('.draggable-row');
-            rows.forEach(row => row.classList.remove('drag-over'));
-        }
-
 
         // ==========================================
         // 7. ALGORITMA ANALISIS OTOMATIS (NLP ENGINE)
@@ -1992,12 +1953,12 @@
             };
         }
 
-
         // ==========================================
         // 8. INTERACTIVE OUTPUT TABLES (TP & ATP)
         // ==========================================
         function populateElementFilter() {
             const filter = document.getElementById('filter-elemen');
+            if (!filter) return;
             filter.innerHTML = '<option value="">Semua Elemen</option>';
             
             const elemenList = [...new Set(appState.tpOutputs.map(item => item.elemen))];
@@ -2054,6 +2015,7 @@
 
         function renderOutputTable(customData = null) {
             const tbody = document.getElementById('tbody-tp-output');
+            if (!tbody) return;
             tbody.innerHTML = '';
 
             const dataToRender = customData || appState.tpOutputs;
@@ -2127,7 +2089,6 @@
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            // Urutkan data secara numerik berdasarkan kolom 'urutanAtp' ascending
             const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
                 return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
             });
@@ -2146,7 +2107,6 @@
             sortedATPData.forEach((item) => {
                 const tr = document.createElement('tr');
                 
-                // Menyiapkan opsi dropdown atau edit untuk Dimensi Profil
                 tr.innerHTML = `
                     <td style="text-align: center;">
                         <input type="number" class="form-control" style="padding: 4px 8px; text-align:center; font-weight:bold; width:90px; margin: 0 auto;" 
@@ -2232,19 +2192,21 @@
             showToast("TP Dihapus");
         }
 
-
         // ==========================================
         // 9. DASHBOARD STATISTIK
         // ==========================================
         function updateStatistics() {
             const cpCount = appState.cpInputs.filter(item => item.elemen.trim() !== "").length;
-            document.getElementById('stat-total-cp').innerText = cpCount;
+            const statTotalCp = document.getElementById('stat-total-cp');
+            if (statTotalCp) statTotalCp.innerText = cpCount;
 
             const tpCount = appState.tpOutputs.length;
-            document.getElementById('stat-total-tp').innerText = tpCount;
+            const statTotalTp = document.getElementById('stat-total-tp');
+            if (statTotalTp) statTotalTp.innerText = tpCount;
 
             const uniqueKomp = [...new Set(appState.tpOutputs.map(item => item.kompetensi.toLowerCase().trim()))].filter(Boolean).length;
-            document.getElementById('stat-total-kompetensi').innerText = uniqueKomp;
+            const statTotalKomp = document.getElementById('stat-total-kompetensi');
+            if (statTotalKomp) statTotalKomp.innerText = uniqueKomp;
 
             const validCount = appState.tpOutputs.filter(item => item.validasi.isValid).length;
             
@@ -2253,10 +2215,12 @@
                 percent = Math.round((validCount / tpCount) * 100);
             }
             
-            document.getElementById('stat-valid-percent').innerText = `${percent}%`;
-            document.getElementById('stat-progress-bar').style.width = `${percent}%`;
+            const statValidPercent = document.getElementById('stat-valid-percent');
+            if (statValidPercent) statValidPercent.innerText = `${percent}%`;
+            
+            const statProgressBar = document.getElementById('stat-progress-bar');
+            if (statProgressBar) statProgressBar.style.width = `${percent}%`;
         }
-
 
         // ==========================================
         // 10. MODAL IMPORT & PASTE SYSTEM
@@ -2324,19 +2288,33 @@
             }
         }
 
-
         // ==========================================
-        // 11. PRATINJAU DOKUMEN MODAL CONTROLLER
+        // 11. COMPILE HTML FOR VIEW PREVIEW & PRINT
         // ==========================================
-        function openPreviewModal() {
+        function compileA4DocumentHTML() {
             loadIdentitasFromDOM();
-            const previewModal = document.getElementById('preview-modal');
-            const previewContent = document.getElementById('sheet-preview-content');
 
-            // Susun data tabel TP untuk cetak pratinjau
+            // Susun data tabel CP Elemen untuk cetak/preview
+            let cpRowsHtml = '';
+            let activeCPs = appState.cpInputs.filter(item => item.elemen.trim() !== "" || item.deskripsi.trim() !== "");
+            if (activeCPs.length === 0) {
+                cpRowsHtml = `<tr><td colspan="3" style="text-align:center; padding:15px; color:#666;">Belum ada data CP Elemen.</td></tr>`;
+            } else {
+                activeCPs.forEach((item, index) => {
+                    cpRowsHtml += `
+                        <tr>
+                            <td style="text-align:center; border:1px solid #000; padding:6px;">${index + 1}</td>
+                            <td style="border:1px solid #000; padding:6px;"><b>${escapeHtml(item.elemen)}</b></td>
+                            <td style="border:1px solid #000; padding:6px;">${escapeHtml(item.deskripsi)}</td>
+                        </tr>
+                    `;
+                });
+            }
+
+            // Susun data tabel TP untuk cetak
             let tpRowsHtml = '';
             if(appState.tpOutputs.length === 0) {
-                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">Belum ada data TP.</td></tr>`;
+                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td></tr>`;
             } else {
                 appState.tpOutputs.forEach((item, index) => {
                     tpRowsHtml += `
@@ -2352,14 +2330,14 @@
                 });
             }
 
-            // Susun data tabel ATP tersortir untuk pratinjau
+            // Susun data tabel ATP tersortir untuk cetak
             let atpRowsHtml = '';
             const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
                 return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
             });
 
             if(sortedATPData.length === 0) {
-                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666;">Belum ada data ATP.</td></tr>`;
+                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
             } else {
                 sortedATPData.forEach((item) => {
                     atpRowsHtml += `
@@ -2377,44 +2355,74 @@
             const tglSelesai = document.getElementById('doc-tanggal').value;
             const formattedDate = formatIndonesianDate(tglSelesai);
 
-            // Bangun simulasi lembaran A4 dokumen final dinamis
-            previewContent.innerHTML = `
-                <!-- Kop Surat Preview -->
-                <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:3px double #000; padding-bottom:10px; margin-bottom:20px;">
-                    <img style="width:65px; height:65px; object-fit:contain;" src="${document.getElementById('preview-sekolah').src}" alt="Logo Kiri">
-                    <div style="text-align:center; flex:1; padding:0 15px;">
-                        <h2 style="font-size:14pt; font-weight:700; margin:0; text-transform:uppercase;">${document.getElementById('doc-sekolah').value}</h2>
-                        <p style="font-size:9pt; margin:2px 0 0 0; color:#333;">NPSN: ${document.getElementById('doc-npsn').value} | Kabupaten/Kota: ${document.getElementById('doc-kabupaten').value}</p>
+            return `
+                <!-- Kop Surat Bersih (Swapped Logo positions: Gov on Left, School on Right) -->
+                <div class="print-header-clean">
+                    <img class="print-logo-clean" src="${document.getElementById('preview-pemerintah').src}" alt="Logo Kiri Pemerintah">
+                    <div class="print-title-clean">
+                        <h2>${document.getElementById('doc-sekolah').value}</h2>
+                        <p>NPSN: ${document.getElementById('doc-npsn').value} | Kabupaten/Kota: ${document.getElementById('doc-kabupaten').value}</p>
                         <h2 style="margin-top:8px; font-size:11pt; border-top:1px solid #000; padding-top:5px; font-weight:800; letter-spacing:0.5px;">
-                            ANALISIS DEKONSTRUKSI CP & ALUR TUJUAN PEMBELAJARAN (ATP)
+                            DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN
                         </h2>
                     </div>
-                    <img style="width:65px; height:65px; object-fit:contain;" src="${document.getElementById('preview-pemerintah').src}" alt="Logo Kanan">
+                    <img class="print-logo-clean" src="${document.getElementById('preview-sekolah').src}" alt="Logo Kanan Sekolah">
                 </div>
 
-                <!-- Grid Identitas Dokumen -->
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; font-size:9pt; border:1px solid #000; padding:10px; background-color:#fafafa;">
-                    <div><b>Penyusun:</b> ${document.getElementById('doc-penyusun').value}</div>
-                    <div><b>Mata Pelajaran:</b> ${document.getElementById('doc-mapel').value}</div>
-                    <div><b>NIP Penyusun:</b> ${document.getElementById('doc-nip').value}</div>
-                    <div><b>Fase / Kelas:</b> Fase ${document.getElementById('doc-fase').value} / Kelas ${document.getElementById('doc-kelas').value}</div>
-                    <div><b>Sekolah:</b> ${document.getElementById('doc-sekolah').value}</div>
-                    <div><b>Semester / Tahun Pelajaran:</b> Semester ${document.getElementById('doc-semester').value} / TA ${document.getElementById('doc-tapel').value}</div>
+                <!-- Grid Identitas Kurikulum -->
+                <div class="print-identity-clean">
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">Nama Penyusun</span>
+                        <span class="print-identity-val-clean">: ${document.getElementById('doc-penyusun').value}</span>
+                    </div>
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">Mata Pelajaran</span>
+                        <span class="print-identity-val-clean">: ${document.getElementById('doc-mapel').value}</span>
+                    </div>
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">NIP Penyusun</span>
+                        <span class="print-identity-val-clean">: ${document.getElementById('doc-nip').value}</span>
+                    </div>
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">Fase / Kelas</span>
+                        <span class="print-identity-val-clean">: Fase ${document.getElementById('doc-fase').value} / Kelas ${document.getElementById('doc-kelas').value}</span>
+                    </div>
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">Nama Sekolah</span>
+                        <span class="print-identity-val-clean">: ${document.getElementById('doc-sekolah').value}</span>
+                    </div>
+                    <div class="print-identity-item-clean">
+                        <span class="print-identity-label-clean">Semester / Tapel</span>
+                        <span class="print-identity-val-clean">: Semester ${document.getElementById('doc-semester').value} / Tahun Pelajaran ${document.getElementById('doc-tapel').value}</span>
+                    </div>
                 </div>
 
-                <!-- Bagian 1: Tabel Dekonstruksi TP -->
-                <h3 style="font-size:10pt; font-weight:bold; margin-bottom:8px; border-left:3px solid #1e40af; padding-left:8px; text-transform:uppercase; color:#1e40af;">
-                    I. Hasil Dekonstruksi Capaian Pembelajaran (CP) ke Tujuan Pembelajaran (TP)
-                </h3>
-                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:25px;">
+                <!-- Bagian I: Capaian Pembelajaran (CP) -->
+                <div class="print-section-title">I. Capaian Pembelajaran (CP)</div>
+                <table class="print-table">
                     <thead>
-                        <tr style="background-color:#f1f5f9;">
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:30px;">No</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:100px;">Elemen</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:90px;">Kompetensi</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:120px;">Materi (Konten)</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:65px;">Kode</th>
+                        <tr>
+                            <th style="width:30px; text-align:center; border:1px solid #000;">No</th>
+                            <th style="width:150px; border:1px solid #000;">Elemen</th>
+                            <th style="border:1px solid #000;">Deskripsi Capaian Pembelajaran (CP)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${cpRowsHtml}
+                    </tbody>
+                </table>
+
+                <!-- Bagian II: Tujuan Pembelajaran (TP) -->
+                <div class="print-section-title">II. Tujuan Pembelajaran (TP)</div>
+                <table class="print-table">
+                    <thead>
+                        <tr>
+                            <th style="width:30px; text-align:center; border:1px solid #000;">No</th>
+                            <th style="width:100px; border:1px solid #000;">Elemen</th>
+                            <th style="width:90px; border:1px solid #000;">Kompetensi</th>
+                            <th style="width:120px; border:1px solid #000;">Materi (Konten)</th>
+                            <th style="border:1px solid #000;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:65px; text-align:center; border:1px solid #000;">Kode</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2422,18 +2430,16 @@
                     </tbody>
                 </table>
 
-                <!-- Bagian 2: Tabel Alur Tujuan Pembelajaran (ATP) -->
-                <h3 style="font-size:10pt; font-weight:bold; margin-bottom:8px; border-left:3px solid #1e40af; padding-left:8px; text-transform:uppercase; color:#1e40af;">
-                    II. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pembelajaran
-                </h3>
-                <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-bottom:30px;">
+                <!-- Bagian III: Tabel Alur Tujuan Pembelajaran (ATP) -->
+                <div class="print-section-title">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
+                <table class="print-table">
                     <thead>
-                        <tr style="background-color:#f1f5f9;">
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:80px; text-align:center;">Urutan ATP</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:80px; text-align:center;">Kode TP</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:150px;">Materi Pokok Referensi</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="border:1px solid #000; padding:6px; font-weight:bold; width:180px;">Dimensi Profil Lulusan (Pancasila)</th>
+                        <tr>
+                            <th style="width:80px; text-align:center; border:1px solid #000;">Urutan ATP</th>
+                            <th style="width:80px; text-align:center; border:1px solid #000;">Kode TP</th>
+                            <th style="width:150px; border:1px solid #000;">Materi Pokok Referensi</th>
+                            <th style="border:1px solid #000;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:180px; border:1px solid #000;">Dimensi Profil Lulusan (Pancasila)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -2441,22 +2447,45 @@
                     </tbody>
                 </table>
 
-                <!-- Bagian 3: Tanda Tangan Basah -->
-                <div style="display:flex; justify-content:space-between; margin-top:35px; font-size:9pt; page-break-inside:avoid;">
-                    <div style="text-align:center; width:220px;">
+                <!-- Bagian IV: Tanda Tangan Basah -->
+                <div class="print-signature-clean">
+                    <div class="print-signature-box-clean">
                         <p>Mengetahui,</p>
                         <p style="font-weight:600;">Kepala ${document.getElementById('doc-sekolah').value}</p>
-                        <div style="height:55px;"></div>
+                        <div class="print-signature-space-clean"></div>
                         <p><b><u>${document.getElementById('doc-kepsek').value}</u></b></p>
                         <p>NIP. ${document.getElementById('doc-nip-kepsek').value}</p>
                     </div>
-                    <div style="text-align:center; width:240px;">
+                    <div class="print-signature-box-clean">
                         <p>${document.getElementById('doc-kabupaten').value}, ${formattedDate}</p>
                         <p style="font-weight:600;">Guru Mata Pelajaran,</p>
-                        <div style="height:55px;"></div>
+                        <div class="print-signature-space-clean"></div>
                         <p><b><u>${document.getElementById('doc-penyusun').value}</u></b></p>
                         <p>NIP. ${document.getElementById('doc-nip').value}</p>
                     </div>
+                </div>
+
+                <!-- Footer Kecil untuk Cetak Halaman -->
+                <div class="footer-print-clean">
+                    Dokumen hasil olahan TP & ATP Generator BSKAP No. 046/2025 | Tanggal Cetak: ${formattedDate}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // 12. EXPORT & PRATINJAU SYSTEM
+        // ==========================================
+        function openPreviewModal() {
+            const previewModal = document.getElementById('preview-modal');
+            const previewContent = document.getElementById('sheet-preview-content');
+            
+            // Kompilasi layout A4 dokumen utuh
+            const compiledHTML = compileA4DocumentHTML();
+            
+            // Bungkus dengan kontainer khusus agar pratinjau mewarisi visual cetak yang rapi
+            previewContent.innerHTML = `
+                <div class="print-document-container">
+                    ${compiledHTML}
                 </div>
             `;
 
@@ -2472,9 +2501,46 @@
             triggerPrint();
         }
 
-        // ==========================================
-        // 12. EXPORT SYSTEM
-        // ==========================================
+        // Fungsi pemicu cetak profesional (Print/PDF)
+        function triggerPrint() {
+            // Sembelih dahulu bug render cetak lama, panggil compiler dokumen bersih
+            const compiledHTML = compileA4DocumentHTML();
+            
+            // Suntikkan langsung ke container cetak rahasia kita
+            const printArea = document.getElementById('print-area');
+            printArea.innerHTML = compiledHTML;
+
+            // Jalankan pencetakan sistem
+            window.print();
+        }
+
+        // Format Tanggal ISO menjadi Format Bahasa Indonesia (Contoh: 4 Juli 2026)
+        function formatIndonesianDate(dateStr) {
+            if(!dateStr) return "-";
+            const parts = dateStr.split('-');
+            if(parts.length !== 3) return dateStr;
+            
+            const listBulan = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const tgl = parseInt(parts[2]);
+            const bln = listBulan[parseInt(parts[1]) - 1];
+            const thn = parts[0];
+            
+            return `${tgl} ${bln} ${thn}`;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
         function copyToClipboard() {
             let clipboardText = "No\tElemen\tKompetensi\tKonten\tTujuan Pembelajaran (TP)\tKode TP\tStatus\n";
             appState.tpOutputs.forEach((item, index) => {
@@ -2532,7 +2598,7 @@
             showToast("CSV TP berhasil diunduh!");
         }
 
-        // Ekspor mandiri khusus untuk tabel ATP sesuai struktur baru
+        // Ekspor mandiri khusus untuk tabel ATP
         function exportATPToCSV() {
             if(appState.tpOutputs.length === 0) {
                 alert("Tidak ada data Alur Tujuan Pembelajaran untuk diekspor");
@@ -2580,7 +2646,7 @@
 
             let htmlContent = `
                 <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><title>Dekonstruksi CP & TP BSKAP 046</title>
+                <head><title>Capaian Pembelajaran & TP BSKAP 046</title>
                 <style>
                     body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.4; }
                     h2 { color: #1e40af; text-align: center; }
@@ -2590,7 +2656,7 @@
                 </style>
                 </head>
                 <body>
-                    <h2>DOKUMEN DEKONSTRUKSI CP & TUJUAN PEMBELAJARAN</h2>
+                    <h2>DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN</h2>
                     <p><b>Mata Pelajaran:</b> ${mapel}<br>
                     <b>Sekolah:</b> ${sekolah}<br>
                     <b>Penyusun:</b> ${penyusun}<br>
@@ -2640,81 +2706,6 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast("Dokumen MS Word (.doc) berhasil diunduh!");
-        }
-
-        function loadIdentitasFromDOM() {
-            const mapel = document.getElementById('doc-mapel').value;
-            const sekolah = document.getElementById('doc-sekolah').value;
-            const alamat = `Kabupaten/Kota: ${document.getElementById('doc-kabupaten').value}`;
-            
-            document.getElementById('print-txt-sekolah').innerText = sekolah.toUpperCase();
-            document.getElementById('print-txt-alamat').innerText = alamat;
-            document.getElementById('print-txt-tapel').innerText = document.getElementById('doc-tapel').value;
-            document.getElementById('print-txt-fase').innerText = document.getElementById('doc-fase').value;
-            document.getElementById('print-txt-mapel').innerText = mapel;
-        }
-
-        function triggerPrint() {
-            loadIdentitasFromDOM();
-
-            const identitasGrid = document.getElementById('print-identity-block');
-            identitasGrid.innerHTML = `
-                <div class="identity-item"><span class="identity-label">Nama Penyusun</span><span class="identity-val">: ${document.getElementById('doc-penyusun').value}</span></div>
-                <div class="identity-item"><span class="identity-label">Sekolah / NPSN</span><span class="identity-val">: ${document.getElementById('doc-sekolah').value} / ${document.getElementById('doc-npsn').value}</span></div>
-                <div class="identity-item"><span class="identity-label">NIP Penyusun</span><span class="identity-val">: ${document.getElementById('doc-nip').value}</span></div>
-                <div class="identity-item"><span class="identity-label">Tahun Pelajaran</span><span class="identity-val">: ${document.getElementById('doc-tapel').value}</span></div>
-                <div class="identity-item"><span class="identity-label">Fase / Kelas</span><span class="identity-val">: ${document.getElementById('doc-fase').value} / ${document.getElementById('doc-kelas').value}</span></div>
-                <div class="identity-item"><span class="identity-label">Semester / Mapel</span><span class="identity-val">: Semester ${document.getElementById('doc-semester').value} / ${document.getElementById('doc-mapel').value}</span></div>
-            `;
-
-            const tglSelesai = document.getElementById('doc-tanggal').value;
-            const formattedDate = formatIndonesianDate(tglSelesai);
-            const signatureGrid = document.getElementById('print-signature-block');
-            
-            signatureGrid.innerHTML = `
-                <div class="signature-box">
-                    <p>Mengetahui,</p>
-                    <p>Kepala ${document.getElementById('doc-sekolah').value}</p>
-                    <div class="signature-space"></div>
-                    <p><b><u>${document.getElementById('doc-kepsek').value}</u></b></p>
-                    <p>NIP. ${document.getElementById('doc-nip-kepsek').value}</p>
-                </div>
-                <div class="signature-box">
-                    <p>${document.getElementById('doc-kabupaten').value}, ${formattedDate}</p>
-                    <p>Guru Mata Pelajaran,</p>
-                    <div class="signature-space"></div>
-                    <p><b><u>${document.getElementById('doc-penyusun').value}</u></b></p>
-                    <p>NIP. ${document.getElementById('doc-nip').value}</p>
-                </div>
-            `;
-
-            window.print();
-        }
-
-        function formatIndonesianDate(dateStr) {
-            if(!dateStr) return "-";
-            const parts = dateStr.split('-');
-            if(parts.length !== 3) return dateStr;
-            
-            const listBulan = [
-                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-            ];
-            const tgl = parseInt(parts[2]);
-            const bln = listBulan[parseInt(parts[1]) - 1];
-            const thn = parts[0];
-            
-            return `${tgl} ${bln} ${thn}`;
-        }
-
-        function escapeHtml(text) {
-            if (!text) return "";
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
         }
     </script>
 </body>
