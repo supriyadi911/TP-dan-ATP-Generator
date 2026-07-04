@@ -1561,7 +1561,8 @@
             "membandingkan", "menerapkan", "mengevaluasi", "membaca", "menulis", "menyatakan", "menggunakan",
             "menyajikan", "memformulasikan", "mengonstruksi", "memodelkan", "menjelaskan", "mengklasifikasi",
             "menemukan", "merancang", "menciptakan", "menghitung", "memperkirakan", "menaksir", "mengukur",
-            "membuktikan", "menyusun", "membuat", "menceritakan", "membedakan", "menunjukkan", "menghargai"
+            "membuktikan", "menyusun", "membuat", "menceritakan", "membedakan", "menunjukkan", "menghargai",
+            "mempraktikkan", "merespons", "memirsa", "merekam", "menuangkan", "mengeksplorasi", "mengurai", "mengenali", "mengamati"
         ];
 
         const DIMENSI_PPP = [
@@ -2050,7 +2051,7 @@
                 const elemenClean = item.elemen.trim();
                 const textCP = item.deskripsi.trim();
                 
-                const hasilDekonstruksi = dekonstruksiTextCP(textCP);
+                const hasilDekonstruksi = dekonstruksiTextCP(textCP, elemenClean);
                 
                 hasilDekonstruksi.forEach((tpData, indexTP) => {
                     const idTP = appState.tpOutputs.length + 1;
@@ -2063,20 +2064,36 @@
                     }
 
                     const indikatorAcak = INDIKATOR_SMART[(indexCP + indexTP) % INDIKATOR_SMART.length];
-                    const rumusanTPOtomatis = `Murid mampu ${tpData.kompetensi.toLowerCase()} ${tpData.konten} ${indikatorAcak}.`;
+                    const rumusanTPOtomatis = `Murid mampu ${tpData.kompetensi.toLowerCase()} ${tpData.konten.toLowerCase()} ${indikatorAcak}.`;
 
                     const validasi = lakukanValidasiTP(rumusanTPOtomatis, tpData.kompetensi, tpData.konten);
 
-                    // Berikan default dimensi profil lulusan berdasarkan KKO/Kompetensi
-                    let defaultProfil = "Bernalar Kritis";
-                    const kompLower = tpData.kompetensi.toLowerCase();
-                    if (kompLower.includes("rancang") || kompLower.includes("cipta") || kompLower.includes("buat") || kompLower.includes("susun")) {
-                        defaultProfil = "Kreatif";
-                    } else if (kompLower.includes("selesai") || kompLower.includes("mampu") || kompLower.includes("tentu")) {
-                        defaultProfil = "Mandiri";
-                    } else if (kompLower.includes("komunikasi") || kompLower.includes("saji")) {
-                        defaultProfil = "Gotong Royong";
+                    // Analisis dimensi profil lulusan yang bervariasi (2-3 dimensi)
+                    const teksAnalisis = (rumusanTPOtomatis + " " + elemenClean).toLowerCase();
+                    let dimensiSet = new Set();
+                    
+                    if (teksAnalisis.match(/(analisis|evaluasi|banding|paham|kritis|identifikasi|bukti|selesai|masalah)/)) dimensiSet.add("Bernalar Kritis");
+                    if (teksAnalisis.match(/(rancang|cipta|buat|susun|ide|gagasan|karya|eksplorasi|modifikasi)/)) dimensiSet.add("Kreatif");
+                    if (teksAnalisis.match(/(praktik|tentu|selesai|sendiri|baca|tulis|ukur|hitung|mandiri)/)) dimensiSet.add("Mandiri");
+                    if (teksAnalisis.match(/(komunikasi|saji|diskusi|kelompok|kerja sama|interaksi|bagi|bersama)/)) dimensiSet.add("Gotong Royong");
+                    if (teksAnalisis.match(/(budaya|global|dunia|beda|hargai|bangsa|lingkungan)/)) dimensiSet.add("Berkebinekaan Global");
+                    if (teksAnalisis.match(/(tuhan|agama|akhlak|alam|makhluk|syukur|nilai|pancasila)/)) dimensiSet.add("Beriman, Bertakwa kepada Tuhan YME, dan Berakhlak Mulia");
+                    
+                    let dimensiArray = Array.from(dimensiSet);
+                    const defaultDimensi = ["Bernalar Kritis", "Mandiri", "Gotong Royong", "Kreatif"];
+                    
+                    // Pastikan minimal ada 2 dimensi agar bervariasi
+                    while (dimensiArray.length < 2) {
+                        let acak = defaultDimensi[Math.floor(Math.random() * defaultDimensi.length)];
+                        if (!dimensiArray.includes(acak)) dimensiArray.push(acak);
                     }
+                    
+                    // Batasi maksimal 3 dimensi per baris agar tetap rapi pada tabel
+                    if (dimensiArray.length > 3) {
+                        dimensiArray = dimensiArray.sort(() => 0.5 - Math.random()).slice(0, 3);
+                    }
+
+                    const profilLulusan = dimensiArray.join(", ");
 
                     appState.tpOutputs.push({
                         id: idTP,
@@ -2085,7 +2102,7 @@
                         kompetensi: tpData.kompetensi,
                         konten: tpData.konten,
                         tujuanPembelajaran: rumusanTPOtomatis,
-                        dimensiProfil: defaultProfil,
+                        dimensiProfil: profilLulusan,
                         kode: kodeTP,
                         urutanAtp: idTP, 
                         validasi: validasi,
@@ -2105,55 +2122,89 @@
             showToast("Sukses: TP & Alur ATP berhasil dirumuskan!");
         }
 
-        function dekonstruksiTextCP(text) {
+        function dekonstruksiTextCP(text, elemenName) {
             let matches = [];
-            const kalimat = text.split(/[,.;]/);
+            // Pisahkan kalimat berdasarkan titik atau titik koma
+            const kalimat = text.split(/[.;]/);
+
+            // Kata batas (boundary) yang menandakan akhir dari sebuah frasa materi pokok
+            const stopWordsBoundary = [" dalam ", " dengan ", " secara ", " sebagai ", " untuk ", " berdasarkan ", " melalui ", " yang ", " guna ", " pada ", " dari "];
+            // Kata yang sering mengawali frasa tapi bukan materi
+            const ignoreWords = ["murid", "peserta didik", "dapat", "mampu", "menunjukkan", "kemampuan"];
 
             kalimat.forEach(part => {
-                const cleanedPart = part.trim();
+                let cleanedPart = part.trim();
                 if (cleanedPart.length < 15) return;
 
-                let kompetensiDitemukan = "";
+                let kompetensiUtama = "Memahami";
                 let kontenDitemukan = "";
 
+                // 1. Temukan KKO Utama
                 for (let kko of DICTIONARY_KKO) {
                     const regex = new RegExp(`\\b${kko}\\w*\\b`, 'i');
                     if (regex.test(cleanedPart)) {
-                        kompetensiDitemukan = kko.charAt(0).toUpperCase() + kko.slice(1);
-                        
-                        const indexKKO = cleanedPart.toLowerCase().indexOf(kko);
-                        let sisaTeks = cleanedPart.slice(indexKKO + kko.length).trim();
-                        sisaTeks = sisaTeks.replace(/^(dan|atau|dalam|dengan|secara|yang|pada|untuk)\b/i, "").trim();
-                        
-                        if (sisaTeks.length > 5) {
-                            kontenDitemukan = sisaTeks;
-                        }
+                        kompetensiUtama = kko.charAt(0).toUpperCase() + kko.slice(1);
                         break;
                     }
                 }
 
-                if (!kompetensiDitemukan) kompetensiDitemukan = "Memahami";
+                // 2. Ekstrak Konten (Materi Pokok)
+                let sisaTeks = cleanedPart;
+                
+                // Hapus subjek dan modal verb
+                ignoreWords.forEach(w => {
+                    sisaTeks = sisaTeks.replace(new RegExp(`\\b${w}\\b`, 'gi'), "");
+                });
 
-                if (!kontenDitemukan) {
-                    kontenDitemukan = cleanedPart.replace(/peserta didik|murid/gi, "").trim();
+                // Hapus seluruh KKO dari string untuk menyisakan Kata Benda (Nouns)
+                DICTIONARY_KKO.forEach(kko => {
+                    sisaTeks = sisaTeks.replace(new RegExp(`\\b${kko}\\w*\\b`, 'gi'), "");
+                });
+
+                // Bersihkan awalan kalimat dari koma atau kata sambung
+                sisaTeks = sisaTeks.replace(/^[,\s]+/g, "").trim();
+                sisaTeks = sisaTeks.replace(/^(dan|atau|serta|tentang|mengenai|kaitan)\s+/i, "");
+
+                // Potong string tepat sebelum kata sambung boundary
+                for (let sw of stopWordsBoundary) {
+                    const swIndex = sisaTeks.toLowerCase().indexOf(sw);
+                    if (swIndex > -1) {
+                        sisaTeks = sisaTeks.substring(0, swIndex);
+                    }
                 }
 
-                if(kontenDitemukan.length > 80) {
-                    kontenDitemukan = kontenDitemukan.substring(0, 80) + "...";
-                }
+                // Rapikan tanda baca akhir
+                sisaTeks = sisaTeks.replace(/[,:;]+$/g, "").replace(/\s{2,}/g, " ").trim();
 
-                if (kontenDitemukan.length > 3) {
-                    matches.push({
-                        kompetensi: kompetensiDitemukan,
-                        konten: kontenDitemukan
+                if (sisaTeks.length > 3) {
+                    // Batasi frasa menjadi maksimal 8 kata agar ringkas layaknya "Materi Pokok"
+                    let words = sisaTeks.split(" ");
+                    if (words.length > 8) {
+                        kontenDitemukan = words.slice(0, 8).join(" ");
+                    } else {
+                        kontenDitemukan = sisaTeks;
+                    }
+
+                    // Format menjadi Title Case yang rapi
+                    kontenDitemukan = kontenDitemukan.replace(/\w\S*/g, function(txt){
+                        let lower = txt.toLowerCase();
+                        if(["dan", "atau", "serta", "di", "ke", "dari", "pada"].includes(lower)) return lower;
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
                     });
+                } else {
+                    kontenDitemukan = elemenName || "Materi Pokok";
                 }
+
+                matches.push({
+                    kompetensi: kompetensiUtama,
+                    konten: kontenDitemukan
+                });
             });
 
             if (matches.length === 0) {
                 matches.push({
                     kompetensi: "Memahami",
-                    konten: text.length > 50 ? text.substring(0, 50) + "..." : text
+                    konten: elemenName || "Konsep Dasar"
                 });
             }
 
