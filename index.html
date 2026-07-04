@@ -82,6 +82,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
         }
 
         body {
@@ -586,7 +587,7 @@
         }
 
         .stat-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -1306,6 +1307,13 @@
                             <input type="date" class="form-control" id="doc-tanggal" value="2026-07-04">
                         </div>
                     </div>
+                    
+                    <div style="text-align: right; margin-top:20px; border-top: 1px solid var(--card-border); padding-top: 20px;">
+                        <button class="btn btn-success" style="padding: 12px 24px; box-shadow: var(--shadow-lg);" onclick="saveIdentitasToLocal()">
+                            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                            SIMPAN IDENTITAS
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1498,7 +1506,7 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted);">Menampilkan tata letak lembar cetakan fisik A4 instansi secara utuh.</p>
                 </div>
                 <button class="btn btn-success" onclick="triggerPrintFromPreview()">
-                    <svg viewBox="0 0 24 24" style="width:18px; height:18px; stroke:currentColor; fill:none; vertical-align:middle; margin-right:4px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                    <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                     Cetak Dokumen (PDF)
                 </button>
             </div>
@@ -1562,7 +1570,7 @@
             "menyajikan", "memformulasikan", "mengonstruksi", "memodelkan", "menjelaskan", "mengklasifikasi",
             "menemukan", "merancang", "menciptakan", "menghitung", "memperkirakan", "menaksir", "mengukur",
             "membuktikan", "menyusun", "membuat", "menceritakan", "membedakan", "menunjukkan", "menghargai",
-            "mempraktikkan", "merespons", "memirsa", "merekam", "menuangkan", "mengeksplorasi", "mengurai", "mengenali", "mengamati"
+            "mempraktikkan", "merespons", "memirsa", "merekam", "menuangkan", "mengeksplorasi", "mengurai", "mengenali", "mengamati", "mengurutkan"
         ];
 
         const DIMENSI_PPP = [
@@ -1636,48 +1644,7 @@
         }
 
         // ==========================================
-        // 3. LIFECYCLE & INITIALIZATION
-        // ==========================================
-        window.onload = function() {
-            const savedState = localStorage.getItem('tp_generator_state_v1');
-            if (savedState) {
-                try {
-                    appState = JSON.parse(savedState);
-                    if(!appState.history) {
-                        appState.history = [];
-                        appState.historyIndex = -1;
-                    }
-                } catch(e) {
-                    console.error("Gagal meload cache data", e);
-                }
-            } else {
-                saveToHistory();
-            }
-
-            renderCPTable();
-            renderOutputTable();
-            renderATPTable();
-            updateStatistics();
-            populateElementFilter();
-
-            const dateInput = document.getElementById('doc-tanggal');
-            if(dateInput && !dateInput.value) {
-                const today = new Date().toISOString().split('T')[0];
-                dateInput.value = today;
-            }
-
-            const formInputs = document.querySelectorAll('.form-control, #doc-tanggal');
-            formInputs.forEach(input => {
-                input.addEventListener('change', () => {
-                    saveStateToLocalStorage();
-                });
-            });
-
-            showToast("Aplikasi Kurikulum Merdeka BSKAP 046/2025 diaktifkan!");
-        };
-
-        // ==========================================
-        // 4. TAB & DRAWER SIDEBAR CONTROL
+        // 3. TAB & DRAWER SIDEBAR CONTROL
         // ==========================================
         function switchTab(tabId, menuBtn) {
             const tabContents = document.querySelectorAll('.tab-content');
@@ -1712,7 +1679,7 @@
         }
 
         // ==========================================
-        // 5. UTILITY FUNCTIONS & LOCAL STORAGE
+        // 4. UTILITY FUNCTIONS & LOCAL STORAGE
         // ==========================================
         function saveStateToLocalStorage() {
             localStorage.setItem('tp_generator_state_v1', JSON.stringify({
@@ -1795,6 +1762,7 @@
         function resetAll() {
             if(confirm("Apakah Anda yakin ingin menghapus seluruh data dan mereset sistem ke setelan awal?")) {
                 localStorage.removeItem('tp_generator_state_v1');
+                localStorage.removeItem('tp_generator_identitas_v1');
                 appState.cpInputs = [];
                 appState.tpOutputs = [];
                 appState.history = [];
@@ -1818,6 +1786,10 @@
             }
         }
 
+        function loadIdentitasFromDOM() {
+            // Placeholder safe function
+        }
+
         function toggleContrast() {
             const body = document.documentElement;
             if (body.getAttribute('data-contrast') === 'high') {
@@ -1837,6 +1809,60 @@
             } else {
                 body.setAttribute('data-theme', 'dark');
                 showToast("Mode Gelap Aktif");
+            }
+        }
+
+        // ==========================================
+        // FITUR PENYIMPANAN IDENTITAS DOKUMEN
+        // ==========================================
+        function saveIdentitasToLocal() {
+            const identitas = {
+                penyusun: document.getElementById('doc-penyusun').value,
+                nip: document.getElementById('doc-nip').value,
+                sekolah: document.getElementById('doc-sekolah').value,
+                npsn: document.getElementById('doc-npsn').value,
+                mapel: document.getElementById('doc-mapel').value,
+                fase: document.getElementById('doc-fase').value,
+                kelas: document.getElementById('doc-kelas').value,
+                semester: document.getElementById('doc-semester').value,
+                tapel: document.getElementById('doc-tapel').value,
+                kabupaten: document.getElementById('doc-kabupaten').value,
+                kepsek: document.getElementById('doc-kepsek').value,
+                nipKepsek: document.getElementById('doc-nip-kepsek').value,
+                kodeFormat: document.getElementById('doc-kode-format').value,
+                tanggal: document.getElementById('doc-tanggal').value,
+                logoPemda: document.getElementById('preview-pemerintah').src,
+                logoSekolah: document.getElementById('preview-sekolah').src
+            };
+
+            localStorage.setItem('tp_generator_identitas_v1', JSON.stringify(identitas));
+            showToast("Identitas dokumen dan logo berhasil disimpan secara lokal!");
+        }
+
+        function loadIdentitasFromLocal() {
+            const saved = localStorage.getItem('tp_generator_identitas_v1');
+            if (saved) {
+                try {
+                    const identitas = JSON.parse(saved);
+                    if(identitas.penyusun) document.getElementById('doc-penyusun').value = identitas.penyusun;
+                    if(identitas.nip) document.getElementById('doc-nip').value = identitas.nip;
+                    if(identitas.sekolah) document.getElementById('doc-sekolah').value = identitas.sekolah;
+                    if(identitas.npsn) document.getElementById('doc-npsn').value = identitas.npsn;
+                    if(identitas.mapel) document.getElementById('doc-mapel').value = identitas.mapel;
+                    if(identitas.fase) document.getElementById('doc-fase').value = identitas.fase;
+                    if(identitas.kelas) document.getElementById('doc-kelas').value = identitas.kelas;
+                    if(identitas.semester) document.getElementById('doc-semester').value = identitas.semester;
+                    if(identitas.tapel) document.getElementById('doc-tapel').value = identitas.tapel;
+                    if(identitas.kabupaten) document.getElementById('doc-kabupaten').value = identitas.kabupaten;
+                    if(identitas.kepsek) document.getElementById('doc-kepsek').value = identitas.kepsek;
+                    if(identitas.nipKepsek) document.getElementById('doc-nip-kepsek').value = identitas.nipKepsek;
+                    if(identitas.kodeFormat) document.getElementById('doc-kode-format').value = identitas.kodeFormat;
+                    if(identitas.tanggal) document.getElementById('doc-tanggal').value = identitas.tanggal;
+                    if(identitas.logoPemda) document.getElementById('preview-pemerintah').src = identitas.logoPemda;
+                    if(identitas.logoSekolah) document.getElementById('preview-sekolah').src = identitas.logoSekolah;
+                } catch (e) {
+                    console.error("Gagal memuat cache identitas", e);
+                }
             }
         }
 
@@ -2128,13 +2154,35 @@
             const kalimat = text.split(/[.;]/);
 
             // Kata batas (boundary) yang menandakan akhir dari sebuah frasa materi pokok
-            const stopWordsBoundary = [" dalam ", " dengan ", " secara ", " sebagai ", " untuk ", " berdasarkan ", " melalui ", " yang ", " guna ", " pada ", " dari "];
-            // Kata yang sering mengawali frasa tapi bukan materi
-            const ignoreWords = ["murid", "peserta didik", "dapat", "mampu", "menunjukkan", "kemampuan"];
+            const stopWordsBoundary = [" dalam ", " dengan ", " secara ", " sebagai ", " untuk ", " berdasarkan ", " melalui ", " yang ", " guna ", " pada ", " dari ", " termasuk ", " menggunakan ", " lewat ", " beserta "];
+            
+            // Urutan ignore words harus dari yang terpanjang ke terpendek agar matching akurat
+            const ignoreWords = [
+                "menyelesaikan masalah yang berkaitan dengan",
+                "masalah yang berkaitan dengan",
+                "yang berkaitan dengan",
+                "peserta didik", 
+                "murid",
+                "mereka",
+                "juga",
+                "dapat", 
+                "mampu", 
+                "akan",
+                "telah",
+                "menunjukkan", 
+                "kemampuan",
+                "berbagai macam",
+                "berbagai",
+                "konsep",
+                "tentang",
+                "mengenai",
+                "suatu",
+                "sebuah"
+            ];
 
             kalimat.forEach(part => {
                 let cleanedPart = part.trim();
-                if (cleanedPart.length < 15) return;
+                if (cleanedPart.length < 10) return;
 
                 let kompetensiUtama = "Memahami";
                 let kontenDitemukan = "";
@@ -2151,7 +2199,7 @@
                 // 2. Ekstrak Konten (Materi Pokok)
                 let sisaTeks = cleanedPart;
                 
-                // Hapus subjek dan modal verb
+                // Hapus ignore words (case insensitive)
                 ignoreWords.forEach(w => {
                     sisaTeks = sisaTeks.replace(new RegExp(`\\b${w}\\b`, 'gi'), "");
                 });
@@ -2163,7 +2211,7 @@
 
                 // Bersihkan awalan kalimat dari koma atau kata sambung
                 sisaTeks = sisaTeks.replace(/^[,\s]+/g, "").trim();
-                sisaTeks = sisaTeks.replace(/^(dan|atau|serta|tentang|mengenai|kaitan)\s+/i, "");
+                sisaTeks = sisaTeks.replace(/^(dan|atau|serta)\s+/i, "");
 
                 // Potong string tepat sebelum kata sambung boundary
                 for (let sw of stopWordsBoundary) {
@@ -2176,7 +2224,12 @@
                 // Rapikan tanda baca akhir
                 sisaTeks = sisaTeks.replace(/[,:;]+$/g, "").replace(/\s{2,}/g, " ").trim();
 
-                if (sisaTeks.length > 3) {
+                // Penghalusan frasa (Smart AI Mapping)
+                if (sisaTeks.toLowerCase() === "pecahan" || sisaTeks.toLowerCase() === "pecahan campuran") {
+                    sisaTeks = "Bilangan Pecahan";
+                }
+
+                if (sisaTeks.length > 2) {
                     // Batasi frasa menjadi maksimal 8 kata agar ringkas layaknya "Materi Pokok"
                     let words = sisaTeks.split(" ");
                     if (words.length > 8) {
@@ -2185,10 +2238,11 @@
                         kontenDitemukan = sisaTeks;
                     }
 
-                    // Format menjadi Title Case yang rapi
+                    // Format menjadi Title Case yang rapi dan pertahankan akronim
                     kontenDitemukan = kontenDitemukan.replace(/\w\S*/g, function(txt){
                         let lower = txt.toLowerCase();
                         if(["dan", "atau", "serta", "di", "ke", "dari", "pada"].includes(lower)) return lower;
+                        if(["kpk", "fpb", "nkri", "iptek", "sdm", "sda"].includes(lower)) return txt.toUpperCase();
                         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
                     });
                 } else {
@@ -2324,6 +2378,28 @@
                 return;
             }
 
+            // Kalkulasi rowspan untuk merger sel Elemen dan CP secara dinamis
+            let rowSpans = {};
+            let skipMap = {};
+
+            for (let i = 0; i < dataToRender.length; i++) {
+                if (skipMap[i]) continue;
+                let currentElemen = dataToRender[i].elemen;
+                let currentCP = dataToRender[i].cpOriginal;
+                let count = 1;
+                
+                for (let j = i + 1; j < dataToRender.length; j++) {
+                    // Jika elemen dan CP baris selanjutnya sama, gabungkan
+                    if (dataToRender[j].elemen === currentElemen && dataToRender[j].cpOriginal === currentCP) {
+                        count++;
+                        skipMap[j] = true;
+                    } else {
+                        break;
+                    }
+                }
+                rowSpans[i] = count;
+            }
+
             dataToRender.forEach((item, index) => {
                 const tr = document.createElement('tr');
                 const badgeClass = item.validasi.isValid ? "validation-valid" : "validation-invalid";
@@ -2338,11 +2414,15 @@
                     ${item.validasi.details.formatBenar ? '✓' : '✗'} Format BSKAP (Murid...)
                 `;
 
-                tr.innerHTML = `
-                    <td style="text-align: center; font-weight: bold;">${index + 1}</td>
-                    <td><b>${escapeHtml(item.elemen)}</b></td>
-                    <td style="font-size:0.8rem; color:var(--text-muted);">${escapeHtml(item.cpOriginal.substring(0, 80))}${item.cpOriginal.length > 80 ? '...' : ''}</td>
-                    
+                let rowHtml = `<td style="text-align: center; font-weight: bold; vertical-align: top;">${index + 1}</td>`;
+
+                // Hanya me-render sel Elemen dan CP jika ini adalah baris pertama dari kelompok yang sama
+                if (rowSpans[index]) {
+                    rowHtml += `<td rowspan="${rowSpans[index]}" style="vertical-align: top;"><b>${escapeHtml(item.elemen)}</b></td>`;
+                    rowHtml += `<td rowspan="${rowSpans[index]}" style="font-size:0.8rem; color:var(--text-muted); vertical-align: top; text-align: justify;">${escapeHtml(item.cpOriginal)}</td>`;
+                }
+
+                rowHtml += `
                     <td contenteditable="true" class="editable-cell" 
                         onblur="saveInlineEdit(${item.id}, 'kompetensi', this.innerText)"
                         onkeydown="handleInlineKey(event)">${escapeHtml(item.kompetensi)}</td>
@@ -2355,25 +2435,26 @@
                         onblur="saveInlineEdit(${item.id}, 'tujuanPembelajaran', this.innerText)"
                         onkeydown="handleInlineKey(event)">${escapeHtml(item.tujuanPembelajaran)}</td>
                     
-                    <td style="text-align: center;">
+                    <td style="text-align: center; vertical-align: top;">
                         <input type="text" class="form-control" style="padding: 4px 8px; text-align:center; font-weight:bold; min-width:65px;" 
                             value="${escapeHtml(item.kode)}" onchange="updateRowKode(${item.id}, this.value)">
                     </td>
                     
-                    <td class="no-print" style="text-align: center;">
+                    <td class="no-print" style="text-align: center; vertical-align: top;">
                         <div class="tooltip">
                             <span class="validation-badge ${badgeClass}">${badgeIcon}</span>
                             <span class="tooltiptext">${tooltipText}</span>
                         </div>
                     </td>
                     
-                    <td class="no-print" style="text-align: center;">
+                    <td class="no-print" style="text-align: center; vertical-align: top;">
                         <button class="btn btn-outline btn-sm" onclick="deleteOutputTP(${item.id})" title="Hapus" style="color: var(--danger-color); border-color: var(--danger-color); padding: 8px;">
                             <svg viewBox="0 0 24 24" style="width:14px; height:14px; stroke:currentColor; fill:none;"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                         </button>
                     </td>
                 `;
 
+                tr.innerHTML = rowHtml;
                 tbody.appendChild(tr);
             });
         }
@@ -2611,15 +2692,38 @@
             if(appState.tpOutputs.length === 0) {
                 tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td></tr>`;
             } else {
+                // Kalkulasi rowspan khusus cetak untuk Elemen
+                let rowSpansPrint = {};
+                let skipMapPrint = {};
+                for (let i = 0; i < appState.tpOutputs.length; i++) {
+                    if (skipMapPrint[i]) continue;
+                    let currentElemen = appState.tpOutputs[i].elemen;
+                    let count = 1;
+                    for (let j = i + 1; j < appState.tpOutputs.length; j++) {
+                        if (appState.tpOutputs[j].elemen === currentElemen) {
+                            count++;
+                            skipMapPrint[j] = true;
+                        } else {
+                            break;
+                        }
+                    }
+                    rowSpansPrint[i] = count;
+                }
+
                 appState.tpOutputs.forEach((item, index) => {
+                    tpRowsHtml += `<tr>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; vertical-align:top;">${index + 1}</td>`;
+                            
+                    // Render elemen sebagai sel gabungan untuk baris yang sama
+                    if (rowSpansPrint[index]) {
+                        tpRowsHtml += `<td rowspan="${rowSpansPrint[index]}" style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.elemen)}</td>`;
+                    }
+                    
                     tpRowsHtml += `
-                        <tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px;">${index + 1}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:bold;">${escapeHtml(item.elemen)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.kompetensi)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.konten)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.tujuanPembelajaran)}</td>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold;">${escapeHtml(item.kode)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.kompetensi)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.kode)}</td>
                         </tr>
                     `;
                 });
@@ -3011,6 +3115,9 @@
             URL.revokeObjectURL(url);
             showToast("Dokumen MS Word (.doc) berhasil diunduh!");
         }
+        
+        // Menggunakan DOMContentLoaded agar eksekusi tertunda sampai DOM siap (mencegah ReferenceError)
+        window.addEventListener('DOMContentLoaded', window.onload);
     </script>
 </body>
 </html>
