@@ -890,116 +890,42 @@
             line-height: 1.4;
         }
 
-        .print-header-clean {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            border-bottom: 3px double #000000 !important;
-            padding-bottom: 12px !important;
-            margin-bottom: 20px !important;
+        /* Tabel dan Layout universal untuk Pratinjau, Print, Excel & Word */
+        .doc-layout-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 20px;
+        }
+        .doc-layout-table td {
+            border: none;
+            padding: 5px;
+            vertical-align: top;
         }
 
-        .print-logo-clean {
-            width: 65px !important;
-            height: 65px !important;
-            object-fit: contain !important;
+        .doc-data-table {
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-bottom: 25px;
         }
-
-        .print-title-clean {
-            text-align: center !important;
-            flex: 1 !important;
-            padding: 0 15px !important;
+        .doc-data-table th, .doc-data-table td {
+            border: 1px solid #000000;
+            padding: 8px;
+            font-size: 10pt;
+            text-align: left;
+            vertical-align: top;
         }
-
-        .print-title-clean h2 {
-            font-size: 13pt !important;
-            font-weight: 700 !important;
-            margin: 0 !important;
-            text-transform: uppercase !important;
-            color: #000000 !important;
-        }
-
-        .print-title-clean p {
-            font-size: 8.5pt !important;
-            margin: 4px 0 0 0 !important;
-            color: #333333 !important;
-        }
-
-        .print-identity-clean {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 10px !important;
-            margin-bottom: 20px !important;
-            font-size: 9pt !important;
-            border: 1px solid #000000 !important;
-            padding: 12px !important;
-            background-color: #f8fafc !important;
-        }
-
-        .print-identity-item-clean {
-            display: flex !important;
-        }
-
-        .print-identity-label-clean {
-            width: 140px !important;
-            font-weight: bold !important;
-            color: #000000 !important;
-        }
-
-        .print-identity-val-clean {
-            flex: 1 !important;
-            color: #000000 !important;
+        .doc-data-table th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            text-align: center;
         }
 
         .print-section-title {
-            font-size: 10pt !important;
+            font-size: 11pt !important;
             font-weight: bold !important;
             margin-top: 25px !important;
             margin-bottom: 10px !important;
-            border-left: 4px solid #1e40af !important;
-            padding-left: 8px !important;
-            text-transform: uppercase !important;
-            color: #1e40af !important;
-        }
-
-        .print-table {
-            width: 100% !important;
-            border-collapse: collapse !important;
-            margin-top: 10px !important;
-            margin-bottom: 20px !important;
-            table-layout: fixed !important;
-            word-wrap: break-word !important;
-        }
-
-        .print-table th, .print-table td {
-            border: 1px solid #000000 !important;
-            padding: 8px !important;
-            font-size: 9pt !important;
             color: #000000 !important;
-            text-align: left !important;
-        }
-
-        .print-table th {
-            background-color: #f1f5f9 !important;
-            font-weight: bold !important;
-            text-transform: uppercase !important;
-        }
-
-        .print-signature-clean {
-            display: flex !important;
-            justify-content: space-between !important;
-            margin-top: 40px !important;
-        }
-
-        .print-signature-box-clean {
-            text-align: center !important;
-            width: 240px !important;
-            font-size: 9.5pt !important;
-            color: #000000 !important;
-        }
-
-        .print-signature-space-clean {
-            height: 60px !important;
         }
 
         .footer-print-clean {
@@ -1049,11 +975,7 @@
                 box-shadow: none !important;
             }
 
-            .print-table tr {
-                page-break-inside: avoid !important;
-            }
-
-            .print-signature-clean {
+            .doc-data-table tr {
                 page-break-inside: avoid !important;
             }
 
@@ -1146,7 +1068,6 @@
                     </svg>
                     Alur Tujuan Pembelajaran (ATP)
                 </button>
-                <!-- Menu Baru: Backup & Restore -->
                 <button class="menu-item" onclick="switchTab('backup', this)">
                     <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -1158,7 +1079,6 @@
             </nav>
 
             <div class="sidebar-footer">
-                <!-- Kontrol Aksesibilitas Modern -->
                 <div style="display:flex; justify-content:space-between; gap:6px;">
                     <button class="btn-icon" onclick="adjustFont(-10)" title="Kecilkan Huruf">
                         <svg viewBox="0 0 24 24"><path d="M5 12h14"></path></svg>
@@ -1173,7 +1093,6 @@
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
                     </button>
                 </div>
-                <!-- Navigasi Riwayat Undo/Redo -->
                 <div style="display:flex; justify-content:space-between; gap:6px;">
                     <button class="btn btn-outline btn-sm" onclick="triggerUndo()" id="btn-undo" style="flex:1; padding: 10px 0;">
                         <svg viewBox="0 0 24 24" style="width:14px; height:14px;"><path d="M3 7v6h6M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>
@@ -1207,7 +1126,7 @@
                 </div>
             </div>
 
-            <!-- Header Konten Live (Tidak Dicetak) -->
+            <!-- Header Konten Live -->
             <div class="content-header no-print">
                 <div>
                     <h1 id="current-tab-title">Dashboard Utama</h1>
@@ -1222,7 +1141,6 @@
                TAB 1: DASHBOARD UTAMA
                ========================================== -->
             <div class="tab-content active" id="tab-dashboard">
-                <!-- Metrik Statistik -->
                 <div class="card">
                     <div class="card-title">
                         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="9"></line><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="13" y2="17"></line></svg>
@@ -1251,7 +1169,6 @@
                     </div>
                 </div>
 
-                <!-- Contoh Template Kurikulum -->
                 <div class="card no-print">
                     <div class="card-title">
                         <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
@@ -1291,7 +1208,7 @@
                         </div>
                         <div class="form-group">
                             <label>Nama Sekolah</label>
-                            <input type="text" class="form-control" id="doc-sekolah" value="SMP Negeri 1 Garuda">
+                            <input type="text" class="form-control" id="doc-sekolah" value="SD Negeri 1 Garuda">
                         </div>
                         <div class="form-group">
                             <label>NPSN</label>
@@ -1309,15 +1226,15 @@
                             <select class="form-control" id="doc-fase">
                                 <option value="A">Fase A (Kelas 1-2 SD)</option>
                                 <option value="B">Fase B (Kelas 3-4 SD)</option>
-                                <option value="C">Fase C (Kelas 5-6 SD)</option>
-                                <option value="D" selected>Fase D (Kelas 7-9 SMP)</option>
+                                <option value="C" selected>Fase C (Kelas 5-6 SD)</option>
+                                <option value="D">Fase D (Kelas 7-9 SMP)</option>
                                 <option value="E">Fase E (Kelas 10 SMA)</option>
                                 <option value="F">Fase F (Kelas 11-12 SMA)</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Kelas</label>
-                            <input type="text" class="form-control" id="doc-kelas" value="VII (Tujuh)">
+                            <input type="text" class="form-control" id="doc-kelas" value="V (Lima)">
                         </div>
                         <div class="form-group">
                             <label>Semester</label>
@@ -1349,7 +1266,6 @@
                     </div>
 
                     <div class="grid-4" style="margin-top:10px;">
-                        <!-- Posisi penempatan preview upload ditukar sesuai letak barunya -->
                         <div class="form-group">
                             <label>Upload Logo Pemerintah (Kiri)</label>
                             <div class="image-preview-container">
@@ -1481,8 +1397,9 @@
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
                             <button class="btn btn-outline btn-sm" onclick="copyToClipboard()">📋 Salin Data</button>
-                            <button class="btn btn-outline btn-sm" onclick="exportToCSV()">📊 Ekspor (.csv)</button>
-                            <button class="btn btn-outline btn-sm" onclick="exportToWord()">📝 Ekspor (.doc)</button>
+                            <!-- Tombol Export diganti menjadi Excel (.xls) -->
+                            <button class="btn btn-outline btn-sm" onclick="exportToExcel()">📊 Ekspor Excel (.xls)</button>
+                            <button class="btn btn-outline btn-sm" onclick="exportToWord()">📝 Ekspor Word (.doc)</button>
                             <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / PDF</button>
                         </div>
                     </div>
@@ -1530,7 +1447,8 @@
                         </span>
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
-                            <button class="btn btn-outline btn-sm" onclick="exportATPToCSV()">📊 Ekspor ATP (.csv)</button>
+                            <!-- Tombol Export diganti menjadi Excel (.xls) -->
+                            <button class="btn btn-outline btn-sm" onclick="exportToExcel()">📊 Ekspor Semua ke Excel (.xls)</button>
                             <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / PDF</button>
                         </div>
                     </div>
@@ -1785,14 +1703,13 @@
                 dateInput.value = today;
             }
 
-            const formInputs = document.querySelectorAll('.form-control, #doc-tanggal');
-            formInputs.forEach(input => {
-                input.addEventListener('change', () => {
-                    saveStateToLocalStorage();
-                });
+            const identitasInputs = document.querySelectorAll('#tab-identitas .form-control');
+            identitasInputs.forEach(input => {
+                input.addEventListener('input', saveIdentitasToLocal);
+                input.addEventListener('change', saveIdentitasToLocal);
             });
 
-            showToast("Sistem navigasi siap. BSKAP 046/2025 aktif!");
+            showToast("Aplikasi Kurikulum Merdeka BSKAP 046/2025 diaktifkan!");
         };
 
         // ==========================================
@@ -2123,7 +2040,7 @@
                     const previewElement = document.getElementById(previewId);
                     if (previewElement) previewElement.src = e.target.result;
                     showToast("Logo berhasil diperbarui!");
-                    saveStateToLocalStorage();
+                    saveIdentitasToLocal();
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -2191,6 +2108,7 @@
                 renderCPTable();
                 saveToHistory();
                 saveStateToLocalStorage();
+                saveIdentitasToLocal();
                 
                 const cpTabBtn = document.querySelectorAll('.menu-item')[2];
                 switchTab('input-cp', cpTabBtn);
@@ -2951,19 +2869,19 @@
         // ==========================================
         // 11. COMPILE HTML FOR VIEW PREVIEW & PRINT
         // ==========================================
-        function compileA4DocumentHTML() {
+        function getUniversalDocumentHTML(isExcel = false) {
             // Susun data tabel CP Elemen untuk cetak/preview
             let cpRowsHtml = '';
             let activeCPs = appState.cpInputs.filter(item => item.elemen.trim() !== "" || item.deskripsi.trim() !== "");
             if (activeCPs.length === 0) {
-                cpRowsHtml = `<tr><td colspan="3" style="text-align:center; padding:15px; color:#666;">Belum ada data CP Elemen.</td></tr>`;
+                cpRowsHtml = `<tr><td colspan="3" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data CP Elemen.</td></tr>`;
             } else {
                 activeCPs.forEach((item, index) => {
                     cpRowsHtml += `
                         <tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px;">${index + 1}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:bold;">${escapeHtml(item.elemen)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.deskripsi)}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; vertical-align:top;">${index + 1}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.elemen)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.deskripsi)}</td>
                         </tr>
                     `;
                 });
@@ -2972,9 +2890,8 @@
             // Susun data tabel TP untuk cetak
             let tpRowsHtml = '';
             if(appState.tpOutputs.length === 0) {
-                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td></tr>`;
+                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td></tr>`;
             } else {
-                // Kalkulasi rowspan khusus cetak untuk Elemen
                 let rowSpansPrint = {};
                 let skipMapPrint = {};
                 for (let i = 0; i < appState.tpOutputs.length; i++) {
@@ -3018,16 +2935,16 @@
             });
 
             if(sortedATPData.length === 0) {
-                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
+                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
             } else {
                 sortedATPData.forEach((item) => {
                     atpRowsHtml += `
                         <tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold;">${item.urutanAtp}</td>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af;">${escapeHtml(item.kode)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.konten)}</td>
-                            <td style="border:1px solid #000; padding:8px;">${escapeHtml(item.tujuanPembelajaran)}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#475569;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${item.urutanAtp}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af; vertical-align:top;">${escapeHtml(item.kode)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#475569; vertical-align:top;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
                         </tr>
                     `;
                 });
@@ -3036,7 +2953,6 @@
             const tglSelesai = document.getElementById('doc-tanggal').value;
             const formattedDate = formatIndonesianDate(tglSelesai);
             
-            // Gunakan optional chaining untuk memastikan tak ada error jika elemen belum terbaca
             const sekolah = document.getElementById('doc-sekolah')?.value || '';
             const npsn = document.getElementById('doc-npsn')?.value || '';
             const kabupaten = document.getElementById('doc-kabupaten')?.value || '';
@@ -3053,56 +2969,54 @@
             const logoPemda = document.getElementById('preview-pemerintah')?.src || '';
             const logoSekolah = document.getElementById('preview-sekolah')?.src || '';
 
+            // Untuk Excel terkadang gambar base64 bisa bermasalah, kita sertakan saja secara normal
+            // Karena menggunakan struktur tabel, ini dijamin 100% rapi pada Ms Office (Word & Excel)
             return `
-                <!-- Kop Surat Bersih (Logo Pemda di Kiri, Logo Sekolah di Kanan) -->
-                <div class="print-header-clean">
-                    <img class="print-logo-clean" src="${logoPemda}" alt="Logo Kiri Pemerintah">
-                    <div class="print-title-clean">
-                        <h2>${sekolah}</h2>
-                        <p>NPSN: ${npsn} | Kabupaten/Kota: ${kabupaten}</p>
-                        <h2 style="margin-top:8px; font-size:11pt; border-top:1px solid #000; padding-top:5px; font-weight:800; letter-spacing:0.5px;">
-                            DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN
-                        </h2>
-                    </div>
-                    <img class="print-logo-clean" src="${logoSekolah}" alt="Logo Kanan Sekolah">
-                </div>
+                <table class="doc-layout-table" style="width: 100%; border-bottom: 3px double #000; margin-bottom: 20px;">
+                    <tr>
+                        <td style="width: 15%; text-align: left; vertical-align: middle; border: none;">
+                            <img src="${logoPemda}" style="width: 70px; height: 70px; object-fit: contain;" alt="Logo Pemda">
+                        </td>
+                        <td style="width: 70%; text-align: center; vertical-align: middle; border: none;">
+                            <h2 style="margin: 0; font-size: 14pt; font-family: Arial, sans-serif;">${sekolah}</h2>
+                            <p style="margin: 4px 0; font-size: 9pt; font-family: Arial, sans-serif;">NPSN: ${npsn} | Kabupaten/Kota: ${kabupaten}</p>
+                            <h3 style="margin: 8px 0 0 0; font-size: 11pt; border-top: 1px solid #000; padding-top: 5px; font-family: Arial, sans-serif;">DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN</h3>
+                        </td>
+                        <td style="width: 15%; text-align: right; vertical-align: middle; border: none;">
+                            <img src="${logoSekolah}" style="width: 70px; height: 70px; object-fit: contain;" alt="Logo Sekolah">
+                        </td>
+                    </tr>
+                </table>
 
                 <!-- Grid Identitas Kurikulum -->
-                <div class="print-identity-clean">
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">Nama Penyusun</span>
-                        <span class="print-identity-val-clean">: ${penyusun}</span>
-                    </div>
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">Mata Pelajaran</span>
-                        <span class="print-identity-val-clean">: ${mapel}</span>
-                    </div>
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">NIP Penyusun</span>
-                        <span class="print-identity-val-clean">: ${nip}</span>
-                    </div>
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">Fase / Kelas</span>
-                        <span class="print-identity-val-clean">: Fase ${fase} / Kelas ${kelas}</span>
-                    </div>
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">Nama Sekolah</span>
-                        <span class="print-identity-val-clean">: ${sekolah}</span>
-                    </div>
-                    <div class="print-identity-item-clean">
-                        <span class="print-identity-label-clean">Semester / Tapel</span>
-                        <span class="print-identity-val-clean">: Semester ${semester} / Tahun Pelajaran ${tapel}</span>
-                    </div>
-                </div>
+                <table class="doc-layout-table" style="width: 100%; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 10pt;">
+                    <tr>
+                        <td style="width: 15%; font-weight: bold; border: none;">Nama Penyusun</td>
+                        <td style="width: 35%; border: none;">: ${penyusun}</td>
+                        <td style="width: 15%; font-weight: bold; border: none;">Fase / Kelas</td>
+                        <td style="width: 35%; border: none;">: Fase ${fase} / Kelas ${kelas}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; border: none;">NIP Penyusun</td>
+                        <td style="border: none;">: ${nip}</td>
+                        <td style="font-weight: bold; border: none;">Semester / Tapel</td>
+                        <td style="border: none;">: Semester ${semester} / ${tapel}</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: bold; border: none;">Mata Pelajaran</td>
+                        <td style="border: none;">: ${mapel}</td>
+                        <td style="font-weight: bold; border: none;">Nama Sekolah</td>
+                        <td style="border: none;">: ${sekolah}</td>
+                    </tr>
+                </table>
 
-                <!-- Bagian I: Capaian Pembelajaran (CP) -->
-                <div class="print-section-title">I. Capaian Pembelajaran (CP)</div>
-                <table class="print-table">
+                <div class="print-section-title" style="font-family: Arial, sans-serif;">I. Capaian Pembelajaran (CP)</div>
+                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
                     <thead>
                         <tr>
-                            <th style="width:5%; text-align:center; border:1px solid #000;">No</th>
-                            <th style="width:25%; border:1px solid #000;">Elemen</th>
-                            <th style="width:70%; border:1px solid #000;">Deskripsi Capaian Pembelajaran (CP)</th>
+                            <th style="width:5%; background-color:#f1f5f9;">No</th>
+                            <th style="width:25%; background-color:#f1f5f9;">Elemen</th>
+                            <th style="width:70%; background-color:#f1f5f9;">Deskripsi Capaian Pembelajaran (CP)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3110,17 +3024,16 @@
                     </tbody>
                 </table>
 
-                <!-- Bagian II: Tujuan Pembelajaran (TP) -->
-                <div class="print-section-title">II. Tujuan Pembelajaran (TP)</div>
-                <table class="print-table">
+                <div class="print-section-title" style="font-family: Arial, sans-serif;">II. Tujuan Pembelajaran (TP)</div>
+                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
                     <thead>
                         <tr>
-                            <th style="width:5%; text-align:center; border:1px solid #000;">No</th>
-                            <th style="width:18%; border:1px solid #000;">Elemen</th>
-                            <th style="width:15%; border:1px solid #000;">Kompetensi</th>
-                            <th style="width:20%; border:1px solid #000;">Materi (Konten)</th>
-                            <th style="width:32%; border:1px solid #000;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="width:10%; text-align:center; border:1px solid #000;">Kode</th>
+                            <th style="width:5%; background-color:#f1f5f9;">No</th>
+                            <th style="width:18%; background-color:#f1f5f9;">Elemen</th>
+                            <th style="width:15%; background-color:#f1f5f9;">Kompetensi</th>
+                            <th style="width:20%; background-color:#f1f5f9;">Materi (Konten)</th>
+                            <th style="width:32%; background-color:#f1f5f9;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:10%; background-color:#f1f5f9;">Kode</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3128,16 +3041,15 @@
                     </tbody>
                 </table>
 
-                <!-- Bagian III: Tabel Alur Tujuan Pembelajaran (ATP) -->
-                <div class="print-section-title">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
-                <table class="print-table">
+                <div class="print-section-title" style="font-family: Arial, sans-serif;">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
+                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
                     <thead>
                         <tr>
-                            <th style="width:10%; text-align:center; border:1px solid #000;">Urutan ATP</th>
-                            <th style="width:12%; text-align:center; border:1px solid #000;">Kode TP</th>
-                            <th style="width:20%; border:1px solid #000;">Materi Pokok Referensi</th>
-                            <th style="width:38%; border:1px solid #000;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="width:20%; border:1px solid #000;">Dimensi Profil Lulusan (Pancasila)</th>
+                            <th style="width:10%; background-color:#f1f5f9;">Urutan ATP</th>
+                            <th style="width:12%; background-color:#f1f5f9;">Kode TP</th>
+                            <th style="width:20%; background-color:#f1f5f9;">Materi Pokok Referensi</th>
+                            <th style="width:38%; background-color:#f1f5f9;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:20%; background-color:#f1f5f9;">Dimensi Profil Lulusan (Pancasila)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3145,26 +3057,21 @@
                     </tbody>
                 </table>
 
-                <!-- Bagian IV: Tanda Tangan Basah -->
-                <div class="print-signature-clean">
-                    <div class="print-signature-box-clean">
-                        <p>Mengetahui,</p>
-                        <p style="font-weight:600;">Kepala ${sekolah}</p>
-                        <div class="print-signature-space-clean"></div>
-                        <p><b><u>${kepsek}</u></b></p>
-                        <p>NIP. ${nipKepsek}</p>
-                    </div>
-                    <div class="print-signature-box-clean">
-                        <p>${kabupaten}, ${formattedDate}</p>
-                        <p style="font-weight:600;">Guru Mata Pelajaran,</p>
-                        <div class="print-signature-space-clean"></div>
-                        <p><b><u>${penyusun}</u></b></p>
-                        <p>NIP. ${nip}</p>
-                    </div>
-                </div>
+                <!-- Tanda Tangan -->
+                <table class="doc-layout-table" style="width: 100%; margin-top: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 10pt;">
+                    <tr>
+                        <td style="width: 50%; border: none; vertical-align: top;">
+                            Mengetahui,<br>Kepala ${sekolah}<br><br><br><br><br>
+                            <b><u>${kepsek}</u></b><br>NIP. ${nipKepsek}
+                        </td>
+                        <td style="width: 50%; border: none; vertical-align: top;">
+                            ${kabupaten}, ${formattedDate}<br>Guru Mata Pelajaran,<br><br><br><br><br>
+                            <b><u>${penyusun}</u></b><br>NIP. ${nip}
+                        </td>
+                    </tr>
+                </table>
 
-                <!-- Footer Cetakan -->
-                <div class="footer-print-clean">
+                <div class="footer-print-clean" style="font-family: Arial, sans-serif;">
                     Dokumen Hasil Olahan TP & ATP Generator BSKAP No. 046/2025 | Tanggal Cetak: ${formattedDate}
                 </div>
             `;
@@ -3177,7 +3084,7 @@
             const previewModal = document.getElementById('preview-modal');
             const previewContent = document.getElementById('sheet-preview-content');
             
-            const compiledHTML = compileA4DocumentHTML();
+            const compiledHTML = getUniversalDocumentHTML();
             
             previewContent.innerHTML = `
                 <div class="print-document-container">
@@ -3199,7 +3106,7 @@
         }
 
         function triggerPrint() {
-            const compiledHTML = compileA4DocumentHTML();
+            const compiledHTML = getUniversalDocumentHTML();
             const printArea = document.getElementById('print-area');
             if (printArea) {
                 printArea.innerHTML = compiledHTML;
@@ -3257,72 +3164,41 @@
             document.body.removeChild(textarea);
         }
 
-        function exportToCSV() {
+        function exportToExcel() {
             if(appState.tpOutputs.length === 0) {
-                alert("Tidak ada data TP untuk diekspor");
+                alert("Tidak ada data untuk diekspor");
                 return;
             }
+            
+            const mapel = document.getElementById('doc-mapel').value || 'Mata Pelajaran';
+            const innerHtml = getUniversalDocumentHTML(true);
+            
+            const htmlContent = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Export Excel</title>
+                    <style>
+                        body { font-family: 'Arial', sans-serif; }
+                        table { border-collapse: collapse; }
+                    </style>
+                </head>
+                <body>
+                    ${innerHtml}
+                </body>
+                </html>
+            `;
 
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "No;Elemen;Kompetensi;Konten;Tujuan Pembelajaran (TP);Kode TP;Status Validasi\n";
-
-            appState.tpOutputs.forEach((item, index) => {
-                const row = [
-                    index + 1,
-                    `"${item.elemen.replace(/"/g, '""')}"`,
-                    `"${item.kompetensi.replace(/"/g, '""')}"`,
-                    `"${item.konten.replace(/"/g, '""')}"`,
-                    `"${item.tujuanPembelajaran.replace(/"/g, '""')}"`,
-                    `"${item.kode.replace(/"/g, '""')}"`,
-                    item.validasi.isValid ? 'Valid' : 'Koreksi'
-                ];
-                csvContent += row.join(";") + "\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            const mapel = document.getElementById('doc-mapel').value || 'Materi';
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `TP_Generator_BSKAP_${mapel.replace(/\s+/g, '_')}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("CSV TP berhasil diunduh!");
-        }
-
-        function exportATPToCSV() {
-            if(appState.tpOutputs.length === 0) {
-                alert("Tidak ada data Alur Tujuan Pembelajaran untuk diekspor");
-                return;
-            }
-
-            const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
-                return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
-            });
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Urutan ATP;Kode TP;Materi Pokok Referensi;Rumusan Tujuan Pembelajaran;Dimensi Profil Lulusan\n";
-
-            sortedATPData.forEach((item) => {
-                const row = [
-                    item.urutanAtp,
-                    `"${item.kode.replace(/"/g, '""')}"`,
-                    `"${item.konten.replace(/"/g, '""')}"`,
-                    `"${item.tujuanPembelajaran.replace(/"/g, '""')}"`,
-                    `"${(item.dimensiProfil || "Bernalar Kritis").replace(/"/g, '""')}"`
-                ];
-                csvContent += row.join(";") + "\n";
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            const mapel = document.getElementById('doc-mapel').value || 'Materi';
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `ATP_Alur_Belajar_${mapel.replace(/\s+/g, '_')}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast("CSV ATP berhasil diunduh!");
+            const blob = new Blob(['\ufeff' + htmlContent], { type: 'application/vnd.ms-excel' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Dokumen_Lengkap_TP_ATP_${mapel.replace(/\s+/g, '_')}.xls`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("Dokumen Excel (.xls) berhasil diunduh!");
         }
 
         function exportToWord() {
@@ -3332,57 +3208,20 @@
             }
 
             const mapel = document.getElementById('doc-mapel').value || 'Mata Pelajaran';
-            const sekolah = document.getElementById('doc-sekolah').value || 'Sekolah';
-            const penyusun = document.getElementById('doc-penyusun').value || 'Guru';
-
-            let htmlContent = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><title>Capaian Pembelajaran & TP BSKAP 046</title>
-                <style>
-                    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.4; }
-                    h2 { color: #1e40af; text-align: center; }
-                    table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-                    th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 10pt; }
-                    th { background-color: #f2f2f2; font-weight: bold; }
-                </style>
+            const innerHtml = getUniversalDocumentHTML();
+            
+            const htmlContent = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                    <title>Export Word</title>
+                    <style>
+                        body { font-family: 'Arial', sans-serif; }
+                        table { border-collapse: collapse; }
+                    </style>
                 </head>
                 <body>
-                    <h2>DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN</h2>
-                    <p><b>Mata Pelajaran:</b> ${mapel}<br>
-                    <b>Sekolah:</b> ${sekolah}<br>
-                    <b>Penyusun:</b> ${penyusun}<br>
-                    <b>Dasar Hukum:</b> BSKAP Nomor 046 Tahun 2025</p>
-                    
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Elemen</th>
-                                <th>Kompetensi</th>
-                                <th>Konten Pokok</th>
-                                <th>Rumusan Tujuan Pembelajaran (TP)</th>
-                                <th>Kode</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-            appState.tpOutputs.forEach((item, index) => {
-                htmlContent += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td><b>${escapeHtml(item.elemen)}</b></td>
-                        <td>${escapeHtml(item.kompetensi)}</td>
-                        <td>${escapeHtml(item.konten)}</td>
-                        <td>${escapeHtml(item.tujuanPembelajaran)}</td>
-                        <td><b>${escapeHtml(item.kode)}</b></td>
-                    </tr>
-                `;
-            });
-
-            htmlContent += `
-                        </tbody>
-                    </table>
+                    ${innerHtml}
                 </body>
                 </html>
             `;
@@ -3391,7 +3230,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Dokumen_TP_BSKAP_${mapel.replace(/\s+/g, '_')}.doc`;
+            a.download = `Dokumen_Lengkap_TP_ATP_${mapel.replace(/\s+/g, '_')}.doc`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
