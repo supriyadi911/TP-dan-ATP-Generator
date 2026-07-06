@@ -1421,6 +1421,7 @@
                                     <th width="70" style="text-align: center;">Urutan</th>
                                     <th width="240">Elemen / Materi Pokok</th>
                                     <th>Deskripsi Capaian Pembelajaran (CP)</th>
+                                    <th width="80" style="text-align: center;">Jml TP</th>
                                     <th width="150" style="text-align: center;">Aksi</th>
                                 </tr>
                             </thead>
@@ -1662,8 +1663,8 @@
         // ==========================================
         let appState = {
             cpInputs: [
-                { id: 1, elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional dalam menyelesaikan masalah." },
-                { id: 2, elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, dan menggunakan sifat-sifat operasi untuk menyelesaikan persamaan dan pertidaksamaan linear satu variabel." }
+                { id: 1, elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional dalam menyelesaikan masalah.", jumlahTP: 2 },
+                { id: 2, elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, dan menggunakan sifat-sifat operasi untuk menyelesaikan persamaan dan pertidaksamaan linear satu variabel.", jumlahTP: 2 }
             ],
             tpOutputs: [],
             history: [],
@@ -2184,7 +2185,7 @@
                 document.getElementById('doc-kelas').value = data.kelas;
 
                 appState.cpInputs = data.elemen.map((el, index) => {
-                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi };
+                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi, jumlahTP: 2 };
                 });
 
                 renderCPTable();
@@ -2208,7 +2209,7 @@
             if(appState.cpInputs.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
                             Tidak ada baris data. Tekan "Tambah Elemen" atau pilih Template di Dashboard.
                         </td>
                     </tr>
@@ -2237,11 +2238,16 @@
                     </td>
                     <td>
                         <input type="text" class="form-control" value="${escapeHtml(item.elemen)}" 
-                            onchange="updateCPData(${index}, 'elemen', this.value)" placeholder="Nama Elemen">
+                            oninput="updateCPData(${index}, 'elemen', this.value)" placeholder="Nama Elemen">
                     </td>
                     <td>
                         <textarea class="form-control" rows="3" 
-                            onchange="updateCPData(${index}, 'deskripsi', this.value)" placeholder="Tuliskan Rumusan Capaian Pembelajaran..."></textarea>
+                            oninput="updateCPData(${index}, 'deskripsi', this.value)" placeholder="Tuliskan Rumusan Capaian Pembelajaran..."></textarea>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <input type="number" class="form-control" style="text-align: center; font-weight: bold; padding: 8px 4px;" 
+                            value="${item.jumlahTP || 1}" min="1" max="15" 
+                            oninput="updateCPData(${index}, 'jumlahTP', this.value)" title="Jumlah TP yang ingin dihasilkan">
                     </td>
                     <td style="text-align: center; vertical-align: middle;">
                         <div style="display:flex; gap:6px; justify-content:center;">
@@ -2265,7 +2271,8 @@
             appState.cpInputs.push({
                 id: newId,
                 elemen: "",
-                deskripsi: ""
+                deskripsi: "",
+                jumlahTP: 1
             });
             renderCPTable();
             saveToHistory();
@@ -2273,6 +2280,7 @@
         }
 
         function updateCPData(index, field, value) {
+            if (field === 'jumlahTP') value = parseInt(value) || 1;
             appState.cpInputs[index][field] = value;
             saveStateToLocalStorage();
         }
@@ -2282,7 +2290,8 @@
             appState.cpInputs.splice(index + 1, 0, {
                 id: Math.max(...appState.cpInputs.map(o => o.id)) + 1,
                 elemen: original.elemen + " (Salinan)",
-                deskripsi: original.deskripsi
+                deskripsi: original.deskripsi,
+                jumlahTP: original.jumlahTP || 1
             });
             renderCPTable();
             saveToHistory();
@@ -2325,8 +2334,9 @@
             activeInputs.forEach((item, indexCP) => {
                 const elemenClean = item.elemen.trim();
                 const textCP = item.deskripsi.trim();
+                const targetJumlahTP = item.jumlahTP || 1;
                 
-                const hasilDekonstruksi = dekonstruksiTextCP(textCP, elemenClean);
+                const hasilDekonstruksi = dekonstruksiTextCP(textCP, elemenClean, targetJumlahTP);
                 
                 hasilDekonstruksi.forEach((tpData, indexTP) => {
                     const idTP = appState.tpOutputs.length + 1;
@@ -2397,7 +2407,7 @@
             showToast("Sukses: TP & Alur ATP berhasil dirumuskan!");
         }
 
-        function dekonstruksiTextCP(text, elemenName) {
+        function dekonstruksiTextCP(text, elemenName, targetCount = 1) {
             let matches = [];
             // Pisahkan kalimat berdasarkan titik atau titik koma
             const kalimat = text.split(/[.;]/);
@@ -2509,6 +2519,26 @@
                     kompetensi: "Memahami",
                     konten: elemenName || "Konsep Dasar"
                 });
+            }
+
+            // Normalisasi jumlah sesuai Target Count (Jumlah TP Input)
+            if (matches.length > targetCount) {
+                // Potong jika kelebihan
+                matches = matches.slice(0, targetCount);
+            } else if (matches.length < targetCount) {
+                // Hasilkan variasi kompetensi jika kekurangan
+                const kkoVariasi = ["Menentukan", "Menganalisis", "Menyelesaikan", "Menerapkan", "Mengevaluasi", "Mengidentifikasi", "Menyajikan", "Merancang", "Menciptakan", "Mendemonstrasikan"];
+                const extraNeeded = targetCount - matches.length;
+                const baseMatches = [...matches]; 
+
+                for (let i = 0; i < extraNeeded; i++) {
+                    const baseItem = baseMatches[i % baseMatches.length];
+                    const variasiBaru = kkoVariasi[Math.floor(Math.random() * kkoVariasi.length)];
+                    matches.push({
+                        kompetensi: variasiBaru,
+                        konten: baseItem.konten
+                    });
+                }
             }
 
             return matches;
@@ -2882,7 +2912,8 @@
                 if (kolom.length >= 2) {
                     importData.push({
                         elemen: kolom[0].trim(),
-                        deskripsi: kolom.slice(1).join(pemisah).trim()
+                        deskripsi: kolom.slice(1).join(pemisah).trim(),
+                        jumlahTP: 1
                     });
                 }
             });
@@ -2893,14 +2924,16 @@
                         appState.cpInputs.push({
                             id: appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1,
                             elemen: item.elemen,
-                            deskripsi: item.deskripsi
+                            deskripsi: item.deskripsi,
+                            jumlahTP: item.jumlahTP
                         });
                     });
                 } else {
                     appState.cpInputs = importData.map((item, idx) => ({
                         id: idx + 1,
                         elemen: item.elemen,
-                        deskripsi: item.deskripsi
+                        deskripsi: item.deskripsi,
+                        jumlahTP: item.jumlahTP
                     }));
                 }
 
