@@ -1347,10 +1347,25 @@
                         </table>
                     </div>
 
-                    <div style="text-align: right; margin-top:20px;">
-                        <button class="btn btn-success" style="padding: 14px 28px; box-shadow: var(--shadow-lg);" onclick="generateTP()">
-                            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                            PROSES SEKARANG & GENERATE TP
+                    <div class="card no-print" style="margin-top: 20px; background-color: rgba(59, 130, 246, 0.04); border: 1px dashed var(--primary-color); box-shadow: none;">
+                        <div style="margin-bottom: 12px; font-weight: 800; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                            Generate Cerdas dengan Gemini AI
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                            <input type="password" id="gemini-api-key" class="form-control" style="flex: 1; min-width: 250px;" placeholder="Masukkan Google Gemini API Key Anda di sini...">
+                            <button class="btn btn-primary" id="btn-generate-ai" onclick="generateTPWithGemini()" style="box-shadow: var(--shadow-md);">
+                                🤖 GENERATE TP (GEMINI AI)
+                            </button>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+                            Dapatkan API Key secara gratis di <a href="https://aistudio.google.com/" target="_blank" style="color: var(--primary-color); font-weight:bold;">Google AI Studio</a>. Kunci rahasia API Anda dienkripsi dan disimpan aman secara lokal di browser ini.
+                        </p>
+                    </div>
+
+                    <div style="text-align: right; margin-top:15px;">
+                        <button class="btn btn-outline" style="padding: 12px 24px;" onclick="generateTP()">
+                            ⚙️ GENERATE TP (SISTEM LOKAL)
                         </button>
                     </div>
                 </div>
@@ -1708,6 +1723,12 @@
                 input.addEventListener('input', saveIdentitasToLocal);
                 input.addEventListener('change', saveIdentitasToLocal);
             });
+
+            // Load Gemini API Key jika pernah diinput sebelumnya
+            const savedApiKey = localStorage.getItem('tp_generator_gemini_key');
+            if (savedApiKey && document.getElementById('gemini-api-key')) {
+                document.getElementById('gemini-api-key').value = savedApiKey;
+            }
 
             showToast("Aplikasi Kurikulum Merdeka BSKAP 046/2025 diaktifkan!");
         };
@@ -2323,6 +2344,133 @@
             const outputTabBtn = document.querySelectorAll('.menu-item')[3];
             switchTab('output-tp', outputTabBtn);
             showToast("Sukses: TP & Alur ATP berhasil dirumuskan!");
+        }
+
+        async function generateTPWithGemini() {
+            let activeInputs = appState.cpInputs.filter(item => item.elemen.trim() !== "" && item.deskripsi.trim() !== "");
+            
+            if (activeInputs.length === 0) {
+                alert("Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
+                return;
+            }
+
+            const apiKey = document.getElementById('gemini-api-key').value.trim();
+            if (!apiKey) {
+                alert("Silakan masukkan Google Gemini API Key terlebih dahulu.");
+                document.getElementById('gemini-api-key').focus();
+                return;
+            }
+
+            // Auto-save API key ke local storage
+            localStorage.setItem('tp_generator_gemini_key', apiKey);
+
+            const btnAI = document.getElementById('btn-generate-ai');
+            const originalBtnText = btnAI.innerHTML;
+            btnAI.innerHTML = "⏳ MENGANALISIS DENGAN AI...";
+            btnAI.disabled = true;
+
+            const formatKode = document.getElementById('doc-kode-format').value;
+            const fase = document.getElementById('doc-fase').value;
+
+            // Mempersiapkan set instruksi dan data CP
+            const promptData = activeInputs.map(i => ({
+                elemen: i.elemen, 
+                cp: i.deskripsi, 
+                target_jumlah_tp: i.jumlahTP || 1
+            }));
+
+            const promptText = `Anda adalah seorang ahli Kurikulum Merdeka BSKAP 046/2025 tingkat nasional.
+            Tugas Anda adalah mendekonstruksi teks Capaian Pembelajaran (CP) menjadi Tujuan Pembelajaran (TP) yang logis dan terukur.
+            
+            Berikut adalah data input JSON:
+            ${JSON.stringify(promptData)}
+
+            INSTRUKSI KETAT PENGERJAAN:
+            1. Untuk setiap elemen dalam input di atas, hasilkan TEPAT 'target_jumlah_tp' buah Tujuan Pembelajaran. Jika target 2, buatlah 2 TP dengan KKO yang bervariasi sesuai tingkat pemahaman CP.
+            2. Ekstrak 'kompetensi' (Hanya satu Kata Kerja Operasional, misal: Menganalisis, Mengevaluasi, Menyajikan).
+            3. Ekstrak 'konten' (Materi Pokok inti, dalam format Title Case, contoh: "Bilangan Pecahan", "Sistem Peredaran Darah"). Pertahankan singkatan akronim huruf besar seperti "KPK", "FPB".
+            4. Rumuskan kalimat 'tujuanPembelajaran' dengan format: "Murid mampu [kompetensi] [konten] [penambahan konteks/indikator SMART]".
+            5. Tentukan properti 'dimensiProfil' yang berisi 2 sampai 3 nilai Profil Pelajar Pancasila yang paling relevan dengan konteks kegiatan (pisahkan dengan koma).
+            
+            KEMBALIKAN HANYA ARRAY JSON MURNI dengan parameter properti: elemen, cpOriginal, kompetensi, konten, tujuanPembelajaran, dimensiProfil. Jangan tambahkan format markdown json, backticks, atau teks pengantar apapun.`;
+
+            try {
+                // Menggunakan model Gemini 1.5 Flash untuk keseimbangan kecepatan dan kecerdasan
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }],
+                        generationConfig: { temperature: 0.2 } // Suhu rendah agar AI lebih patuh pada format
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Koneksi ditolak. Periksa kembali API Key Anda atau pastikan koneksi internet stabil.");
+                }
+
+                const data = await response.json();
+                let aiResponseText = data.candidates[0].content.parts[0].text;
+                
+                // Membersihkan markdown JSON pembungkus jika ada
+                aiResponseText = aiResponseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                
+                const aiResult = JSON.parse(aiResponseText);
+                
+                appState.tpOutputs = [];
+                let currentElemen = "";
+                let elemenIndex = 0;
+                let tpCounter = 1;
+
+                // Pemetaan dan injeksi data AI ke dalam state aplikasi
+                aiResult.forEach((tpData, index) => {
+                    const idTP = index + 1;
+                    
+                    // Logika pengurutan penomoran kode TP
+                    if (tpData.elemen !== currentElemen) {
+                        currentElemen = tpData.elemen;
+                        elemenIndex++;
+                        tpCounter = 1;
+                    }
+
+                    let kodeTP = formatKode === "prefix" ? `TP-${String(idTP).padStart(2, '0')}` : `${fase}.${elemenIndex}.${tpCounter}`;
+
+                    // Jalankan validasi kelayakan pada hasil AI
+                    const validasi = lakukanValidasiTP(tpData.tujuanPembelajaran, tpData.kompetensi, tpData.konten);
+
+                    appState.tpOutputs.push({
+                        id: idTP,
+                        elemen: tpData.elemen,
+                        cpOriginal: tpData.cpOriginal || "Hasil CP",
+                        kompetensi: tpData.kompetensi,
+                        konten: tpData.konten,
+                        tujuanPembelajaran: tpData.tujuanPembelajaran,
+                        dimensiProfil: tpData.dimensiProfil || "Bernalar Kritis, Mandiri",
+                        kode: kodeTP,
+                        urutanAtp: idTP, 
+                        validasi: validasi,
+                        catatan: "Dihasilkan secara cerdas oleh Google Gemini AI."
+                    });
+                    tpCounter++;
+                });
+
+                renderOutputTable();
+                renderATPTable();
+                populateElementFilter();
+                saveToHistory();
+                saveStateToLocalStorage();
+                
+                const outputTabBtn = document.querySelectorAll('.menu-item')[3];
+                switchTab('output-tp', outputTabBtn);
+                showToast("Sukses: TP & Konten materi berhasil dirumuskan dengan Gemini AI!");
+
+            } catch (error) {
+                console.error("Kesalahan Gemini API:", error);
+                alert("Gagal memproses dengan AI: " + error.message);
+            } finally {
+                btnAI.innerHTML = originalBtnText;
+                btnAI.disabled = false;
+            }
         }
 
         function dekonstruksiTextCP(text, elemenName, targetCount = 1) {
