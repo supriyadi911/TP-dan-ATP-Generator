@@ -564,8 +564,24 @@
             letter-spacing: 0.05em;
         }
 
+        .main-table th.sortable-header {
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .main-table th.sortable-header:hover {
+            background-color: #cbd5e1 !important;
+            color: var(--primary-color) !important;
+        }
+
         [data-theme="dark"] .main-table th {
             background-color: #0b0f19;
+        }
+        
+        [data-theme="dark"] .main-table th.sortable-header:hover {
+            background-color: #1f2937 !important;
+            color: var(--primary-hover) !important;
         }
 
         .main-table td {
@@ -908,6 +924,7 @@
             width: 100%; 
             border-collapse: collapse; 
             margin-bottom: 25px;
+            page-break-inside: auto !important;
         }
         .doc-data-table th, .doc-data-table td {
             border: 1px solid #000000;
@@ -928,6 +945,8 @@
             margin-top: 25px !important;
             margin-bottom: 10px !important;
             color: #000000 !important;
+            page-break-after: avoid !important;
+            break-after: avoid !important;
         }
 
         .footer-print-clean {
@@ -940,7 +959,7 @@
         }
 
         /* ==========================================
-           15. MEDIA PRINT LAYOUT OVERRIDES
+           15. MEDIA PRINT LAYOUT OVERRIDES (Browser PDF)
            ========================================== */
         #print-area {
             display: none;
@@ -949,7 +968,7 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 15mm;
+                margin: 15mm 15mm 15mm 15mm;
             }
 
             body {
@@ -977,8 +996,25 @@
                 box-shadow: none !important;
             }
 
-            .doc-data-table tr {
+            /* FORCE REPEAT TABLE HEADERS DI SETIAP HALAMAN */
+            thead {
+                display: table-header-group !important;
+            }
+
+            /* Cegah pemotongan baris data di tengah-tengah */
+            tr {
                 page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Izinkan tabel mengalir secara alami */
+            table {
+                page-break-inside: auto !important;
+            }
+
+            .avoid-break {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
             .footer-print-clean {
@@ -1271,7 +1307,7 @@
                         <div class="form-group">
                             <label>Upload Logo Pemerintah (Kiri)</label>
                             <div class="image-preview-container">
-                                <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah', 'preview-pemerintah')">
+                                <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah')">
                                 <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-pemerintah').click()">Pilih Logo</button>
                                 <img id="preview-pemerintah" class="image-preview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzE2YTM0YSIvPjxwYXRoIGQ9Ik0zMCw1MCBMNDUsNjUgTDcwLDM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjgiIGZpbGw9Im5vbmUiLz48L3N2Zz4=">
                             </div>
@@ -1279,7 +1315,7 @@
                         <div class="form-group">
                             <label>Upload Logo Sekolah (Kanan)</label>
                             <div class="image-preview-container">
-                                <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah', 'preview-sekolah')">
+                                <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah')">
                                 <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-sekolah').click()">Pilih Logo</button>
                                 <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFlNDBhZiIvPjxwb2x5Z29uIHBvaW50cz0iNTAsMjAgODAsNzUgMjAsNzUiIGZpbGw9IndoaXRlIi8+PC9zdmc+">
                             </div>
@@ -1287,7 +1323,7 @@
                         <div class="form-group">
                             <label>Format Kode TP</label>
                             <select class="form-control" id="doc-kode-format">
-                                <option value="prefix">TP-01, TP-02, ...</option>
+                                <option value="prefix" selected>TP-01, TP-02, ...</option>
                                 <option value="numeric">7.1.1, 7.1.2, ... (Fase.Materi.No)</option>
                             </select>
                         </div>
@@ -1337,7 +1373,7 @@
                             <thead>
                                 <tr>
                                     <th width="70" style="text-align: center;">Urutan</th>
-                                    <th width="240">Elemen / Materi Pokok</th>
+                                    <th width="240">Elemen / Topik Pokok</th>
                                     <th>Deskripsi Capaian Pembelajaran (CP)</th>
                                     <th width="80" style="text-align: center;">Jml TP</th>
                                     <th width="150" style="text-align: center;">Aksi</th>
@@ -1348,27 +1384,57 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
 
-                    <div class="card no-print" style="margin-top: 20px; background-color: rgba(59, 130, 246, 0.04); border: 1px dashed var(--primary-color); box-shadow: none;">
-                        <div style="margin-bottom: 12px; font-weight: 800; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
-                            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
-                            Generate Cerdas dengan Gemini AI
-                        </div>
-                        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-                            <button class="btn btn-primary" id="btn-generate-ai" onclick="generateTPWithGemini()" style="box-shadow: var(--shadow-md); width: 100%;">
-                                🤖 GENERATE TP (GEMINI AI - BUILT-IN)
-                            </button>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
-                            Aplikasi ini terintegrasi langsung dengan model <b>Gemini 2.5 Flash</b>. Anda tidak perlu memasukkan API Key secara manual.
-                        </p>
+                <!-- ==========================================
+                   INPUT MATERI / BAB BUKU CETAK PER SEMESTER
+                   ========================================== -->
+                <div class="card no-print" style="margin-top: 20px;">
+                    <div class="card-title">
+                        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                        Referensi Materi / BAB Buku Cetak per Semester
                     </div>
+                    <p style="font-size:0.85rem; margin-bottom:15px; color:var(--text-muted);">
+                        Silakan tuliskan daftar materi pokok atau bab buku paket pelajaran Anda. Pemisahan per baris atau dengan tanda koma akan dibaca oleh sistem (baik Generator Lokal maupun AI) untuk memetakan Tujuan Pembelajaran secara runut.
+                    </p>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label style="font-weight:700; color:var(--primary-color);">Daftar Materi / BAB Semester 1 (Ganjil)</label>
+                            <textarea class="form-control" id="global-materi-sm1" rows="5" 
+                                oninput="updateGlobalMateri('globalMateriSm1', this.value)" 
+                                placeholder="Contoh:&#10;Bab 1: Struktur Eksplanasi&#10;Bab 2: Unsur Informasi Nonsastra&#10;Bab 3: Membaca Lancar Cerita"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-weight:700; color:var(--accent-color);">Daftar Materi / BAB Semester 2 (Genap)</label>
+                            <textarea class="form-control" id="global-materi-sm2" rows="5" 
+                                oninput="updateGlobalMateri('globalMateriSm2', this.value)" 
+                                placeholder="Contoh:&#10;Bab 4: Drama Sastra Anak&#10;Bab 5: Dongeng Rakyat Nusantara&#10;Bab 6: Analisis Cerpen Pendidikan"></textarea>
+                        </div>
+                    </div>
+                </div>
 
-                    <div style="text-align: right; margin-top:15px;">
-                        <button class="btn btn-outline" style="padding: 12px 24px;" onclick="generateTP()">
-                            ⚙️ GENERATE TP (SISTEM LOKAL)
+                <!-- ==========================================
+                   MODUL GENERATE AI & LOKAL
+                   ========================================== -->
+                <div class="card no-print" style="margin-top: 20px; background-color: rgba(59, 130, 246, 0.04); border: 1px dashed var(--primary-color); box-shadow: none;">
+                    <div style="margin-bottom: 12px; font-weight: 800; color: var(--primary-color); display: flex; align-items: center; gap: 8px;">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                        Generate Cerdas dengan Gemini AI (Menyelaraskan Materi Buku Cetak)
+                    </div>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                        <button class="btn btn-primary" id="btn-generate-ai" onclick="generateTPWithGemini()" style="box-shadow: var(--shadow-md); width: 100%;">
+                            🤖 GENERATE TP (GEMINI AI - MENGIKUTI MATERI BUKU CETAK SEMESTER 1 & 2)
                         </button>
                     </div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 10px;">
+                        Aplikasi ini terintegrasi langsung dengan model <b>Gemini 2.5 Flash</b>. TP hasil generate akan disebar ke Semester 1 & 2 mengikuti bab cetak di atas.
+                    </p>
+                </div>
+
+                <div style="text-align: right; margin-top:15px; margin-bottom: 25px;">
+                    <button class="btn btn-outline" style="padding: 12px 24px;" onclick="generateTP()">
+                        ⚙️ GENERATE TP (SISTEM LOKAL - SINKRON BAB)
+                    </button>
                 </div>
             </div>
 
@@ -1395,7 +1461,7 @@
                     </div>
                     <div>
                         <select class="form-control" id="sort-order" onchange="sortAndRenderOutput()">
-                            <option value="default">Urutan Default</option>
+                            <option value="default" selected>Urutan Default</option>
                             <option value="elemen-asc">Elemen (A-Z)</option>
                             <option value="kode-asc">Kode TP (Asc)</option>
                             <option value="kompetensi-asc">Kompetensi (A-Z)</option>
@@ -1407,8 +1473,8 @@
                 <div class="card" id="output-section">
                     <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
                         <span style="display:flex; align-items:center; gap:8px;">
-                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                            Tabel Hasil Rumusan Tujuan Pembelajaran (TP)
+                            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                            Tabel Hasil Rumusan Tujuan Pembelajaran (TP) Berbasis Semester
                         </span>
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
@@ -1421,7 +1487,7 @@
                     </div>
 
                     <p class="no-print" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
-                        💡 <b>Info Pengeditan:</b> Klik ganda pada sel **Kompetensi**, **Konten**, atau **TP** untuk memperbarui isi teks secara langsung. Hasil validasi otomatis dihitung ulang secara real-time.
+                        💡 <b>Info Pengeditan:</b> Klik ganda pada sel **Kompetensi**, **Materi (Buku Cetak)**, atau **TP** untuk memperbarui isi teks secara langsung. Anda juga bisa mengatur jatah Semester untuk setiap baris hasil melalui pilihan dropdown secara interaktif.
                     </p>
 
                     <div class="table-responsive">
@@ -1429,10 +1495,11 @@
                             <thead>
                                 <tr>
                                     <th width="50" style="text-align: center;">No</th>
-                                    <th width="150">Elemen / Topik</th>
+                                    <th width="140">Elemen / Topik</th>
                                     <th width="200">Capaian Pembelajaran (CP)</th>
-                                    <th width="140">Kompetensi</th>
-                                    <th width="150">Konten (Materi Pokok)</th>
+                                    <th width="120">Kompetensi</th>
+                                    <th width="150">Materi (Buku Cetak)</th>
+                                    <th width="120" style="text-align: center;">Semester</th>
                                     <th>Tujuan Pembelajaran (TP)</th>
                                     <th width="90" style="text-align: center;">Kode</th>
                                     <th width="130" style="text-align: center;" class="no-print">Saringan Validasi</th>
@@ -1441,7 +1508,7 @@
                             </thead>
                             <tbody id="tbody-tp-output">
                                 <tr>
-                                    <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                                    <td colspan="10" style="text-align: center; color: var(--text-muted); padding: 40px;">
                                         Belum ada data pembelajaran dianalisis. Isi Capaian Pembelajaran Elemen lalu jalankan proses analisis.
                                     </td>
                                 </tr>
@@ -1459,7 +1526,7 @@
                     <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 15px;">
                         <span style="display:flex; align-items:center; gap:8px;">
                             <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-                            Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran
+                            Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran per Semester (Sesuai Urutan BAB)
                         </span>
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
@@ -1470,23 +1537,39 @@
                     </div>
 
                     <p class="no-print" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
-                        💡 <b>Rancang Alur Pembelajaran:</b> ATP telah otomatis diurutkan berdasarkan kompleksitas taksonomi (LOTS ke HOTS). Anda tetap dapat menyesuaikan urutannya secara manual pada kolom **Urutan ATP**.
+                        💡 <b>Rancang Alur Pembelajaran:</b> ATP telah otomatis diurutkan secara runut berdasarkan **Urutan BAB materi buku cetak** yang diinput per Semester. Klik pada nama header kolom untuk mengurutkan (*sorting*) data secara instan.
                     </p>
 
                     <div class="table-responsive">
                         <table class="main-table" id="table-atp-output">
                             <thead>
                                 <tr>
-                                    <th width="110" style="text-align: center;">Urutan ATP</th>
-                                    <th width="110" style="text-align: center;">Kode TP</th>
-                                    <th width="200">Materi Pokok Referensi</th>
-                                    <th>Rumusan Tujuan Pembelajaran (TP)</th>
-                                    <th width="220">Dimensi Profil Lulusan (Pancasila)</th>
+                                    <th width="110" style="text-align: center;" class="sortable-header" onclick="sortATPByHeader('urutanAtp')">
+                                        Urutan ATP <span id="sort-icon-urutanAtp">▲</span>
+                                    </th>
+                                    <th width="110" style="text-align: center;" class="sortable-header" onclick="sortATPByHeader('kode')">
+                                        Kode TP <span id="sort-icon-kode"></span>
+                                    </th>
+                                    <th width="180" class="sortable-header" onclick="sortATPByHeader('bab')">
+                                        BAB <span id="sort-icon-bab"></span>
+                                    </th>
+                                    <th width="120" style="text-align: center;" class="sortable-header" onclick="sortATPByHeader('semester')">
+                                        Semester <span id="sort-icon-semester"></span>
+                                    </th>
+                                    <th width="200" class="sortable-header" onclick="sortATPByHeader('konten')">
+                                        Materi Buku Cetak <span id="sort-icon-konten"></span>
+                                    </th>
+                                    <th class="sortable-header" onclick="sortATPByHeader('tujuanPembelajaran')">
+                                        Rumusan Tujuan Pembelajaran (TP) <span id="sort-icon-tujuanPembelajaran"></span>
+                                    </th>
+                                    <th width="220" class="sortable-header" onclick="sortATPByHeader('dimensiProfil')">
+                                        Dimensi Profil Lulusan (Pancasila) <span id="sort-icon-dimensiProfil"></span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="tbody-atp-output">
                                 <tr>
-                                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">
                                         Belum ada alur pengajaran (ATP) yang terbentuk. Selesaikan analisis TP terlebih dahulu.
                                     </td>
                                 </tr>
@@ -1580,6 +1663,20 @@
         </div>
     </div>
 
+    <!-- ==========================================
+       EE. MODAL KONFIRMASI CUSTOM (Ganti confirm & alert)
+       ========================================== -->
+    <div id="custom-confirm-modal" class="modal no-print" style="z-index: 2000; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);">
+        <div class="modal-content" style="max-width: 440px; text-align: center;">
+            <h3 id="confirm-title" style="margin-bottom: 12px; color: var(--primary-color); font-weight: 800; font-size:1.25rem;">Konfirmasi</h3>
+            <p id="confirm-message" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5;"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;" id="confirm-buttons-wrapper">
+                <button class="btn btn-outline" id="btn-confirm-cancel">Batal</button>
+                <button class="btn btn-danger" id="btn-confirm-ok">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast-notif">
         <span id="toast-message">Pemberitahuan berhasil disimpan!</span>
@@ -1597,13 +1694,20 @@
         // ==========================================
         let appState = {
             cpInputs: [
-                { id: 1, elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); dan menganalisis teks sastra berbentuk teks aural.", jumlahTP: 4 },
-                { id: 2, elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual.", jumlahTP: 2 }
+                { id: 1, elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); dan menganalisis teks sastra berbentuk teks aural.", jumlahTP: 3 },
+                { id: 2, elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual.", jumlahTP: 3 }
             ],
+            globalMateriSm1: "Bab 1: Eksplanasi Aural dari Media Informasi, Bab 2: Membaca Lancar Cerita Rakyat Nusantara",
+            globalMateriSm2: "Bab 3: Struktur Drama Anak Tradisional, Bab 4: Nilai Karakter dalam Film Pendek",
             tpOutputs: [],
             history: [],
             historyIndex: -1,
             maxHistory: 15
+        };
+
+        let atpSortState = {
+            field: 'urutanAtp',
+            direction: 'asc'
         };
 
         const DICTIONARY_KKO = [
@@ -1629,10 +1733,55 @@
             "melalui penyelesaian masalah kontekstual",
             "secara tepat dan mandiri",
             "secara kreatif dalam kehidupan sehari-hari",
-            "dengan menggunakan representasi matematika yang sesuai",
+            "dengan menggunakan representasi yang sesuai",
             "secara kolaboratif dalam kerja kelompok",
             "dengan sistematis berdasarkan bukti ilmiah"
         ];
+
+        // ==========================================
+        // 1B. DIALOG DAN NOTIFIKASI PENGGANTI (Tanpa alert/confirm)
+        // ==========================================
+        function showCustomConfirm(title, message, onOk) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const cancelBtn = document.getElementById('btn-confirm-cancel');
+            const okBtn = document.getElementById('btn-confirm-ok');
+            
+            cancelBtn.style.display = 'inline-flex';
+            okBtn.innerText = "Ya, Lanjutkan";
+            okBtn.className = "btn btn-danger";
+
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.style.display = 'flex';
+            
+            cancelBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+            okBtn.onclick = function() {
+                modal.style.display = 'none';
+                onOk();
+            };
+        }
+
+        function showCustomAlert(title, message) {
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-message').innerText = message;
+            
+            const cancelBtn = document.getElementById('btn-confirm-cancel');
+            const okBtn = document.getElementById('btn-confirm-ok');
+            
+            cancelBtn.style.display = 'none';
+            okBtn.innerText = "Selesai";
+            okBtn.className = "btn btn-primary";
+
+            const modal = document.getElementById('custom-confirm-modal');
+            modal.style.display = 'flex';
+            
+            okBtn.onclick = function() {
+                modal.style.display = 'none';
+            };
+        }
 
         // ==========================================
         // 2. FUNGSI DRAG AND DROP & UTILITY
@@ -1685,29 +1834,35 @@
         // Kalkulasi Taksonomi untuk Sorting ATP
         // ==========================================
         function getTaxonomyLevel(kko) {
-            const lowerKKO = kko.toLowerCase();
-            // C1: Mengingat
+            const lowerKKO = String(kko || "").toLowerCase();
             if (lowerKKO.match(/(ingat|sebut|tulis|baca|identifikasi|kenali|tunjuk|rekam)/)) return 1;
-            // C2: Memahami
             if (lowerKKO.match(/(paham|jelas|cerita|beda|klasifikasi|kategori|rangkum|arti|makna)/)) return 2;
-            // C3: Menerapkan
             if (lowerKKO.match(/(terap|guna|tentu|praktik|hitung|ukur|model|formulasi|saji|komunikasi)/)) return 3;
-            // C4: Menganalisis
             if (lowerKKO.match(/(analisis|banding|urut|urai|eksplor|kritis)/)) return 4;
-            // C5: Mengevaluasi
             if (lowerKKO.match(/(evaluasi|bukti|taksir|kira|respons|hargai|nilai)/)) return 5;
-            // C6: Mencipta
             if (lowerKKO.match(/(rancang|cipta|buat|susun|tuang|karya)/)) return 6;
             
-            return 3; // Default ke C3 jika tidak terdeteksi spesifik
+            return 3; 
         }
 
         function finalizeAndSortTP(tempOutputs, formatKode, fase) {
-            // 1. Sort by Element Order (based on appState.cpInputs) then Taxonomy
+            const ch1 = (appState.globalMateriSm1 || "").split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
+            const ch2 = (appState.globalMateriSm2 || "").split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
+            const allChapters = [...ch1, ...ch2];
+
             tempOutputs.sort((a, b) => {
+                let idxA = allChapters.findIndex(ch => ch.toLowerCase().includes(a.bab.toLowerCase()) || a.bab.toLowerCase().includes(ch.toLowerCase()));
+                let idxB = allChapters.findIndex(ch => ch.toLowerCase().includes(b.bab.toLowerCase()) || b.bab.toLowerCase().includes(ch.toLowerCase()));
+                
+                if (idxA === -1) idxA = 999;
+                if (idxB === -1) idxB = 999;
+
+                if (idxA !== idxB) {
+                    return idxA - idxB;
+                }
+                
                 let elIndexA = appState.cpInputs.findIndex(cp => cp.elemen === a.elemen);
                 let elIndexB = appState.cpInputs.findIndex(cp => cp.elemen === b.elemen);
-                
                 if (elIndexA !== elIndexB) return elIndexA - elIndexB;
                 
                 let taxA = getTaxonomyLevel(a.kompetensi);
@@ -1715,21 +1870,24 @@
                 return taxA - taxB;
             });
 
-            // 2. Re-assign ID, Kode, Urutan
             appState.tpOutputs = [];
-            let currentElemen = "";
-            let elemenIndex = 0;
-            let tpCounter = 1;
+            let elementCounter = {};
 
             tempOutputs.forEach((tpData, index) => {
                 const idTP = index + 1;
-                if (tpData.elemen !== currentElemen) {
-                    currentElemen = tpData.elemen;
-                    elemenIndex++;
-                    tpCounter = 1;
-                }
+                const elName = tpData.elemen;
                 
-                let kodeTP = formatKode === "prefix" ? `TP-${String(idTP).padStart(2, '0')}` : `${fase}.${elemenIndex}.${tpCounter}`;
+                if (!elementCounter[elName]) {
+                    elementCounter[elName] = 0;
+                }
+                elementCounter[elName]++;
+                
+                let elIndex = appState.cpInputs.findIndex(cp => cp.elemen === elName) + 1;
+                if (elIndex <= 0) elIndex = 1;
+                
+                let kodeTP = formatKode === "prefix" 
+                    ? `TP-${String(idTP).padStart(2, '0')}` 
+                    : `${fase}.${elIndex}.${elementCounter[elName]}`;
 
                 appState.tpOutputs.push({
                     ...tpData,
@@ -1737,7 +1895,6 @@
                     kode: kodeTP,
                     urutanAtp: idTP
                 });
-                tpCounter++;
             });
         }
 
@@ -1753,6 +1910,12 @@
                         appState.history = [];
                         appState.historyIndex = -1;
                     }
+                    if(appState.globalMateriSm1 === undefined) {
+                        appState.globalMateriSm1 = "Bab 1: Eksplanasi Aural dari Media Informasi, Bab 2: Membaca Lancar Cerita Rakyat Nusantara";
+                    }
+                    if(appState.globalMateriSm2 === undefined) {
+                        appState.globalMateriSm2 = "Bab 3: Struktur Drama Anak Tradisional, Bab 4: Nilai Karakter dalam Film Pendek";
+                    }
                 } catch(e) {
                     console.error("Gagal meload cache data", e);
                 }
@@ -1760,10 +1923,8 @@
                 saveToHistory();
             }
 
-            // Set default values matching SDN 1 DURIAN PAYUNG
             loadIdentitasFromLocal();
             
-            // If empty, populate with uploaded document info (SDN 1 DURIAN PAYUNG)
             if (!localStorage.getItem('tp_generator_identitas_v1')) {
                 document.getElementById('doc-penyusun').value = "Supriyadi, S. Pd. Gr";
                 document.getElementById('doc-nip').value = "198811292022211006";
@@ -1776,6 +1937,17 @@
                 document.getElementById('doc-kabupaten').value = "KOTA BANDAR LAMPUNG";
                 saveIdentitasToLocal();
             }
+
+            if (appState.tpOutputs) {
+                appState.tpOutputs.forEach(item => {
+                    if (item.bab === undefined || item.bab === "") {
+                        item.bab = item.konten || "Bab Baru";
+                    }
+                });
+            }
+
+            document.getElementById('global-materi-sm1').value = appState.globalMateriSm1 || '';
+            document.getElementById('global-materi-sm2').value = appState.globalMateriSm2 || '';
 
             renderCPTable();
             renderOutputTable();
@@ -1840,11 +2012,21 @@
         function saveStateToLocalStorage() {
             localStorage.setItem('tp_generator_state_v1', JSON.stringify({
                 cpInputs: appState.cpInputs,
+                globalMateriSm1: appState.globalMateriSm1,
+                globalMateriSm2: appState.globalMateriSm2,
                 tpOutputs: appState.tpOutputs
             }));
             updateStatistics();
         }
 
+        function updateGlobalMateri(field, value) {
+            appState[field] = value;
+            saveStateToLocalStorage();
+        }
+
+        // ==========================================
+        // 5B. UNDO & REDO CONTROLLERS
+        // ==========================================
         function showToast(message) {
             const toast = document.getElementById('toast-notif');
             const msg = document.getElementById('toast-message');
@@ -1864,6 +2046,8 @@
             
             appState.history.push({
                 cpInputs: JSON.parse(JSON.stringify(appState.cpInputs)),
+                globalMateriSm1: appState.globalMateriSm1,
+                globalMateriSm2: appState.globalMateriSm2,
                 tpOutputs: JSON.parse(JSON.stringify(appState.tpOutputs))
             });
 
@@ -1898,7 +2082,12 @@
             const targetState = appState.history[appState.historyIndex];
             appState.cpInputs = JSON.parse(JSON.stringify(targetState.cpInputs));
             appState.tpOutputs = JSON.parse(JSON.stringify(targetState.tpOutputs));
+            appState.globalMateriSm1 = targetState.globalMateriSm1 || '';
+            appState.globalMateriSm2 = targetState.globalMateriSm2 || '';
             
+            document.getElementById('global-materi-sm1').value = appState.globalMateriSm1;
+            document.getElementById('global-materi-sm2').value = appState.globalMateriSm2;
+
             renderCPTable();
             renderOutputTable();
             renderATPTable();
@@ -1916,21 +2105,30 @@
         }
 
         function resetAll() {
-            if(confirm("Apakah Anda yakin ingin menghapus seluruh data dan mereset sistem ke setelan awal?")) {
-                localStorage.removeItem('tp_generator_state_v1');
-                localStorage.removeItem('tp_generator_identitas_v1');
-                appState.cpInputs = [];
-                appState.tpOutputs = [];
-                appState.history = [];
-                appState.historyIndex = -1;
-                
-                renderCPTable();
-                renderOutputTable();
-                renderATPTable();
-                updateStatistics();
-                populateElementFilter();
-                showToast("Semua data berhasil dibersihkan");
-            }
+            showCustomConfirm(
+                "Mereset Sistem", 
+                "Apakah Anda yakin ingin menghapus seluruh data dan mereset sistem ke setelan awal?", 
+                function() {
+                    localStorage.removeItem('tp_generator_state_v1');
+                    localStorage.removeItem('tp_generator_identitas_v1');
+                    appState.cpInputs = [];
+                    appState.tpOutputs = [];
+                    appState.globalMateriSm1 = "";
+                    appState.globalMateriSm2 = "";
+                    appState.history = [];
+                    appState.historyIndex = -1;
+                    
+                    document.getElementById('global-materi-sm1').value = "";
+                    document.getElementById('global-materi-sm2').value = "";
+
+                    renderCPTable();
+                    renderOutputTable();
+                    renderATPTable();
+                    updateStatistics();
+                    populateElementFilter();
+                    showToast("Semua data berhasil dibersihkan");
+                }
+            );
         }
 
         function adjustFont(percentChange) {
@@ -2073,7 +2271,6 @@
                         appState = importedData.appState;
                         const identitas = importedData.identitas;
 
-                        // Restore Identitas to DOM
                         if(identitas.penyusun) document.getElementById('doc-penyusun').value = identitas.penyusun;
                         if(identitas.nip) document.getElementById('doc-nip').value = identitas.nip;
                         if(identitas.sekolah) document.getElementById('doc-sekolah').value = identitas.sekolah;
@@ -2091,11 +2288,20 @@
                         if(identitas.logoPemda) document.getElementById('preview-pemerintah').src = identitas.logoPemda;
                         if(identitas.logoSekolah) document.getElementById('preview-sekolah').src = identitas.logoSekolah;
 
-                        // Save restored to local storage
+                        document.getElementById('global-materi-sm1').value = appState.globalMateriSm1 || '';
+                        document.getElementById('global-materi-sm2').value = appState.globalMateriSm2 || '';
+
+                        if (appState.tpOutputs) {
+                            appState.tpOutputs.forEach(item => {
+                                if (item.bab === undefined || item.bab === "") {
+                                    item.bab = item.konten || "Bab Baru";
+                                }
+                            });
+                        }
+
                         saveStateToLocalStorage();
                         saveIdentitasToLocal();
 
-                        // Re-render UI
                         renderCPTable();
                         renderOutputTable();
                         renderATPTable();
@@ -2104,74 +2310,73 @@
                         
                         showToast("Seluruh data berhasil direstore dari file JSON!");
                     } else {
-                        alert("Format file JSON tidak valid atau struktur rusak.");
+                        showCustomAlert("Format Error", "Format file JSON tidak valid atau struktur rusak.");
                     }
                 } catch (err) {
-                    alert("Terjadi kesalahan saat membaca isi file JSON.");
+                    showCustomAlert("Gagal Impor", "Terjadi kesalahan saat membaca isi file JSON.");
                     console.error(err);
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Reset the input
-        }
-
-        function previewImage(input, previewId, printId) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const previewElement = document.getElementById(previewId);
-                    if (previewElement) previewElement.src = e.target.result;
-                    showToast("Logo berhasil diperbarui!");
-                    saveIdentitasToLocal();
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
+            event.target.value = ''; 
         }
 
         // ==========================================
-        // 5. TEMPLATE MANAGEMENT (BSKAP 046/2025)
+        // TEMPLATE MANAGEMENT (BSKAP 046/2025)
         // ==========================================
         const MATAPEL_TEMPLATES = {
             pancasila: {
                 mapel: "Pendidikan Pancasila", fase: "C", kelas: "V",
+                materiSm1: "Bab 1: Hubungan Antarsila Pancasila, Bab 2: Nilai Pancasila dalam Kehidupan, Bab 3: Gotong Royong dan Kerja Sama",
+                materiSm2: "Bab 4: Penerapan Sila Pancasila di Sekolah & Masyarakat, Bab 5: Hak dan Kewajiban Warga Negara",
                 elemen: [
-                    { elemen: "Pancasila", deskripsi: "Murid mampu memahami dan menyajikan hubungan antarsila dalam Pancasila sebagai suatu kesatuan yang utuh; mengidentifikasi dan menyajikan makna nilai-nilai Pancasila sebagai pandangan hidup berbangsa dan bernegara; menerapkan nilai-nilai Pancasila di lingkungan keluarga, sekolah, dan masyarakat." },
-                    { elemen: "Undang-Undang Dasar Negara RI Tahun 1945", deskripsi: "Murid mampu menganalisis dan menyajikan hasil analisis bentuk kerja sama dalam lingkungan sekitar; memahami hak dan kewajiban sebagai warga negara." }
+                    { id: 1, elemen: "Pancasila", deskripsi: "Murid mampu memahami dan menyajikan hubungan antarsila dalam Pancasila sebagai suatu kesatuan yang utuh; mengidentifikasi dan menyajikan makna nilai-nilai Pancasila sebagai pandangan hidup berbangsa dan bernegara; menerapkan nilai-nilai Pancasila di lingkungan keluarga, sekolah, dan masyarakat.", jumlahTP: 3 },
+                    { id: 2, elemen: "Undang-Undang Dasar Negara RI Tahun 1945", deskripsi: "Murid mampu menganalisis dan menyajikan hasil analisis bentuk kerja sama dalam lingkungan sekitar; memahami hak dan kewajiban sebagai warga negara.", jumlahTP: 2 }
                 ]
             },
             indonesia: {
                 mapel: "Bahasa Indonesia", fase: "C", kelas: "V",
+                materiSm1: "Bab 1: Eksplanasi Aural dari Media Informasi, Bab 2: Membaca Lancar Cerita Rakyat Nusantara",
+                materiSm2: "Bab 3: Struktur Drama Anak Tradisional, Bab 4: Nilai Karakter dalam Film Pendek",
                 elemen: [
-                    { elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); dan menganalisis teks sastra berbentuk teks aural." },
-                    { elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual." }
+                    { id: 1, elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); and menganalisis teks sastra berbentuk teks aural.", jumlahTP: 3 },
+                    { id: 2, elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual.", jumlahTP: 3 }
                 ]
             },
             matematika: {
                 mapel: "Matematika", fase: "C", kelas: "V",
+                materiSm1: "Bab 1: Nilai Tempat Bilangan Cacah Besar, Bab 2: Dekomposisi Bilangan Bulat, Bab 3: Jaring-jaring Kubus dan Balok",
+                materiSm2: "Bab 4: Operasi Hitung Campuran, Bab 5: Visualisasi Perspektif Spasial",
                 elemen: [
-                    { elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, menentukan nilai tempat, membandingkan, mengurutkan, melakukan komposisi dan dekomposisi bilangan cacah sampai 1.000.000." },
-                    { elemen: "Geometri", deskripsi: "Murid dapat mengonstruksi dan mengurai bangun ruang (kubus, balok, dan gabungannya) dan mengenali visualisasi spasial (bagian depan, atas, dan samping)." }
+                    { id: 1, elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, menentukan nilai tempat, membandingkan, mengurutkan, melakukan komposisi dan dekomposisi bilangan cacah sampai 1.000.000.", jumlahTP: 4 },
+                    { id: 2, elemen: "Geometri", deskripsi: "Murid dapat mengonstruksi dan mengurai bangun ruang (kubus, balok, dan gabungannya) dan mengenali visualisasi spasial (bagian depan, atas, dan samping).", jumlahTP: 2 }
                 ]
             },
             ipas: {
                 mapel: "Ilmu Pengetahuan Alam dan Sosial (IPAS)", fase: "C", kelas: "VI",
+                materiSm1: "Bab 1: Sistem Rangka dan Saraf Manusia, Bab 2: Ekosistem Alami & Buatan, Bab 3: Eksperimen Membuat Magnet Sederhana",
+                materiSm2: "Bab 4: Pengaruh Perubahan Cuaca Ekstrem, Bab 5: Laporan Ilmiah Pelestarian Lingkungan",
                 elemen: [
-                    { elemen: "Pemahaman IPAS", deskripsi: "Murid memahami sistem organ tubuh manusia yang dikaitkan dengan cara menjaga kesehatan tubuhnya; hubungan antar komponen biotik dan abiotik serta pengaruhnya terhadap ekosistem." },
-                    { elemen: "Keterampilan Proses", deskripsi: "Murid mengamati, mempertanyakan dan memprediksi, merencanakan dan melakukan penyelidikan, memproses, menganalisis data dan informasi, mengevaluasi dan refleksi, serta mengomunikasikan hasil." }
+                    { id: 1, elemen: "Pemahaman IPAS", deskripsi: "Murid memahami sistem organ tubuh manusia yang dikaitkan dengan cara menjaga kesehatan tubuhnya; hubungan antar komponen biotik dan abiotik serta pengaruhnya terhadap ekosistem.", jumlahTP: 4 },
+                    { id: 2, elemen: "Keterampilan Proses", deskripsi: "Murid mengamati, mempertanyakan dan memprediksi, merencanakan dan melakukan penyelidikan, memproses, menganalisis data dan informasi, mengevaluasi dan refleksi, serta mengomunikasikan hasil.", jumlahTP: 2 }
                 ]
             },
             pjok: {
                 mapel: "Pendidikan Jasmani, Olahraga, dan Kesehatan", fase: "C", kelas: "V",
+                materiSm1: "Bab 1: Variasi Gerak Permainan Bola Voli, Bab 2: Atletik Lari Estafet, Bab 3: Konsep Pola Hidup Sehat & Gizi Seimbang",
+                materiSm2: "Bab 4: Gerak Dasar Senam Lantai, Bab 5: Pencegahan Bahaya Zat Adiktif",
                 elemen: [
-                    { elemen: "Keterampilan Gerak", deskripsi: "Murid mempraktikkan modifikasi berbagai aktivitas pola gerak dasar dan keterampilan gerak secara mandiri dalam bentuk permainan dan olahraga." },
-                    { elemen: "Pengetahuan Gerak", deskripsi: "Murid memahami fakta, konsep, dan prosedur modifikasi berbagai aktivitas pola gerak dasar dan keterampilan gerak dalam bentuk permainan dan olahraga." }
+                    { id: 1, elemen: "Keterampilan Gerak", deskripsi: "Murid mempraktikkan modifikasi berbagai aktivitas pola gerak dasar dan keterampilan gerak secara mandiri dalam bentuk permainan dan olahraga.", jumlahTP: 3 },
+                    { id: 2, elemen: "Pengetahuan Gerak", deskripsi: "Murid memahami fakta, konsep, dan prosedur modifikasi berbagai aktivitas pola gerak dasar dan keterampilan gerak dalam bentuk permainan dan olahraga.", jumlahTP: 3 }
                 ]
             },
             seni: {
                 mapel: "Seni Rupa", fase: "C", kelas: "VI",
+                materiSm1: "Bab 1: Sketsa Realis Objek Alam Sekitar, Bab 2: Kolase Bahan Alam Kering",
+                materiSm2: "Bab 3: Perspektif Ruang dan Sumbu Gambar, Bab 4: Cetak Tinggi Sederhana & Sablon",
                 elemen: [
-                    { elemen: "Mengalami", deskripsi: "Murid mampu mengamati, mengenal, merekam dan menuangkan pengalaman kesehariannya secara visual dengan menggunakan proporsi, gestur dan ruang." },
-                    { elemen: "Menciptakan", deskripsi: "Murid mampu menciptakan karya 2 atau 3 dimensi dengan mengeksplorasi dan menggunakan elemen seni rupa berupa garis, bentuk, tekstur, ruang dan warna." }
+                    { id: 1, elemen: "Mengalami", deskripsi: "Murid mampu mengamati, mengenal, merekam dan menuangkan pengalaman kesehariannya secara visual dengan menggunakan proporsi, gestur dan ruang.", jumlahTP: 2 },
+                    { id: 2, elemen: "Menciptakan", deskripsi: "Murid mampu menciptakan karya 2 atau 3 dimensi dengan mengeksplorasi dan menggunakan elemen seni rupa berupa garis, bentuk, tekstur, ruang dan warna.", jumlahTP: 2 }
                 ]
             }
         };
@@ -2183,8 +2388,13 @@
                 document.getElementById('doc-fase').value = data.fase;
                 document.getElementById('doc-kelas').value = data.kelas;
 
+                appState.globalMateriSm1 = data.materiSm1 || "";
+                appState.globalMateriSm2 = data.materiSm2 || "";
+                document.getElementById('global-materi-sm1').value = appState.globalMateriSm1;
+                document.getElementById('global-materi-sm2').value = appState.globalMateriSm2;
+
                 appState.cpInputs = data.elemen.map((el, index) => {
-                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi, jumlahTP: 2 };
+                    return { id: index + 1, elemen: el.elemen, deskripsi: el.deskripsi, jumlahTP: el.jumlahTP || 2 };
                 });
 
                 renderCPTable();
@@ -2308,12 +2518,16 @@
         }
 
         function clearCPTable() {
-            if(confirm("Apakah Anda yakin ingin mengosongkan tabel input CP?")) {
-                appState.cpInputs = [];
-                renderCPTable();
-                saveToHistory();
-                saveStateToLocalStorage();
-            }
+            showCustomConfirm(
+                "Bersihkan Tabel", 
+                "Apakah Anda yakin ingin mengosongkan tabel input CP?", 
+                function() {
+                    appState.cpInputs = [];
+                    renderCPTable();
+                    saveToHistory();
+                    saveStateToLocalStorage();
+                }
+            );
         }
 
         // ==========================================
@@ -2323,7 +2537,7 @@
             let activeInputs = appState.cpInputs.filter(item => item.elemen.trim() !== "" && item.deskripsi.trim() !== "");
             
             if (activeInputs.length === 0) {
-                alert("Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
+                showCustomAlert("Data Tidak Lengkap", "Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
                 return;
             }
 
@@ -2331,54 +2545,88 @@
             const fase = document.getElementById('doc-fase').value;
             let tempOutputs = [];
 
+            const chaptersSm1 = (appState.globalMateriSm1 || "").split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
+            const chaptersSm2 = (appState.globalMateriSm2 || "").split(/[,;\n]/).map(x => x.trim()).filter(Boolean);
+
             activeInputs.forEach((item, indexCP) => {
                 const elemenClean = item.elemen.trim();
                 const textCP = item.deskripsi.trim();
                 const targetJumlahTP = item.jumlahTP || 1;
-                
-                const hasilDekonstruksi = dekonstruksiTextCP(textCP, elemenClean, targetJumlahTP);
-                
-                hasilDekonstruksi.forEach((tpData, indexTP) => {
-                    const indikatorAcak = INDIKATOR_SMART[(indexCP + indexTP) % INDIKATOR_SMART.length];
-                    const rumusanTPOtomatis = `Murid mampu ${tpData.kompetensi.toLowerCase()} ${tpData.konten.toLowerCase()} ${indikatorAcak}.`;
 
-                    const validasi = lakukanValidasiTP(rumusanTPOtomatis, tpData.kompetensi, tpData.konten);
+                let countSm1 = 0;
+                let countSm2 = 0;
+                if (chaptersSm1.length > 0 && chaptersSm2.length > 0) {
+                    countSm1 = Math.ceil(targetJumlahTP / 2);
+                    countSm2 = targetJumlahTP - countSm1;
+                } else if (chaptersSm1.length > 0) {
+                    countSm1 = targetJumlahTP;
+                } else if (chaptersSm2.length > 0) {
+                    countSm2 = targetJumlahTP;
+                } else {
+                    countSm1 = Math.ceil(targetJumlahTP / 2);
+                    countSm2 = targetJumlahTP - countSm1;
+                }
 
-                    const teksAnalisis = (rumusanTPOtomatis + " " + elemenClean).toLowerCase();
-                    let dimensiSet = new Set();
-                    
-                    if (teksAnalisis.match(/(analisis|evaluasi|banding|paham|kritis|identifikasi|bukti|selesai|masalah)/)) dimensiSet.add("Bernalar Kritis");
-                    if (teksAnalisis.match(/(rancang|cipta|buat|susun|ide|gagasan|karya|eksplorasi|modifikasi)/)) dimensiSet.add("Kreatif");
-                    if (teksAnalisis.match(/(praktik|tentu|selesai|sendiri|baca|tulis|ukur|hitung|mandiri)/)) dimensiSet.add("Mandiri");
-                    if (teksAnalisis.match(/(komunikasi|saji|diskusi|kelompok|kerja sama|interaksi|bagi|bersama)/)) dimensiSet.add("Gotong Royong");
-                    if (teksAnalisis.match(/(budaya|global|dunia|beda|hargai|bangsa|lingkungan)/)) dimensiSet.add("Berkebinekaan Global");
-                    if (teksAnalisis.match(/(tuhan|agama|akhlak|alam|makhluk|syukur|nilai|pancasila)/)) dimensiSet.add("Beriman, Bertakwa kepada Tuhan YME, dan Berakhlak Mulia");
-                    
-                    let dimensiArray = Array.from(dimensiSet);
-                    const defaultDimensi = ["Bernalar Kritis", "Mandiri", "Gotong Royong", "Kreatif"];
-                    
-                    while (dimensiArray.length < 2) {
-                        let acak = defaultDimensi[Math.floor(Math.random() * defaultDimensi.length)];
-                        if (!dimensiArray.includes(acak)) dimensiArray.push(acak);
+                const generateSubTP = (count, chapters, semesterName) => {
+                    let list = [];
+                    for (let i = 0; i < count; i++) {
+                        let kompetensi = "Memahami";
+                        let konten = "";
+                        let babVal = "Materi Pokok";
+                        
+                        if (chapters.length > 0) {
+                            babVal = chapters[i % chapters.length];
+                            konten = babVal.split(":")[1] ? babVal.split(":")[1].trim() : babVal;
+                            const guessedKKO = DICTIONARY_KKO.find(kko => konten.toLowerCase().startsWith(kko.toLowerCase()));
+                            if (guessedKKO) {
+                                kompetensi = guessedKKO.charAt(0).toUpperCase() + guessedKKO.slice(1);
+                            } else {
+                                const kkoCycle = ["Memahami", "Menerapkan", "Menganalisis", "Menentukan", "Menyajikan"];
+                                kompetensi = kkoCycle[i % kkoCycle.length];
+                            }
+                        } else {
+                            const fallbackDec = dekonstruksiTextCP(textCP, elemenClean, count);
+                            kompetensi = fallbackDec[i % fallbackDec.length].kompetensi;
+                            konten = fallbackDec[i % fallbackDec.length].konten;
+                            babVal = `Bab ${i + 1}: ${konten}`;
+                        }
+
+                        const indikatorAcak = INDIKATOR_SMART[(indexCP + i) % INDIKATOR_SMART.length];
+                        const rumusanTPOtomatis = `Murid mampu ${kompetensi.toLowerCase()} ${konten.toLowerCase()} ${indikatorAcak}.`;
+                        const validasi = lakukanValidasiTP(rumusanTPOtomatis, kompetensi, konten);
+
+                        const teksAnalisis = (rumusanTPOtomatis + " " + elemenClean).toLowerCase();
+                        let dimensiSet = new Set();
+                        if (teksAnalisis.match(/(analisis|evaluasi|banding|paham|kritis|identifikasi|bukti|selesai|masalah)/)) dimensiSet.add("Bernalar Kritis");
+                        if (teksAnalisis.match(/(rancang|cipta|buat|susun|ide|gagasan|karya|eksplorasi|modifikasi)/)) dimensiSet.add("Kreatif");
+                        if (teksAnalisis.match(/(praktik|tentu|selesai|sendiri|baca|tulis|ukur|hitung|mandiri)/)) dimensiSet.add("Mandiri");
+                        if (teksAnalisis.match(/(komunikasi|saji|diskusi|kelompok|kerja sama|interaksi|bagi|bersama)/)) dimensiSet.add("Gotong Royong");
+
+                        let dimensiArray = Array.from(dimensiSet);
+                        while (dimensiArray.length < 2) {
+                            const defaultDimensi = ["Bernalar Kritis", "Mandiri", "Gotong Royong", "Kreatif"];
+                            let acak = defaultDimensi[Math.floor(Math.random() * defaultDimensi.length)];
+                            if (!dimensiArray.includes(acak)) dimensiArray.push(acak);
+                        }
+
+                        list.push({
+                            elemen: elemenClean,
+                            cpOriginal: textCP,
+                            kompetensi: kompetensi,
+                            konten: konten,
+                            bab: babVal,
+                            semester: semesterName,
+                            tujuanPembelajaran: rumusanTPOtomatis,
+                            dimensiProfil: dimensiArray.slice(0, 3).join(", "),
+                            validasi: validasi,
+                            catatan: `Terbentuk otomatis menyelaraskan bab buku cetak untuk ${semesterName}.`
+                        });
                     }
-                    
-                    if (dimensiArray.length > 3) {
-                        dimensiArray = dimensiArray.sort(() => 0.5 - Math.random()).slice(0, 3);
-                    }
+                    return list;
+                };
 
-                    const profilLulusan = dimensiArray.join(", ");
-
-                    tempOutputs.push({
-                        elemen: elemenClean,
-                        cpOriginal: textCP,
-                        kompetensi: tpData.kompetensi,
-                        konten: tpData.konten,
-                        tujuanPembelajaran: rumusanTPOtomatis,
-                        dimensiProfil: profilLulusan,
-                        validasi: validasi,
-                        catatan: "Terbentuk otomatis."
-                    });
-                });
+                tempOutputs = tempOutputs.concat(generateSubTP(countSm1, chaptersSm1, "Semester 1"));
+                tempOutputs = tempOutputs.concat(generateSubTP(countSm2, chaptersSm2, "Semester 2"));
             });
 
             finalizeAndSortTP(tempOutputs, formatKode, fase);
@@ -2391,14 +2639,14 @@
             
             const outputTabBtn = document.querySelectorAll('.menu-item')[3];
             switchTab('output-tp', outputTabBtn);
-            showToast("Sukses: TP & Alur ATP berhasil dirumuskan!");
+            showToast("Sukses: TP & Alur ATP disesuaikan dengan Bab per Semester!");
         }
 
         async function generateTPWithGemini() {
             let activeInputs = appState.cpInputs.filter(item => item.elemen.trim() !== "" && item.deskripsi.trim() !== "");
             
             if (activeInputs.length === 0) {
-                alert("Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
+                showCustomAlert("Data Tidak Lengkap", "Mohon isi minimal satu Elemen beserta Capaian Pembelajaran terlebih dahulu.");
                 return;
             }
 
@@ -2410,7 +2658,6 @@
             const formatKode = document.getElementById('doc-kode-format').value;
             const fase = document.getElementById('doc-fase').value;
 
-            // Mempersiapkan set instruksi dan data CP
             const promptData = activeInputs.map(i => ({
                 elemen: i.elemen, 
                 cp: i.deskripsi, 
@@ -2420,23 +2667,30 @@
             const promptText = `Anda adalah seorang ahli Kurikulum Merdeka BSKAP 046/2025 tingkat nasional.
             Tugas Anda adalah mendekonstruksi teks Capaian Pembelajaran (CP) menjadi Tujuan Pembelajaran (TP) yang logis dan terukur.
             
-            Berikut adalah data input JSON:
+            Berikut adalah data input CP Elemen:
             ${JSON.stringify(promptData)}
 
-            INSTRUKSI KETAT PENGERJAAN:
-            1. Untuk setiap elemen dalam input di atas, hasilkan TEPAT 'target_jumlah_tp' buah Tujuan Pembelajaran. Jika target 2, buatlah 2 TP dengan tingkat pemahaman yang bervariasi.
-            2. Ekstrak 'kompetensi' (Hanya SATU Kata Kerja Operasional). WAJIB menggunakan KKO dari Taksonomi Bloom versi revisi terbaru (Anderson & Krathwohl, 2001) ranah kognitif C1-C6 (misal: Mengidentifikasi, Menjelaskan, Menerapkan, Menganalisis, Mengevaluasi, Menciptakan/Merancang). Jangan gunakan KKO ambigu seperti "mengetahui" atau "memahami" secara berlebihan.
-            3. Ekstrak 'konten' (Materi Pokok inti, dalam format Title Case, contoh: "Bilangan Pecahan", "Sistem Peredaran Darah"). Pertahankan singkatan akronim huruf besar seperti "KPK", "FPB".
-            4. Rumuskan kalimat 'tujuanPembelajaran' dengan format: "Murid mampu [kompetensi] [konten] [penambahan konteks/indikator SMART]".
-            5. Tentukan properti 'dimensiProfil' yang berisi 2 sampai 3 nilai Profil Pelajar Pancasila yang paling relevan dengan konteks kegiatan (pisahkan dengan koma).
-            
-            KEMBALIKAN HANYA ARRAY JSON MURNI dengan parameter properti: elemen, cpOriginal, kompetensi, konten, tujuanPembelajaran, dimensiProfil. Jangan tambahkan format markdown json, backticks, atau teks pengantar apapun.`;
+            GURU TELAH MENYEDIAKAN REFERENSI MATERI/BAB BUKU CETAK:
+            - Materi Semester 1: "${appState.globalMateriSm1 || ''}"
+            - Materi Semester 2: "${appState.globalMateriSm2 || ''}"
 
-            const apiKey = "";
+            INSTRUKSI KETAT PENGERJAAN:
+            1. Untuk setiap elemen dalam input di atas, hasilkan TEPAT 'target_jumlah_tp' buah Tujuan Pembelajaran. Pembagian TP harus seimbang dan terdistribusi secara proporsional antara "Semester 1" dan "Semester 2".
+            2. WAJIB MENYESUAIKAN konten materi dari TP yang dihasilkan agar secara langsung merujuk pada referensi daftar Materi/BAB Buku Cetak yang diberikan di atas! 
+               - Jika TP ditargetkan untuk Semester 1, buat kontennya mengambil atau terinspirasi dari "Materi Semester 1".
+               - Jika TP ditargetkan untuk Semester 2, buat kontennya mengambil atau terinspirasi dari "Materi Semester 2".
+            3. Setiap TP harus memiliki label 'semester' dengan nilai "Semester 1" atau "Semester 2" secara tepat sesuai materi babnya. Serta sertakan properti 'bab' yang merupakan nama lengkap babnya (misal: 'Bab 1: Struktur Eksplanasi').
+            4. Ekstrak 'kompetensi' (Hanya SATU Kata Kerja Operasional) dari Taksonomi Bloom (misal: Mengidentifikasi, Menjelaskan, Menerapkan, Menganalisis, Mengevaluasi, Merancang).
+            5. Rumuskan kalimat 'tujuanPembelajaran' dengan format: "Murid mampu [kompetensi] [konten] [penambahan konteks/indikator SMART]".
+            6. Tentukan properti 'dimensiProfil' yang berisi 2 sampai 3 nilai Profil Pelajar Pancasila yang paling relevan.
+
+            KEMBALIKAN HANYA ARRAY JSON MURNI dengan parameter properti: elemen, cpOriginal, kompetensi, konten, bab, semester, tujuanPembelajaran, dimensiProfil. Jangan tambahkan format markdown json, backticks, atau teks pengantar apapun.`;
+
+            const apiKey = ""; 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-            const maxRetries = 5;
-            const delays = [1000, 2000, 4000, 8000, 16000];
+            const maxRetries = 3;
+            const delays = [1000, 2000, 4000];
             let attempt = 0;
             let success = false;
             let responseData = null;
@@ -2448,9 +2702,7 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: promptText }] }],
-                            generationConfig: { 
-                                temperature: 0.2
-                            }
+                            generationConfig: { temperature: 0.2 }
                         })
                     });
 
@@ -2466,7 +2718,7 @@
                     if (attempt < maxRetries) {
                         await new Promise(res => setTimeout(res, delays[attempt - 1]));
                     } else {
-                        alert("Gagal terhubung dengan server AI setelah beberapa percobaan. Pastikan Anda memiliki koneksi internet yang stabil.");
+                        showCustomAlert("Koneksi Gagal", "Gagal terhubung dengan server AI. Silakan periksa jaringan internet Anda.");
                         btnAI.innerHTML = originalBtnText;
                         btnAI.disabled = false;
                         return;
@@ -2486,15 +2738,27 @@
 
                 aiResult.forEach((tpData) => {
                     const validasi = lakukanValidasiTP(tpData.tujuanPembelajaran, tpData.kompetensi, tpData.konten);
+                    
+                    let dim = tpData.dimensiProfil;
+                    if (Array.isArray(dim)) {
+                        dim = dim.join(", ");
+                    } else if (dim && typeof dim === 'object') {
+                        dim = JSON.stringify(dim);
+                    } else {
+                        dim = String(dim || "Bernalar Kritis, Mandiri");
+                    }
+
                     tempOutputs.push({
-                        elemen: tpData.elemen,
-                        cpOriginal: tpData.cpOriginal || "Hasil CP",
-                        kompetensi: tpData.kompetensi,
-                        konten: tpData.konten,
-                        tujuanPembelajaran: tpData.tujuanPembelajaran,
-                        dimensiProfil: tpData.dimensiProfil || "Bernalar Kritis, Mandiri",
+                        elemen: String(tpData.elemen || ""),
+                        cpOriginal: String(tpData.cpOriginal || "Hasil CP"),
+                        kompetensi: String(tpData.kompetensi || "Memahami"),
+                        konten: String(tpData.konten || ""),
+                        bab: String(tpData.bab || tpData.konten || "Bab Baru"),
+                        semester: String(tpData.semester || "Semester 1"),
+                        tujuanPembelajaran: String(tpData.tujuanPembelajaran || ""),
+                        dimensiProfil: dim,
                         validasi: validasi,
-                        catatan: "Dihasilkan secara cerdas oleh Google Gemini AI."
+                        catatan: "Dihasikan otomatis mengikuti BAB per Semester oleh Gemini AI."
                     });
                 });
 
@@ -2508,11 +2772,11 @@
                 
                 const outputTabBtn = document.querySelectorAll('.menu-item')[3];
                 switchTab('output-tp', outputTabBtn);
-                showToast("Sukses: TP & Konten materi berhasil dirumuskan dengan Gemini AI!");
+                showToast("Sukses: TP & Alur ATP disinkronkan dengan Buku Cetak via Gemini AI!");
 
             } catch (error) {
                 console.error("Kesalahan parsing Gemini API:", error);
-                alert("Terjadi kesalahan saat memproses data JSON dari AI. Silakan coba klik tombol Generate sekali lagi.");
+                showCustomAlert("Kesalahan AI", "Terjadi kesalahan pengolahan data AI atau kuota limit terlampaui. Silakan gunakan generator sistem lokal.");
             } finally {
                 btnAI.innerHTML = originalBtnText;
                 btnAI.disabled = false;
@@ -2521,34 +2785,16 @@
 
         function dekonstruksiTextCP(text, elemenName, targetCount = 1) {
             let matches = [];
-            // Pisahkan kalimat berdasarkan titik atau titik koma
-            const kalimat = text.split(/[.;]/);
-
-            // Kata batas (boundary) yang menandakan akhir dari sebuah frasa materi pokok
+            const safeText = String(text || "");
+            const safeElemenName = String(elemenName || "");
+            const kalimat = safeText.split(/[.;]/);
             const stopWordsBoundary = [" dalam ", " dengan ", " secara ", " sebagai ", " untuk ", " berdasarkan ", " melalui ", " yang ", " guna ", " pada ", " dari ", " termasuk ", " menggunakan ", " lewat ", " beserta "];
-            
-            // Urutan ignore words harus dari yang terpanjang ke terpendek agar matching akurat
             const ignoreWords = [
                 "menyelesaikan masalah yang berkaitan dengan",
                 "masalah yang berkaitan dengan",
                 "yang berkaitan dengan",
-                "peserta didik", 
-                "murid",
-                "mereka",
-                "juga",
-                "dapat", 
-                "mampu", 
-                "akan",
-                "telah",
-                "menunjukkan", 
-                "kemampuan",
-                "berbagai macam",
-                "berbagai",
-                "konsep",
-                "tentang",
-                "mengenai",
-                "suatu",
-                "sebuah"
+                "peserta didik", "murid", "mereka", "juga", "dapat", "mampu", "akan", "telah", "menunjukkan", "kemampuan",
+                "berbagai macam", "berbagai", "konsep", "tentang", "mengenai", "suatu", "sebuah"
             ];
 
             kalimat.forEach(part => {
@@ -2558,7 +2804,6 @@
                 let kompetensiUtama = "Memahami";
                 let kontenDitemukan = "";
 
-                // 1. Temukan KKO Utama
                 for (let kko of DICTIONARY_KKO) {
                     const regex = new RegExp(`\\b${kko}\\w*\\b`, 'i');
                     if (regex.test(cleanedPart)) {
@@ -2567,24 +2812,18 @@
                     }
                 }
 
-                // 2. Ekstrak Konten (Materi Pokok)
                 let sisaTeks = cleanedPart;
-                
-                // Hapus ignore words (case insensitive)
                 ignoreWords.forEach(w => {
                     sisaTeks = sisaTeks.replace(new RegExp(`\\b${w}\\b`, 'gi'), "");
                 });
 
-                // Hapus seluruh KKO dari string untuk menyisakan Kata Benda (Nouns)
                 DICTIONARY_KKO.forEach(kko => {
                     sisaTeks = sisaTeks.replace(new RegExp(`\\b${kko}\\w*\\b`, 'gi'), "");
                 });
 
-                // Bersihkan awalan kalimat dari koma atau kata sambung
                 sisaTeks = sisaTeks.replace(/^[,\s]+/g, "").trim();
                 sisaTeks = sisaTeks.replace(/^(dan|atau|serta)\s+/i, "");
 
-                // Potong string tepat sebelum kata sambung boundary
                 for (let sw of stopWordsBoundary) {
                     const swIndex = sisaTeks.toLowerCase().indexOf(sw);
                     if (swIndex > -1) {
@@ -2592,16 +2831,13 @@
                     }
                 }
 
-                // Rapikan tanda baca akhir
                 sisaTeks = sisaTeks.replace(/[,:;]+$/g, "").replace(/\s{2,}/g, " ").trim();
 
-                // Penghalusan frasa (Smart AI Mapping)
                 if (sisaTeks.toLowerCase() === "pecahan" || sisaTeks.toLowerCase() === "pecahan campuran") {
                     sisaTeks = "Bilangan Pecahan";
                 }
 
                 if (sisaTeks.length > 2) {
-                    // Batasi frasa menjadi maksimal 8 kata agar ringkas layaknya "Materi Pokok"
                     let words = sisaTeks.split(" ");
                     if (words.length > 8) {
                         kontenDitemukan = words.slice(0, 8).join(" ");
@@ -2609,7 +2845,6 @@
                         kontenDitemukan = sisaTeks;
                     }
 
-                    // Format menjadi Title Case yang rapi dan pertahankan akronim
                     kontenDitemukan = kontenDitemukan.replace(/\w\S*/g, function(txt){
                         let lower = txt.toLowerCase();
                         if(["dan", "atau", "serta", "di", "ke", "dari", "pada"].includes(lower)) return lower;
@@ -2617,7 +2852,7 @@
                         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
                     });
                 } else {
-                    kontenDitemukan = elemenName || "Materi Pokok";
+                    kontenDitemukan = safeElemenName || "Materi Pokok";
                 }
 
                 matches.push({
@@ -2629,16 +2864,13 @@
             if (matches.length === 0) {
                 matches.push({
                     kompetensi: "Memahami",
-                    konten: elemenName || "Konsep Dasar"
+                    konten: safeElemenName || "Konsep Dasar"
                 });
             }
 
-            // Normalisasi jumlah sesuai Target Count (Jumlah TP Input)
             if (matches.length > targetCount) {
-                // Potong jika kelebihan
                 matches = matches.slice(0, targetCount);
             } else if (matches.length < targetCount) {
-                // Hasilkan variasi kompetensi jika kekurangan
                 const kkoVariasi = ["Menentukan", "Menganalisis", "Menyelesaikan", "Menerapkan", "Mengevaluasi", "Mengidentifikasi", "Menyajikan", "Merancang", "Menciptakan", "Mendemonstrasikan"];
                 const extraNeeded = targetCount - matches.length;
                 const baseMatches = [...matches]; 
@@ -2665,16 +2897,20 @@
                 formatBenar: false
             };
 
-            const tpLower = tpText.toLowerCase();
-            checks.memilikiKKO = DICTIONARY_KKO.some(kko => tpLower.includes(kko));
-            checks.panjangSesuai = tpText.length >= 20 && tpText.length <= 250;
+            const safeTpText = String(tpText || "");
+            const safeKompetensi = String(kompetensi || "");
+            const safeKonten = String(konten || "");
 
-            if (kompetensi) {
-                checks.sesuaiKompetensi = tpLower.includes(kompetensi.toLowerCase());
+            const tpLower = safeTpText.toLowerCase();
+            checks.memilikiKKO = DICTIONARY_KKO.some(kko => tpLower.includes(kko));
+            checks.panjangSesuai = safeTpText.length >= 20 && safeTpText.length <= 250;
+
+            if (safeKompetensi) {
+                checks.sesuaiKompetensi = tpLower.includes(safeKompetensi.toLowerCase());
             }
 
-            if (konten) {
-                const kontenClean = konten.toLowerCase().replace(/[^\w\s]/g, '');
+            if (safeKonten) {
+                const kontenClean = safeKonten.toLowerCase().replace(/[^\w\s]/g, '');
                 const kataKonten = kontenClean.split(' ');
                 checks.memilikiKonten = kataKonten.some(word => word.length > 3 && tpLower.includes(word));
             }
@@ -2716,10 +2952,10 @@
             const selectedStatus = document.getElementById('filter-status').value;
 
             let filteredData = appState.tpOutputs.filter(item => {
-                const matchSearch = item.tujuanPembelajaran.toLowerCase().includes(query) || 
-                                    item.elemen.toLowerCase().includes(query) || 
-                                    item.konten.toLowerCase().includes(query) ||
-                                    item.kompetensi.toLowerCase().includes(query);
+                const matchSearch = String(item.tujuanPembelajaran || "").toLowerCase().includes(query) || 
+                                    String(item.elemen || "").toLowerCase().includes(query) || 
+                                    String(item.konten || "").toLowerCase().includes(query) ||
+                                    String(item.kompetensi || "").toLowerCase().includes(query);
                 
                 const matchElemen = selectedElemen === "" || item.elemen === selectedElemen;
                 
@@ -2741,11 +2977,11 @@
             let sorted = [...appState.tpOutputs];
 
             if (order === "elemen-asc") {
-                sorted.sort((a, b) => a.elemen.localeCompare(b.elemen));
+                sorted.sort((a, b) => String(a.elemen || "").localeCompare(String(b.elemen || "")));
             } else if (order === "kode-asc") {
-                sorted.sort((a, b) => a.kode.localeCompare(b.kode));
+                sorted.sort((a, b) => String(a.kode || "").localeCompare(String(b.kode || "")));
             } else if (order === "kompetensi-asc") {
-                sorted.sort((a, b) => a.kompetensi.localeCompare(b.kompetensi));
+                sorted.sort((a, b) => String(a.kompetensi || "").localeCompare(String(b.kompetensi || "")));
             }
 
             renderOutputTable(sorted);
@@ -2761,7 +2997,7 @@
             if (dataToRender.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="9" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                        <td colspan="10" style="text-align: center; color: var(--text-muted); padding: 40px;">
                             Tidak ada data rumusan TP yang cocok dengan penyaringan.
                         </td>
                     </tr>
@@ -2769,7 +3005,6 @@
                 return;
             }
 
-            // Kalkulasi rowspan untuk merger sel Elemen dan CP secara dinamis
             let rowSpans = {};
             let skipMap = {};
 
@@ -2820,6 +3055,14 @@
                         onblur="saveInlineEdit(${item.id}, 'konten', this.innerText)"
                         onkeydown="handleInlineKey(event)">${escapeHtml(item.konten)}</td>
                     
+                    <td style="text-align: center; vertical-align: top;">
+                        <select class="form-control" style="font-size: 0.8rem; padding: 4px; font-weight: 600; width: 100%;" 
+                            onchange="updateRowSemester(${item.id}, this.value)">
+                            <option value="Semester 1" ${item.semester === 'Semester 1' ? 'selected' : ''}>Semester 1</option>
+                            <option value="Semester 2" ${item.semester === 'Semester 2' ? 'selected' : ''}>Semester 2</option>
+                        </select>
+                    </td>
+
                     <td contenteditable="true" class="editable-cell" style="font-weight: 500;" 
                         onblur="saveInlineEdit(${item.id}, 'tujuanPembelajaran', this.innerText)"
                         onkeydown="handleInlineKey(event)">${escapeHtml(item.tujuanPembelajaran)}</td>
@@ -2848,21 +3091,64 @@
             });
         }
 
+        // ==========================================
+        // 8B. SISTEM SORTING HEADER TABEL ATP
+        // ==========================================
+        function sortATPByHeader(field) {
+            if (atpSortState.field === field) {
+                atpSortState.direction = atpSortState.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                atpSortState.field = field;
+                atpSortState.direction = 'asc';
+            }
+
+            const fields = ['urutanAtp', 'kode', 'bab', 'semester', 'konten', 'tujuanPembelajaran', 'dimensiProfil'];
+            fields.forEach(f => {
+                const el = document.getElementById(`sort-icon-${f}`);
+                if (el) {
+                    if (f === field) {
+                        el.innerText = atpSortState.direction === 'asc' ? ' ▲' : ' ▼';
+                        el.style.color = 'var(--primary-color)';
+                    } else {
+                        el.innerText = '';
+                    }
+                }
+            });
+
+            appState.tpOutputs.sort((a, b) => {
+                let valA = a[field];
+                let valB = b[field];
+
+                if (field === 'urutanAtp') {
+                    valA = parseInt(valA) || 0;
+                    valB = parseInt(valB) || 0;
+                } else {
+                    valA = String(valA || "").toLowerCase();
+                    valB = String(valB || "").toLowerCase();
+                }
+
+                if (valA < valB) return atpSortState.direction === 'asc' ? -1 : 1;
+                if (valA > valB) return atpSortState.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            renderATPTable();
+            showToast(`Diurutkan berdasarkan ${field.toUpperCase()} (${atpSortState.direction.toUpperCase()})`);
+        }
+
         // --- SISTEM ATP TABLE CONTROLLER ---
         function renderATPTable() {
             const tbody = document.getElementById('tbody-atp-output');
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
-                return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
-            });
+            const sortedATPData = [...appState.tpOutputs];
 
             if (sortedATPData.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 40px;">
-                            Belum ada urutan pengajaran ATP yang terbentuk. Selesaikan analisis CP terlebih dahulu.
+                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 40px;">
+                            Belum ada alur pengajaran (ATP) yang terbentuk. Selesaikan analisis TP terlebih dahulu.
                         </td>
                     </tr>
                 `;
@@ -2878,7 +3164,10 @@
                             value="${item.urutanAtp}" onchange="updateRowUrutanAtp(${item.id}, this.value)">
                     </td>
                     <td style="text-align: center; font-weight: bold; color: var(--primary-color);">${escapeHtml(item.kode)}</td>
-                    <td contenteditable="true" class="editable-cell" 
+                    <td contenteditable="true" class="editable-cell" style="font-weight: 600;"
+                        onblur="saveInlineEdit(${item.id}, 'bab', this.innerText)">${escapeHtml(item.bab || item.konten)}</td>
+                    <td style="text-align: center; font-weight: 700; color: #475569;">${escapeHtml(item.semester || "Semester 1")}</td>
+                    <td contenteditable="true" class="editable-cell" style="font-weight: 500;"
                         onblur="saveInlineEdit(${item.id}, 'konten', this.innerText)">${escapeHtml(item.konten)}</td>
                     <td contenteditable="true" class="editable-cell" style="font-weight: 500;" 
                         onblur="saveInlineEdit(${item.id}, 'tujuanPembelajaran', this.innerText)">${escapeHtml(item.tujuanPembelajaran)}</td>
@@ -2897,6 +3186,22 @@
                 saveStateToLocalStorage();
                 renderATPTable(); 
                 showToast("Urutan Alur Pembelajaran (ATP) diperbarui!");
+            }
+        }
+
+        function updateRowSemester(id, newSemester) {
+            const index = appState.tpOutputs.findIndex(item => item.id === id);
+            if (index !== -1) {
+                appState.tpOutputs[index].semester = newSemester;
+                
+                const formatKode = document.getElementById('doc-kode-format').value;
+                const fase = document.getElementById('doc-fase').value;
+                finalizeAndSortTP(appState.tpOutputs, formatKode, fase);
+
+                saveStateToLocalStorage();
+                renderOutputTable();
+                renderATPTable();
+                showToast("Semester berhasil diubah dan urutan disesuaikan!");
             }
         }
 
@@ -3003,7 +3308,7 @@
         function processImportText() {
             const text = document.getElementById('import-text').value.trim();
             if(!text) {
-                alert("Kotak teks kosong. Silakan paste data terlebih dahulu.");
+                showCustomAlert("Kotak teks kosong", "Silakan paste data terlebih dahulu.");
                 return;
             }
 
@@ -3029,32 +3334,32 @@
             });
 
             if (importData.length > 0) {
-                if(confirm(`Mendeteksi ${importData.length} elemen. Gabungkan dengan data input yang ada?`)) {
-                    importData.forEach(item => {
-                        appState.cpInputs.push({
-                            id: appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1,
-                            elemen: item.elemen,
-                            deskripsi: item.deskripsi,
-                            jumlahTP: item.jumlahTP
+                showCustomConfirm(
+                    "Gabungkan Data", 
+                    `Mendeteksi ${importData.length} elemen. Apakah Anda ingin menggabungkan data ini dengan data input yang ada?`, 
+                    function() {
+                        importData.forEach(item => {
+                            appState.cpInputs.push({
+                                id: appState.cpInputs.length > 0 ? Math.max(...appState.cpInputs.map(o => o.id)) + 1 : 1,
+                                elemen: item.elemen,
+                                deskripsi: item.deskripsi,
+                                jumlahTP: item.jumlahTP
+                            });
                         });
-                    });
-                } else {
-                    appState.cpInputs = importData.map((item, idx) => ({
-                        id: idx + 1,
-                        elemen: item.elemen,
-                        deskripsi: item.deskripsi,
-                        jumlahTP: item.jumlahTP
-                    }));
-                }
+                        completeImport();
+                    }
+                );
 
-                renderCPTable();
-                saveToHistory();
-                saveStateToLocalStorage();
-                closeImportModal();
-                document.getElementById('import-text').value = '';
-                showToast(`Sukses memuat ${importData.length} Baris CP baru!`);
+                const completeImport = () => {
+                    renderCPTable();
+                    saveToHistory();
+                    saveStateToLocalStorage();
+                    closeImportModal();
+                    document.getElementById('import-text').value = '';
+                    showToast(`Sukses memuat ${importData.length} Baris CP baru!`);
+                }
             } else {
-                alert("Format data tidak sesuai. Gunakan minimal dua kolom terpisah oleh TAB atau koma.");
+                showCustomAlert("Format Salah", "Format data tidak sesuai. Gunakan minimal dua kolom terpisah oleh TAB atau koma.");
             }
         }
 
@@ -3062,7 +3367,6 @@
         // 11. COMPILE HTML FOR VIEW PREVIEW & PRINT
         // ==========================================
         function getUniversalDocumentHTML(isExcel = false) {
-            // Susun data tabel CP Elemen untuk cetak/preview
             let cpRowsHtml = '';
             let activeCPs = appState.cpInputs.filter(item => item.elemen.trim() !== "" || item.deskripsi.trim() !== "");
             if (activeCPs.length === 0) {
@@ -3079,10 +3383,7 @@
                 });
             }
 
-            // Struktur Baru: Mengelompokkan TP berdasarkan Elemen secara modular (Menghilangkan Rowspan Buggy)
             let tpSectionsHtml = '';
-            
-            // Pengelompokan Data TP
             let groupedTP = {};
             appState.tpOutputs.forEach(item => {
                 const key = item.elemen || "Tanpa Elemen";
@@ -3110,14 +3411,15 @@
                 keys.forEach((elemenName, groupIdx) => {
                     const group = groupedTP[elemenName];
                     
+                    // MEMBUANG PEMBUNGKUS "avoid-break" agar tabel dapat dipotong dengan mulus dan menghilangkan ruang kosong (Issue 1)
                     tpSectionsHtml += `
-                        <div class="avoid-break" style="margin-top: 15px; margin-bottom: 20px; width: 100%;">
+                        <div style="margin-top: 15px; margin-bottom: 20px; width: 100%; page-break-inside: auto !important;">
                             <table class="doc-layout-table" style="width: 100%; margin-bottom: 8px; font-family: Arial, sans-serif; font-size: 9.5pt; table-layout: fixed; border: 1px solid #000000; background-color: #f8fafc; padding: 10px;">
-                                <tr>
+                                <tr class="avoid-break">
                                     <td style="width: 18%; font-weight: bold; border: none; padding: 4px;">Elemen</td>
                                     <td style="width: 82%; border: none; padding: 4px;">: <strong>${escapeHtml(elemenName)}</strong></td>
                                 </tr>
-                                <tr>
+                                <tr class="avoid-break">
                                     <td style="font-weight: bold; border: none; padding: 4px; vertical-align: top;">Deskripsi CP</td>
                                     <td style="border: none; padding: 4px; text-align: justify; line-height: 1.4;">: ${escapeHtml(group.cp)}</td>
                                 </tr>
@@ -3126,10 +3428,11 @@
                             <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 10px;">
                                 <thead>
                                     <tr>
-                                        <th style="width: 8%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">No</th>
-                                        <th style="width: 20%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Kompetensi</th>
-                                        <th style="width: 25%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Materi (Konten)</th>
-                                        <th style="width: 37%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Rumusan Tujuan Pembelajaran (TP)</th>
+                                        <th style="width: 6%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">No</th>
+                                        <th style="width: 18%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Kompetensi</th>
+                                        <th style="width: 22%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Materi Buku Cetak</th>
+                                        <th style="width: 12%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Semester</th>
+                                        <th style="width: 32%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Rumusan Tujuan Pembelajaran (TP)</th>
                                         <th style="width: 10%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Kode</th>
                                     </tr>
                                 </thead>
@@ -3139,6 +3442,7 @@
                                             <td style="text-align:center; padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${idx + 1}</td>
                                             <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.kompetensi)}</td>
                                             <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.konten)}</td>
+                                            <td style="text-align:center; padding: 6px; font-size: 9pt; border: 1px solid #000000; font-weight:bold; vertical-align: middle;">${escapeHtml(tp.semester || "Semester 1")}</td>
                                             <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; text-align: justify; line-height: 1.3; vertical-align: middle;">${escapeHtml(tp.tujuanPembelajaran)}</td>
                                             <td style="text-align:center; font-weight:bold; padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.kode)}</td>
                                         </tr>
@@ -3150,23 +3454,24 @@
                 });
             }
 
-            // Susun data tabel ATP tersortir untuk cetak
             let atpRowsHtml = '';
             const sortedATPData = [...appState.tpOutputs].sort((a, b) => {
                 return (parseInt(a.urutanAtp) || 0) - (parseInt(b.urutanAtp) || 0);
             });
 
             if(sortedATPData.length === 0) {
-                atpRowsHtml = `<tr class="avoid-break"><td colspan="5" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
+                atpRowsHtml = `<tr class="avoid-break"><td colspan="7" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
             } else {
                 sortedATPData.forEach((item) => {
                     atpRowsHtml += `
                         <tr class="avoid-break">
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:middle; width: 12%;">${item.urutanAtp}</td>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af; vertical-align:middle; width: 12%;">${escapeHtml(item.kode)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; width: 23%;">${escapeHtml(item.konten)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; text-align:justify; width: 33%;">${escapeHtml(item.tujuanPembelajaran)}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#475569; vertical-align:middle; width: 20%;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:middle; width: 8%;">${item.urutanAtp}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af; vertical-align:middle; width: 10%;">${escapeHtml(item.kode)}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:middle; width: 15%;">${escapeHtml(item.bab || item.konten)}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#475569; vertical-align:middle; width: 10%;">${escapeHtml(item.semester || "Semester 1")}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; width: 15%;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; text-align:justify; width: 25%;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#0d9488; vertical-align:middle; width: 17%;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
                         </tr>
                     `;
                 });
@@ -3247,15 +3552,17 @@
                 <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold; margin-top: 25px; margin-bottom: 10px;">II. Tujuan Pembelajaran (TP)</div>
                 ${tpSectionsHtml}
 
-                <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold; margin-top: 25px;">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
+                <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold; margin-top: 25px;">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran (Berdasarkan Urutan BAB)</div>
                 <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed;">
                     <thead>
                         <tr class="avoid-break">
-                            <th style="width:12%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Urutan ATP</th>
-                            <th style="width:12%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Kode TP</th>
-                            <th style="width:23%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Materi Pokok Referensi</th>
-                            <th style="width:33%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="width:20%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Dimensi Profil Lulusan (Pancasila)</th>
+                            <th style="width:8%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Urutan ATP</th>
+                            <th style="width:10%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Kode TP</th>
+                            <th style="width:15%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">BAB</th>
+                            <th style="width:10%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Semester</th>
+                            <th style="width:15%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Materi Buku Cetak</th>
+                            <th style="width:25%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:17%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Dimensi Profil Lulusan (Pancasila)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3264,7 +3571,7 @@
                 </table>
 
                 <!-- Tanda Tangan -->
-                <table class="doc-layout-table" style="width: 100%; margin-top: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 10pt; table-layout: fixed;">
+                <table class="doc-layout-table avoid-break" style="width: 100%; margin-top: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 10pt; table-layout: fixed;">
                     <tr class="avoid-break">
                         <td style="width: 50%; border: none; vertical-align: top; padding: 10px;">
                             Mengetahui,<br>Kepala ${sekolah}<br><br><br><br><br>
@@ -3336,9 +3643,16 @@
             return `${tgl} ${bln} ${thn}`;
         }
 
+        // ==========================================
+        // 13. DATA INTERFACE EXPORTS
+        // ==========================================
         function escapeHtml(text) {
-            if (!text) return "";
-            return text
+            if (text === null || text === undefined) return "";
+            if (Array.isArray(text)) {
+                text = text.join(", ");
+            }
+            const str = String(text);
+            return str
                 .replace(/&/g, "&amp;")
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
@@ -3347,9 +3661,9 @@
         }
 
         function copyToClipboard() {
-            let clipboardText = "No\tElemen\tKompetensi\tKonten\tTujuan Pembelajaran (TP)\tKode TP\tStatus\n";
+            let clipboardText = "No\tElemen\tKompetensi\tBAB\tMateri (Buku Cetak)\tSemester\tTujuan Pembelajaran (TP)\tKode TP\tStatus\n";
             appState.tpOutputs.forEach((item, index) => {
-                clipboardText += `${index + 1}\t${item.elemen}\t${item.kompetensi}\t${item.konten}\t${item.tujuanPembelajaran}\t${item.kode}\t${item.validasi.isValid ? 'Valid' : 'Koreksi'}\n`;
+                clipboardText += `${index + 1}\t${item.elemen}\t${item.kompetensi}\t${item.bab || item.konten}\t${item.konten}\t${item.semester || 'Semester 1'}\t${item.tujuanPembelajaran}\t${item.kode}\t${item.validasi.isValid ? 'Valid' : 'Koreksi'}\n`;
             });
 
             const textarea = document.createElement("textarea");
@@ -3372,7 +3686,7 @@
 
         function exportToExcel() {
             if(appState.tpOutputs.length === 0) {
-                alert("Tidak ada data untuk diekspor");
+                showCustomAlert("Tidak Ada Data", "Tidak ada data untuk diekspor");
                 return;
             }
             
@@ -3409,7 +3723,7 @@
 
         function exportToWord() {
             if(appState.tpOutputs.length === 0) {
-                alert("Tidak ada data untuk diekspor ke Word.");
+                showCustomAlert("Tidak Ada Data", "Tidak ada data untuk diekspor ke Word.");
                 return;
             }
 
@@ -3446,22 +3760,19 @@
 
         function exportToPDF() {
             if (appState.tpOutputs.length === 0) {
-                alert("Tidak ada data untuk diekspor ke PDF. Silakan jalankan proses analisis CP terlebih dahulu.");
+                showCustomAlert("Tidak Ada Data", "Tidak ada data untuk diekspor ke PDF. Silakan jalankan proses analisis CP terlebih dahulu.");
                 return;
             }
 
             showToast("⏳ Menyiapkan lembar PDF berkualitas tinggi (Skala Padat 70% Pas), mohon tunggu...");
 
-            // Membuat container DOM bayangan untuk merender template dokumen secara utuh
             const element = document.createElement('div');
-            // DIUBAH KE 680px agar pas dengan area cetak A4 portrait (190mm) setelah dipotong margin kiri-kanan
             element.style.width = '680px'; 
             element.style.padding = '0';
             element.style.margin = '0';
             element.style.background = '#ffffff';
             element.style.boxSizing = 'border-box';
 
-            // Menyisipkan style override untuk PDF rendering yang rapi dengan skala kompak 70%
             const style = document.createElement('style');
             style.innerHTML = `
                 .pdf-wrapper {
@@ -3487,18 +3798,22 @@
                     padding: 3px !important;
                     vertical-align: middle !important;
                     word-wrap: break-word !important;
-                    font-size: 7.2pt !important; /* Skala 70% dari 10pt */
+                    font-size: 7.2pt !important;
                 }
                 .doc-data-table {
                     width: 100% !important;
                     border-collapse: collapse !important;
                     table-layout: fixed !important;
                     margin-bottom: 15px !important;
+                    page-break-inside: auto !important;
+                }
+                .doc-data-table thead {
+                    display: table-header-group !important;
                 }
                 .doc-data-table th, .doc-data-table td {
                     border: 1px solid #000000 !important;
-                    padding: 5px 6px !important; /* Ramping */
-                    font-size: 6.5pt !important; /* Skala 70% dari 9pt */
+                    padding: 5px 6px !important;
+                    font-size: 6.5pt !important;
                     text-align: left !important;
                     vertical-align: middle !important;
                     word-wrap: break-word !important;
@@ -3518,7 +3833,7 @@
                     break-inside: avoid !important;
                 }
                 .print-section-title {
-                    font-size: 8pt !important; /* Skala 70% dari 11.5pt */
+                    font-size: 8pt !important;
                     font-weight: bold !important;
                     margin-top: 15px !important;
                     margin-bottom: 6px !important;
@@ -3528,19 +3843,18 @@
                 .footer-print-clean {
                     margin-top: 20px !important;
                     text-align: center !important;
-                    font-size: 5.5pt !important; /* Skala 70% dari 8pt */
+                    font-size: 5.5pt !important;
                     border-top: 1px solid #000000 !important;
                     padding-top: 4px !important;
                 }
                 .pdf-wrapper img {
-                    max-width: 56px !important; /* Skala 70% dari 80px */
+                    max-width: 56px !important;
                     max-height: 56px !important;
                     object-fit: contain !important;
                 }
             `;
             element.appendChild(style);
 
-            // Container dokumen isi
             const contentDiv = document.createElement('div');
             contentDiv.className = 'pdf-wrapper';
             contentDiv.innerHTML = getUniversalDocumentHTML();
@@ -3551,8 +3865,6 @@
             const formattedDate = rawDate ? rawDate.replace(/-/g, '') : '';
             const filename = `Dokumen_TP_ATP_${mapel.replace(/\s+/g, '_')}_${formattedDate}.pdf`;
 
-            // Konfigurasi presisi tinggi untuk konversi html2pdf (format lembaran A4 Portrait)
-            // Mengatur margin [10, 10, 15, 10] mm, tersisa ruang cetak bersih lebar 190mm (cocok dengan kontainer 680px)
             const opt = {
                 margin:       [10, 10, 15, 10], 
                 filename:     filename,
@@ -3569,13 +3881,12 @@
                 pagebreak:    { mode: ['css', 'legacy'] }
             };
 
-            // Eksekusi pengunduhan berkas PDF
             html2pdf().set(opt).from(element).save().then(() => {
                 showToast("📕 Dokumen PDF Berhasil diunduh!");
             }).catch(err => {
                 console.error("Gagal mengekspor PDF secara langsung:", err);
                 showToast("Gagal memproses otomatis. Membuka dialog cetak browser sebagai alternatif...");
-                triggerPrint(); // Fallback ke print sistem browser jika terjadi limitasi
+                triggerPrint();
             });
         }
         
