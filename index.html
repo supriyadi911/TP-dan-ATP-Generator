@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TP & ATP Generator - BSKAP No. 046 Tahun 2025</title>
+    <!-- Library html2pdf.js untuk ekspor PDF presisi tinggi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         /* ==========================================
            1. VARIABEL CSS & CONFIGURATION
@@ -1271,7 +1273,7 @@
                             <div class="image-preview-container">
                                 <input type="file" id="upload-logo-pemerintah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-pemerintah', 'preview-pemerintah')">
                                 <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-pemerintah').click()">Pilih Logo</button>
-                                <img id="preview-pemerintah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2316a34a'/><path d='M30,50 L45,65 L70,35' stroke='white' stroke-width='8' fill='none'/></svg>">
+                                <img id="preview-pemerintah" class="image-preview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzE2YTM0YSIvPjxwYXRoIGQ9Ik0zMCw1MCBMNDUsNjUgTDcwLDM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjgiIGZpbGw9Im5vbmUiLz48L3N2Zz4=">
                             </div>
                         </div>
                         <div class="form-group">
@@ -1279,7 +1281,7 @@
                             <div class="image-preview-container">
                                 <input type="file" id="upload-logo-sekolah" accept="image/*" style="display:none" onchange="previewImage(this, 'preview-sekolah', 'preview-sekolah')">
                                 <button class="btn btn-outline btn-sm" onclick="document.getElementById('upload-logo-sekolah').click()">Pilih Logo</button>
-                                <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231e40af'/><polygon points='50,20 80,75 20,75' fill='white'/></svg>">
+                                <img id="preview-sekolah" class="image-preview" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFlNDBhZiIvPjxwb2x5Z29uIHBvaW50cz0iNTAsMjAgODAsNzUgMjAsNzUiIGZpbGw9IndoaXRlIi8+PC9zdmc+">
                             </div>
                         </div>
                         <div class="form-group">
@@ -1413,6 +1415,7 @@
                             <button class="btn btn-outline btn-sm" onclick="copyToClipboard()">📋 Salin Data</button>
                             <button class="btn btn-outline btn-sm" onclick="exportToExcel()">📊 Ekspor Excel (.xls)</button>
                             <button class="btn btn-outline btn-sm" onclick="exportToWord()">📝 Ekspor Word (.doc)</button>
+                            <button class="btn btn-danger btn-sm" onclick="exportToPDF()">📕 Ekspor PDF (Skala 70% Pas)</button>
                             <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / PDF</button>
                         </div>
                     </div>
@@ -1461,12 +1464,13 @@
                         <div class="no-print button-group" style="margin-bottom:0;">
                             <button class="btn btn-outline btn-sm" onclick="openPreviewModal()">👁️ Pratinjau Dokumen</button>
                             <button class="btn btn-outline btn-sm" onclick="exportToExcel()">📊 Ekspor Semua ke Excel (.xls)</button>
+                            <button class="btn btn-danger btn-sm" onclick="exportToPDF()">📕 Ekspor PDF (Skala 70% Pas)</button>
                             <button class="btn btn-success btn-sm" onclick="triggerPrint()">🖨️ Cetak / PDF</button>
                         </div>
                     </div>
 
                     <p class="no-print" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">
-                        💡 <b>Rancang Alur Pembelajaran:</b> Atur prioritas pengajaran dengan memasukkan angka urutan pembelajaran pada kolom **Urutan ATP**. Tabel secara otomatis menyortir prioritas dari urutan terkecil ke terbesar.
+                        💡 <b>Rancang Alur Pembelajaran:</b> ATP telah otomatis diurutkan berdasarkan kompleksitas taksonomi (LOTS ke HOTS). Anda tetap dapat menyesuaikan urutannya secara manual pada kolom **Urutan ATP**.
                     </p>
 
                     <div class="table-responsive">
@@ -1593,8 +1597,8 @@
         // ==========================================
         let appState = {
             cpInputs: [
-                { id: 1, elemen: "Bilangan", deskripsi: "Murid dapat membaca, menulis, dan membandingkan bilangan bulat, bilangan rasional dan irasional, bilangan desimal, bilangan berpangkat bulat dan rasional dalam menyelesaikan masalah.", jumlahTP: 2 },
-                { id: 2, elemen: "Aljabar", deskripsi: "Murid dapat menyatakan suatu situasi ke dalam bentuk aljabar, dan menggunakan sifat-sifat operasi untuk menyelesaikan persamaan dan pertidaksamaan linear satu variabel.", jumlahTP: 2 }
+                { id: 1, elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); dan menganalisis teks sastra berbentuk teks aural.", jumlahTP: 4 },
+                { id: 2, elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual.", jumlahTP: 2 }
             ],
             tpOutputs: [],
             history: [],
@@ -1631,7 +1635,7 @@
         ];
 
         // ==========================================
-        // 2. FUNGSI DRAG AND DROP (DIDEKLARASIKAN AWAL)
+        // 2. FUNGSI DRAG AND DROP & UTILITY
         // ==========================================
         let dragSrcEl = null;
 
@@ -1643,9 +1647,7 @@
         }
 
         function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
+            if (e.preventDefault) { e.preventDefault(); }
             this.classList.add('drag-over');
             e.dataTransfer.dropEffect = 'move';
             return false;
@@ -1656,9 +1658,7 @@
         }
 
         function handleDrop(e) {
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            }
+            if (e.stopPropagation) { e.stopPropagation(); }
             if (dragSrcEl !== this) {
                 const srcIndex = parseInt(dragSrcEl.dataset.index);
                 const targetIndex = parseInt(this.dataset.index);
@@ -1682,6 +1682,66 @@
         }
 
         // ==========================================
+        // Kalkulasi Taksonomi untuk Sorting ATP
+        // ==========================================
+        function getTaxonomyLevel(kko) {
+            const lowerKKO = kko.toLowerCase();
+            // C1: Mengingat
+            if (lowerKKO.match(/(ingat|sebut|tulis|baca|identifikasi|kenali|tunjuk|rekam)/)) return 1;
+            // C2: Memahami
+            if (lowerKKO.match(/(paham|jelas|cerita|beda|klasifikasi|kategori|rangkum|arti|makna)/)) return 2;
+            // C3: Menerapkan
+            if (lowerKKO.match(/(terap|guna|tentu|praktik|hitung|ukur|model|formulasi|saji|komunikasi)/)) return 3;
+            // C4: Menganalisis
+            if (lowerKKO.match(/(analisis|banding|urut|urai|eksplor|kritis)/)) return 4;
+            // C5: Mengevaluasi
+            if (lowerKKO.match(/(evaluasi|bukti|taksir|kira|respons|hargai|nilai)/)) return 5;
+            // C6: Mencipta
+            if (lowerKKO.match(/(rancang|cipta|buat|susun|tuang|karya)/)) return 6;
+            
+            return 3; // Default ke C3 jika tidak terdeteksi spesifik
+        }
+
+        function finalizeAndSortTP(tempOutputs, formatKode, fase) {
+            // 1. Sort by Element Order (based on appState.cpInputs) then Taxonomy
+            tempOutputs.sort((a, b) => {
+                let elIndexA = appState.cpInputs.findIndex(cp => cp.elemen === a.elemen);
+                let elIndexB = appState.cpInputs.findIndex(cp => cp.elemen === b.elemen);
+                
+                if (elIndexA !== elIndexB) return elIndexA - elIndexB;
+                
+                let taxA = getTaxonomyLevel(a.kompetensi);
+                let taxB = getTaxonomyLevel(b.kompetensi);
+                return taxA - taxB;
+            });
+
+            // 2. Re-assign ID, Kode, Urutan
+            appState.tpOutputs = [];
+            let currentElemen = "";
+            let elemenIndex = 0;
+            let tpCounter = 1;
+
+            tempOutputs.forEach((tpData, index) => {
+                const idTP = index + 1;
+                if (tpData.elemen !== currentElemen) {
+                    currentElemen = tpData.elemen;
+                    elemenIndex++;
+                    tpCounter = 1;
+                }
+                
+                let kodeTP = formatKode === "prefix" ? `TP-${String(idTP).padStart(2, '0')}` : `${fase}.${elemenIndex}.${tpCounter}`;
+
+                appState.tpOutputs.push({
+                    ...tpData,
+                    id: idTP,
+                    kode: kodeTP,
+                    urutanAtp: idTP
+                });
+                tpCounter++;
+            });
+        }
+
+        // ==========================================
         // 3. LIFECYCLE & INITIALIZATION
         // ==========================================
         window.onload = function() {
@@ -1700,9 +1760,23 @@
                 saveToHistory();
             }
 
+            // Set default values matching SDN 1 DURIAN PAYUNG
             loadIdentitasFromLocal();
-            loadIdentitasFromDOM();
             
+            // If empty, populate with uploaded document info (SDN 1 DURIAN PAYUNG)
+            if (!localStorage.getItem('tp_generator_identitas_v1')) {
+                document.getElementById('doc-penyusun').value = "Supriyadi, S. Pd. Gr";
+                document.getElementById('doc-nip').value = "198811292022211006";
+                document.getElementById('doc-sekolah').value = "SDN 1 DURIAN PAYUNG";
+                document.getElementById('doc-npsn').value = "10807326";
+                document.getElementById('doc-mapel').value = "Bahasa Indonesia";
+                document.getElementById('doc-fase').value = "C";
+                document.getElementById('doc-kelas').value = "V (Lima)";
+                document.getElementById('doc-tapel').value = "2026/2027";
+                document.getElementById('doc-kabupaten').value = "KOTA BANDAR LAMPUNG";
+                saveIdentitasToLocal();
+            }
+
             renderCPTable();
             renderOutputTable();
             renderATPTable();
@@ -1866,10 +1940,6 @@
                 document.documentElement.style.setProperty('--font-scale', current + '%');
                 showToast(`Ukuran font disesuaikan menjadi ${current}%`);
             }
-        }
-
-        function loadIdentitasFromDOM() {
-            // Placeholder safe function
         }
 
         function toggleContrast() {
@@ -2070,10 +2140,10 @@
                 ]
             },
             indonesia: {
-                mapel: "Bahasa Indonesia", fase: "C", kelas: "VI",
+                mapel: "Bahasa Indonesia", fase: "C", kelas: "V",
                 elemen: [
-                    { elemen: "Membaca dan Memirsa", deskripsi: "Murid mampu membaca dengan lancar dan memahami informasi dan kosakata baru yang memiliki makna denotatif, literal, konotatif, dan kiasan untuk mengidentifikasi objek, fenomena, dan karakter." },
-                    { elemen: "Menulis", deskripsi: "Murid mampu menulis teks eksplanasi, laporan, dan eksposisi persuasif dari gagasan, hasil pengamatan, pengalaman, dan imajinasi." }
+                    { elemen: "Menyimak", deskripsi: "Menganalisis informasi dari teks nonsastra berbentuk teks aural (teks yang dibacakan dan/atau didengarkan); dan menganalisis teks sastra berbentuk teks aural." },
+                    { elemen: "Membaca dan Memirsa", deskripsi: "Membaca kata-kata dengan berbagai pola kombinasi huruf dengan fasih dari bacaan dan/atau tayangan yang dipirsa; dan menganalisis nilai-nilai dalam teks sastra dan nonsastra berwujud teks visual dan/atau audiovisual." }
                 ]
             },
             matematika: {
@@ -2257,9 +2327,9 @@
                 return;
             }
 
-            appState.tpOutputs = [];
             const formatKode = document.getElementById('doc-kode-format').value;
             const fase = document.getElementById('doc-fase').value;
+            let tempOutputs = [];
 
             activeInputs.forEach((item, indexCP) => {
                 const elemenClean = item.elemen.trim();
@@ -2269,21 +2339,11 @@
                 const hasilDekonstruksi = dekonstruksiTextCP(textCP, elemenClean, targetJumlahTP);
                 
                 hasilDekonstruksi.forEach((tpData, indexTP) => {
-                    const idTP = appState.tpOutputs.length + 1;
-                    
-                    let kodeTP = "";
-                    if (formatKode === "prefix") {
-                        kodeTP = `TP-${String(idTP).padStart(2, '0')}`;
-                    } else {
-                        kodeTP = `${fase}.${indexCP + 1}.${indexTP + 1}`;
-                    }
-
                     const indikatorAcak = INDIKATOR_SMART[(indexCP + indexTP) % INDIKATOR_SMART.length];
                     const rumusanTPOtomatis = `Murid mampu ${tpData.kompetensi.toLowerCase()} ${tpData.konten.toLowerCase()} ${indikatorAcak}.`;
 
                     const validasi = lakukanValidasiTP(rumusanTPOtomatis, tpData.kompetensi, tpData.konten);
 
-                    // Analisis dimensi profil lulusan yang bervariasi (2-3 dimensi)
                     const teksAnalisis = (rumusanTPOtomatis + " " + elemenClean).toLowerCase();
                     let dimensiSet = new Set();
                     
@@ -2297,34 +2357,31 @@
                     let dimensiArray = Array.from(dimensiSet);
                     const defaultDimensi = ["Bernalar Kritis", "Mandiri", "Gotong Royong", "Kreatif"];
                     
-                    // Pastikan minimal ada 2 dimensi agar bervariasi
                     while (dimensiArray.length < 2) {
                         let acak = defaultDimensi[Math.floor(Math.random() * defaultDimensi.length)];
                         if (!dimensiArray.includes(acak)) dimensiArray.push(acak);
                     }
                     
-                    // Batasi maksimal 3 dimensi per baris agar tetap rapi pada tabel
                     if (dimensiArray.length > 3) {
                         dimensiArray = dimensiArray.sort(() => 0.5 - Math.random()).slice(0, 3);
                     }
 
                     const profilLulusan = dimensiArray.join(", ");
 
-                    appState.tpOutputs.push({
-                        id: idTP,
+                    tempOutputs.push({
                         elemen: elemenClean,
                         cpOriginal: textCP,
                         kompetensi: tpData.kompetensi,
                         konten: tpData.konten,
                         tujuanPembelajaran: rumusanTPOtomatis,
                         dimensiProfil: profilLulusan,
-                        kode: kodeTP,
-                        urutanAtp: idTP, 
                         validasi: validasi,
                         catatan: "Terbentuk otomatis."
                     });
                 });
             });
+
+            finalizeAndSortTP(tempOutputs, formatKode, fase);
 
             renderOutputTable();
             renderATPTable();
@@ -2367,15 +2424,14 @@
             ${JSON.stringify(promptData)}
 
             INSTRUKSI KETAT PENGERJAAN:
-            1. Untuk setiap elemen dalam input di atas, hasilkan TEPAT 'target_jumlah_tp' buah Tujuan Pembelajaran. Jika target 2, buatlah 2 TP dengan KKO yang bervariasi sesuai tingkat pemahaman CP.
-            2. Ekstrak 'kompetensi' (Hanya satu Kata Kerja Operasional, misal: Menganalisis, Mengevaluasi, Menyajikan).
+            1. Untuk setiap elemen dalam input di atas, hasilkan TEPAT 'target_jumlah_tp' buah Tujuan Pembelajaran. Jika target 2, buatlah 2 TP dengan tingkat pemahaman yang bervariasi.
+            2. Ekstrak 'kompetensi' (Hanya SATU Kata Kerja Operasional). WAJIB menggunakan KKO dari Taksonomi Bloom versi revisi terbaru (Anderson & Krathwohl, 2001) ranah kognitif C1-C6 (misal: Mengidentifikasi, Menjelaskan, Menerapkan, Menganalisis, Mengevaluasi, Menciptakan/Merancang). Jangan gunakan KKO ambigu seperti "mengetahui" atau "memahami" secara berlebihan.
             3. Ekstrak 'konten' (Materi Pokok inti, dalam format Title Case, contoh: "Bilangan Pecahan", "Sistem Peredaran Darah"). Pertahankan singkatan akronim huruf besar seperti "KPK", "FPB".
             4. Rumuskan kalimat 'tujuanPembelajaran' dengan format: "Murid mampu [kompetensi] [konten] [penambahan konteks/indikator SMART]".
             5. Tentukan properti 'dimensiProfil' yang berisi 2 sampai 3 nilai Profil Pelajar Pancasila yang paling relevan dengan konteks kegiatan (pisahkan dengan koma).
             
             KEMBALIKAN HANYA ARRAY JSON MURNI dengan parameter properti: elemen, cpOriginal, kompetensi, konten, tujuanPembelajaran, dimensiProfil. Jangan tambahkan format markdown json, backticks, atau teks pengantar apapun.`;
 
-            // Aturan Lingkungan (Environment Specific Rule): Selalu gunakan string kosong dan biarkan lingkungan yang menyuntikkan proxy key
             const apiKey = "";
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
@@ -2392,7 +2448,6 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             contents: [{ parts: [{ text: promptText }] }],
-                            // Generation Config sesuai rekomendasi stabilitas
                             generationConfig: { 
                                 temperature: 0.2
                             }
@@ -2409,7 +2464,6 @@
                 } catch (error) {
                     attempt++;
                     if (attempt < maxRetries) {
-                        // Exponential backoff wait
                         await new Promise(res => setTimeout(res, delays[attempt - 1]));
                     } else {
                         alert("Gagal terhubung dengan server AI setelah beberapa percobaan. Pastikan Anda memiliki koneksi internet yang stabil.");
@@ -2423,49 +2477,28 @@
             try {
                 let aiResponseText = responseData.candidates[0].content.parts[0].text;
                 
-                // Membersihkan markdown JSON pembungkus jika ada secara ekstrim untuk parsing yang aman
                 if (aiResponseText.includes('[')) {
                     aiResponseText = aiResponseText.substring(aiResponseText.indexOf('['), aiResponseText.lastIndexOf(']') + 1);
                 }
                 
                 const aiResult = JSON.parse(aiResponseText);
-                
-                appState.tpOutputs = [];
-                let currentElemen = "";
-                let elemenIndex = 0;
-                let tpCounter = 1;
+                let tempOutputs = [];
 
-                // Pemetaan dan injeksi data AI ke dalam state aplikasi
-                aiResult.forEach((tpData, index) => {
-                    const idTP = index + 1;
-                    
-                    // Logika pengurutan penomoran kode TP
-                    if (tpData.elemen !== currentElemen) {
-                        currentElemen = tpData.elemen;
-                        elemenIndex++;
-                        tpCounter = 1;
-                    }
-
-                    let kodeTP = formatKode === "prefix" ? `TP-${String(idTP).padStart(2, '0')}` : `${fase}.${elemenIndex}.${tpCounter}`;
-
-                    // Jalankan validasi kelayakan pada hasil AI
+                aiResult.forEach((tpData) => {
                     const validasi = lakukanValidasiTP(tpData.tujuanPembelajaran, tpData.kompetensi, tpData.konten);
-
-                    appState.tpOutputs.push({
-                        id: idTP,
+                    tempOutputs.push({
                         elemen: tpData.elemen,
                         cpOriginal: tpData.cpOriginal || "Hasil CP",
                         kompetensi: tpData.kompetensi,
                         konten: tpData.konten,
                         tujuanPembelajaran: tpData.tujuanPembelajaran,
                         dimensiProfil: tpData.dimensiProfil || "Bernalar Kritis, Mandiri",
-                        kode: kodeTP,
-                        urutanAtp: idTP, 
                         validasi: validasi,
                         catatan: "Dihasilkan secara cerdas oleh Google Gemini AI."
                     });
-                    tpCounter++;
                 });
+
+                finalizeAndSortTP(tempOutputs, formatKode, fase);
 
                 renderOutputTable();
                 renderATPTable();
@@ -2747,7 +2780,6 @@
                 let count = 1;
                 
                 for (let j = i + 1; j < dataToRender.length; j++) {
-                    // Jika elemen dan CP baris selanjutnya sama, gabungkan
                     if (dataToRender[j].elemen === currentElemen && dataToRender[j].cpOriginal === currentCP) {
                         count++;
                         skipMap[j] = true;
@@ -2774,7 +2806,6 @@
 
                 let rowHtml = `<td style="text-align: center; font-weight: bold; vertical-align: top;">${index + 1}</td>`;
 
-                // Hanya me-render sel Elemen dan CP jika ini adalah baris pertama dari kelompok yang sama
                 if (rowSpans[index]) {
                     rowHtml += `<td rowspan="${rowSpans[index]}" style="vertical-align: top;"><b>${escapeHtml(item.elemen)}</b></td>`;
                     rowHtml += `<td rowspan="${rowSpans[index]}" style="font-size:0.8rem; color:var(--text-muted); vertical-align: top; text-align: justify;">${escapeHtml(item.cpOriginal)}</td>`;
@@ -3035,56 +3066,86 @@
             let cpRowsHtml = '';
             let activeCPs = appState.cpInputs.filter(item => item.elemen.trim() !== "" || item.deskripsi.trim() !== "");
             if (activeCPs.length === 0) {
-                cpRowsHtml = `<tr><td colspan="3" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data CP Elemen.</td></tr>`;
+                cpRowsHtml = `<tr class="avoid-break"><td colspan="3" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data CP Elemen.</td></tr>`;
             } else {
                 activeCPs.forEach((item, index) => {
                     cpRowsHtml += `
-                        <tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; vertical-align:top;">${index + 1}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.elemen)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.deskripsi)}</td>
+                        <tr class="avoid-break">
+                            <td style="text-align:center; border:1px solid #000; padding:8px; vertical-align:middle; width: 8%;">${index + 1}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:middle; width: 25%;">${escapeHtml(item.elemen)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; text-align:justify; width: 67%;">${escapeHtml(item.deskripsi)}</td>
                         </tr>
                     `;
                 });
             }
 
-            // Susun data tabel TP untuk cetak
-            let tpRowsHtml = '';
-            if(appState.tpOutputs.length === 0) {
-                tpRowsHtml = `<tr><td colspan="6" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td></tr>`;
-            } else {
-                let rowSpansPrint = {};
-                let skipMapPrint = {};
-                for (let i = 0; i < appState.tpOutputs.length; i++) {
-                    if (skipMapPrint[i]) continue;
-                    let currentElemen = appState.tpOutputs[i].elemen;
-                    let count = 1;
-                    for (let j = i + 1; j < appState.tpOutputs.length; j++) {
-                        if (appState.tpOutputs[j].elemen === currentElemen) {
-                            count++;
-                            skipMapPrint[j] = true;
-                        } else {
-                            break;
-                        }
-                    }
-                    rowSpansPrint[i] = count;
+            // Struktur Baru: Mengelompokkan TP berdasarkan Elemen secara modular (Menghilangkan Rowspan Buggy)
+            let tpSectionsHtml = '';
+            
+            // Pengelompokan Data TP
+            let groupedTP = {};
+            appState.tpOutputs.forEach(item => {
+                const key = item.elemen || "Tanpa Elemen";
+                if (!groupedTP[key]) {
+                    groupedTP[key] = {
+                        cp: item.cpOriginal || "Deskripsi Capaian Pembelajaran tidak tersedia.",
+                        tps: []
+                    };
                 }
+                groupedTP[key].tps.push(item);
+            });
 
-                appState.tpOutputs.forEach((item, index) => {
-                    tpRowsHtml += `<tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; vertical-align:top;">${index + 1}</td>`;
-                            
-                    // Render elemen sebagai sel gabungan untuk baris yang sama
-                    if (rowSpansPrint[index]) {
-                        tpRowsHtml += `<td rowspan="${rowSpansPrint[index]}" style="border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.elemen)}</td>`;
-                    }
+            const keys = Object.keys(groupedTP);
+            if (keys.length === 0) {
+                tpSectionsHtml = `
+                    <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 25px;">
+                        <tbody>
+                            <tr class="avoid-break">
+                                <td style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data TP. Silakan jalankan analisis CP terlebih dahulu.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                keys.forEach((elemenName, groupIdx) => {
+                    const group = groupedTP[elemenName];
                     
-                    tpRowsHtml += `
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.kompetensi)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.konten)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.tujuanPembelajaran)}</td>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${escapeHtml(item.kode)}</td>
-                        </tr>
+                    tpSectionsHtml += `
+                        <div class="avoid-break" style="margin-top: 15px; margin-bottom: 20px; width: 100%;">
+                            <table class="doc-layout-table" style="width: 100%; margin-bottom: 8px; font-family: Arial, sans-serif; font-size: 9.5pt; table-layout: fixed; border: 1px solid #000000; background-color: #f8fafc; padding: 10px;">
+                                <tr>
+                                    <td style="width: 18%; font-weight: bold; border: none; padding: 4px;">Elemen</td>
+                                    <td style="width: 82%; border: none; padding: 4px;">: <strong>${escapeHtml(elemenName)}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: bold; border: none; padding: 4px; vertical-align: top;">Deskripsi CP</td>
+                                    <td style="border: none; padding: 4px; text-align: justify; line-height: 1.4;">: ${escapeHtml(group.cp)}</td>
+                                </tr>
+                            </table>
+                            
+                            <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 10px;">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 8%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">No</th>
+                                        <th style="width: 20%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Kompetensi</th>
+                                        <th style="width: 25%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Materi (Konten)</th>
+                                        <th style="width: 37%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Rumusan Tujuan Pembelajaran (TP)</th>
+                                        <th style="width: 10%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 6px; font-size: 9pt; border: 1px solid #000000;">Kode</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${group.tps.map((tp, idx) => `
+                                        <tr class="avoid-break">
+                                            <td style="text-align:center; padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${idx + 1}</td>
+                                            <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.kompetensi)}</td>
+                                            <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.konten)}</td>
+                                            <td style="padding: 6px; font-size: 9pt; border: 1px solid #000000; text-align: justify; line-height: 1.3; vertical-align: middle;">${escapeHtml(tp.tujuanPembelajaran)}</td>
+                                            <td style="text-align:center; font-weight:bold; padding: 6px; font-size: 9pt; border: 1px solid #000000; vertical-align: middle;">${escapeHtml(tp.kode)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
                     `;
                 });
             }
@@ -3096,16 +3157,16 @@
             });
 
             if(sortedATPData.length === 0) {
-                atpRowsHtml = `<tr><td colspan="5" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
+                atpRowsHtml = `<tr class="avoid-break"><td colspan="5" style="text-align:center; padding:15px; color:#666; border:1px solid #000;">Belum ada data ATP. Silakan urutkan TP terlebih dahulu.</td></tr>`;
             } else {
                 sortedATPData.forEach((item) => {
                     atpRowsHtml += `
-                        <tr>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:top;">${item.urutanAtp}</td>
-                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af; vertical-align:top;">${escapeHtml(item.kode)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.konten)}</td>
-                            <td style="border:1px solid #000; padding:8px; vertical-align:top;">${escapeHtml(item.tujuanPembelajaran)}</td>
-                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#475569; vertical-align:top;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
+                        <tr class="avoid-break">
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; vertical-align:middle; width: 12%;">${item.urutanAtp}</td>
+                            <td style="text-align:center; border:1px solid #000; padding:8px; font-weight:bold; color:#1e40af; vertical-align:middle; width: 12%;">${escapeHtml(item.kode)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; width: 23%;">${escapeHtml(item.konten)}</td>
+                            <td style="border:1px solid #000; padding:8px; vertical-align:middle; text-align:justify; width: 33%;">${escapeHtml(item.tujuanPembelajaran)}</td>
+                            <td style="border:1px solid #000; padding:8px; font-weight:600; color:#475569; vertical-align:middle; width: 20%;">${escapeHtml(item.dimensiProfil || "Bernalar Kritis")}</td>
                         </tr>
                     `;
                 });
@@ -3130,54 +3191,52 @@
             const logoPemda = document.getElementById('preview-pemerintah')?.src || '';
             const logoSekolah = document.getElementById('preview-sekolah')?.src || '';
 
-            // Untuk Excel terkadang gambar base64 bisa bermasalah, kita sertakan saja secara normal
-            // Karena menggunakan struktur tabel, ini dijamin 100% rapi pada Ms Office (Word & Excel)
             return `
-                <table class="doc-layout-table" style="width: 100%; border-bottom: 3px double #000; margin-bottom: 20px;">
-                    <tr>
-                        <td style="width: 15%; text-align: left; vertical-align: middle; border: none;">
-                            <img src="${logoPemda}" style="width: 70px; height: 70px; object-fit: contain;" alt="Logo Pemda">
+                <table class="doc-layout-table" style="width: 100%; border-bottom: 3px double #000; margin-bottom: 20px; table-layout: fixed;">
+                    <tr class="avoid-break">
+                        <td style="width: 15%; text-align: left; vertical-align: middle; border: none; padding: 5px;">
+                            <img src="${logoPemda}" style="max-width: 80px; max-height: 80px; object-fit: contain;" alt="Logo Pemda">
                         </td>
-                        <td style="width: 70%; text-align: center; vertical-align: middle; border: none;">
-                            <h2 style="margin: 0; font-size: 14pt; font-family: Arial, sans-serif;">${sekolah}</h2>
+                        <td style="width: 70%; text-align: center; vertical-align: middle; border: none; padding: 5px;">
+                            <h2 style="margin: 0; font-size: 14pt; font-family: Arial, sans-serif; font-weight: bold;">${sekolah}</h2>
                             <p style="margin: 4px 0; font-size: 9pt; font-family: Arial, sans-serif;">NPSN: ${npsn} | Kabupaten/Kota: ${kabupaten}</p>
-                            <h3 style="margin: 8px 0 0 0; font-size: 11pt; border-top: 1px solid #000; padding-top: 5px; font-family: Arial, sans-serif;">DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN</h3>
+                            <h3 style="margin: 8px 0 0 0; font-size: 11pt; border-top: 1px solid #000; padding-top: 5px; font-family: Arial, sans-serif; font-weight: bold;">DOKUMEN CAPAIAN PEMBELAJARAN & ALUR TUJUAN PEMBELAJARAN</h3>
                         </td>
-                        <td style="width: 15%; text-align: right; vertical-align: middle; border: none;">
-                            <img src="${logoSekolah}" style="width: 70px; height: 70px; object-fit: contain;" alt="Logo Sekolah">
+                        <td style="width: 15%; text-align: right; vertical-align: middle; border: none; padding: 5px;">
+                            <img src="${logoSekolah}" style="max-width: 80px; max-height: 80px; object-fit: contain;" alt="Logo Sekolah">
                         </td>
                     </tr>
                 </table>
 
                 <!-- Grid Identitas Kurikulum -->
-                <table class="doc-layout-table" style="width: 100%; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 10pt;">
-                    <tr>
-                        <td style="width: 15%; font-weight: bold; border: none;">Nama Penyusun</td>
-                        <td style="width: 35%; border: none;">: ${penyusun}</td>
-                        <td style="width: 15%; font-weight: bold; border: none;">Fase / Kelas</td>
-                        <td style="width: 35%; border: none;">: Fase ${fase} / Kelas ${kelas}</td>
+                <table class="doc-layout-table" style="width: 100%; margin-bottom: 20px; font-family: Arial, sans-serif; font-size: 10pt; table-layout: fixed;">
+                    <tr class="avoid-break">
+                        <td style="width: 15%; font-weight: bold; border: none; padding: 4px 0;">Nama Penyusun</td>
+                        <td style="width: 35%; border: none; padding: 4px 0;">: ${penyusun}</td>
+                        <td style="width: 15%; font-weight: bold; border: none; padding: 4px 0;">Fase / Kelas</td>
+                        <td style="width: 35%; border: none; padding: 4px 0;">: Fase ${fase} / Kelas ${kelas}</td>
                     </tr>
-                    <tr>
-                        <td style="font-weight: bold; border: none;">NIP Penyusun</td>
-                        <td style="border: none;">: ${nip}</td>
-                        <td style="font-weight: bold; border: none;">Semester / Tapel</td>
-                        <td style="border: none;">: Semester ${semester} / ${tapel}</td>
+                    <tr class="avoid-break">
+                        <td style="font-weight: bold; border: none; padding: 4px 0;">NIP Penyusun</td>
+                        <td style="border: none; padding: 4px 0;">: ${nip}</td>
+                        <td style="font-weight: bold; border: none; padding: 4px 0;">Semester / Tapel</td>
+                        <td style="border: none; padding: 4px 0;">: Semester ${semester} / ${tapel}</td>
                     </tr>
-                    <tr>
-                        <td style="font-weight: bold; border: none;">Mata Pelajaran</td>
-                        <td style="border: none;">: ${mapel}</td>
-                        <td style="font-weight: bold; border: none;">Nama Sekolah</td>
-                        <td style="border: none;">: ${sekolah}</td>
+                    <tr class="avoid-break">
+                        <td style="font-weight: bold; border: none; padding: 4px 0;">Mata Pelajaran</td>
+                        <td style="border: none; padding: 4px 0;">: ${mapel}</td>
+                        <td style="font-weight: bold; border: none; padding: 4px 0;">Nama Sekolah</td>
+                        <td style="border: none; padding: 4px 0;">: ${sekolah}</td>
                     </tr>
                 </table>
 
-                <div class="print-section-title" style="font-family: Arial, sans-serif;">I. Capaian Pembelajaran (CP)</div>
-                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
+                <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold;">I. Capaian Pembelajaran (CP)</div>
+                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed;">
                     <thead>
-                        <tr>
-                            <th style="width:5%; background-color:#f1f5f9;">No</th>
-                            <th style="width:25%; background-color:#f1f5f9;">Elemen</th>
-                            <th style="width:70%; background-color:#f1f5f9;">Deskripsi Capaian Pembelajaran (CP)</th>
+                        <tr class="avoid-break">
+                            <th style="width:8%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">No</th>
+                            <th style="width:25%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Elemen</th>
+                            <th style="width:67%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Deskripsi Capaian Pembelajaran (CP)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3185,32 +3244,18 @@
                     </tbody>
                 </table>
 
-                <div class="print-section-title" style="font-family: Arial, sans-serif;">II. Tujuan Pembelajaran (TP)</div>
-                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
-                    <thead>
-                        <tr>
-                            <th style="width:5%; background-color:#f1f5f9;">No</th>
-                            <th style="width:18%; background-color:#f1f5f9;">Elemen</th>
-                            <th style="width:15%; background-color:#f1f5f9;">Kompetensi</th>
-                            <th style="width:20%; background-color:#f1f5f9;">Materi (Konten)</th>
-                            <th style="width:32%; background-color:#f1f5f9;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="width:10%; background-color:#f1f5f9;">Kode</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${tpRowsHtml}
-                    </tbody>
-                </table>
+                <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold; margin-top: 25px; margin-bottom: 10px;">II. Tujuan Pembelajaran (TP)</div>
+                ${tpSectionsHtml}
 
-                <div class="print-section-title" style="font-family: Arial, sans-serif;">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
-                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif;">
+                <div class="print-section-title" style="font-family: Arial, sans-serif; font-weight: bold; margin-top: 25px;">III. Alur Tujuan Pembelajaran (ATP) - Urutan Prioritas Pengajaran</div>
+                <table class="doc-data-table" border="1" style="font-family: Arial, sans-serif; width: 100%; border-collapse: collapse; table-layout: fixed;">
                     <thead>
-                        <tr>
-                            <th style="width:10%; background-color:#f1f5f9;">Urutan ATP</th>
-                            <th style="width:12%; background-color:#f1f5f9;">Kode TP</th>
-                            <th style="width:20%; background-color:#f1f5f9;">Materi Pokok Referensi</th>
-                            <th style="width:38%; background-color:#f1f5f9;">Rumusan Tujuan Pembelajaran (TP)</th>
-                            <th style="width:20%; background-color:#f1f5f9;">Dimensi Profil Lulusan (Pancasila)</th>
+                        <tr class="avoid-break">
+                            <th style="width:12%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Urutan ATP</th>
+                            <th style="width:12%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Kode TP</th>
+                            <th style="width:23%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Materi Pokok Referensi</th>
+                            <th style="width:33%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Rumusan Tujuan Pembelajaran (TP)</th>
+                            <th style="width:20%; background-color:#f1f5f9; text-align: center; font-weight: bold; padding: 8px;">Dimensi Profil Lulusan (Pancasila)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3219,20 +3264,20 @@
                 </table>
 
                 <!-- Tanda Tangan -->
-                <table class="doc-layout-table" style="width: 100%; margin-top: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 10pt;">
-                    <tr>
-                        <td style="width: 50%; border: none; vertical-align: top;">
+                <table class="doc-layout-table" style="width: 100%; margin-top: 40px; text-align: center; font-family: Arial, sans-serif; font-size: 10pt; table-layout: fixed;">
+                    <tr class="avoid-break">
+                        <td style="width: 50%; border: none; vertical-align: top; padding: 10px;">
                             Mengetahui,<br>Kepala ${sekolah}<br><br><br><br><br>
                             <b><u>${kepsek}</u></b><br>NIP. ${nipKepsek}
                         </td>
-                        <td style="width: 50%; border: none; vertical-align: top;">
+                        <td style="width: 50%; border: none; vertical-align: top; padding: 10px;">
                             ${kabupaten}, ${formattedDate}<br>Guru Mata Pelajaran,<br><br><br><br><br>
                             <b><u>${penyusun}</u></b><br>NIP. ${nip}
                         </td>
                     </tr>
                 </table>
 
-                <div class="footer-print-clean" style="font-family: Arial, sans-serif;">
+                <div class="footer-print-clean" style="font-family: Arial, sans-serif; margin-top: 30px;">
                     Dokumen Hasil Olahan TP & ATP Generator BSKAP No. 046/2025 | Tanggal Cetak: ${formattedDate}
                 </div>
             `;
@@ -3397,6 +3442,141 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             showToast("Dokumen MS Word (.doc) berhasil diunduh!");
+        }
+
+        function exportToPDF() {
+            if (appState.tpOutputs.length === 0) {
+                alert("Tidak ada data untuk diekspor ke PDF. Silakan jalankan proses analisis CP terlebih dahulu.");
+                return;
+            }
+
+            showToast("⏳ Menyiapkan lembar PDF berkualitas tinggi (Skala Padat 70% Pas), mohon tunggu...");
+
+            // Membuat container DOM bayangan untuk merender template dokumen secara utuh
+            const element = document.createElement('div');
+            // DIUBAH KE 680px agar pas dengan area cetak A4 portrait (190mm) setelah dipotong margin kiri-kanan
+            element.style.width = '680px'; 
+            element.style.padding = '0';
+            element.style.margin = '0';
+            element.style.background = '#ffffff';
+            element.style.boxSizing = 'border-box';
+
+            // Menyisipkan style override untuk PDF rendering yang rapi dengan skala kompak 70%
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .pdf-wrapper {
+                    font-family: Arial, sans-serif;
+                    color: #000000 !important;
+                    background-color: #ffffff !important;
+                    padding: 0px;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+                .pdf-wrapper * {
+                    color: #000000 !important;
+                    box-sizing: border-box !important;
+                }
+                .doc-layout-table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    table-layout: fixed !important;
+                    margin-bottom: 10px !important;
+                }
+                .doc-layout-table td {
+                    border: none !important;
+                    padding: 3px !important;
+                    vertical-align: middle !important;
+                    word-wrap: break-word !important;
+                    font-size: 7.2pt !important; /* Skala 70% dari 10pt */
+                }
+                .doc-data-table {
+                    width: 100% !important;
+                    border-collapse: collapse !important;
+                    table-layout: fixed !important;
+                    margin-bottom: 15px !important;
+                }
+                .doc-data-table th, .doc-data-table td {
+                    border: 1px solid #000000 !important;
+                    padding: 5px 6px !important; /* Ramping */
+                    font-size: 6.5pt !important; /* Skala 70% dari 9pt */
+                    text-align: left !important;
+                    vertical-align: middle !important;
+                    word-wrap: break-word !important;
+                    overflow-wrap: break-word !important;
+                }
+                .doc-data-table th {
+                    background-color: #f1f5f9 !important;
+                    font-weight: bold !important;
+                    text-align: center !important;
+                }
+                .avoid-break {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                .doc-data-table tr {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
+                }
+                .print-section-title {
+                    font-size: 8pt !important; /* Skala 70% dari 11.5pt */
+                    font-weight: bold !important;
+                    margin-top: 15px !important;
+                    margin-bottom: 6px !important;
+                    page-break-after: avoid !important;
+                    break-after: avoid !important;
+                }
+                .footer-print-clean {
+                    margin-top: 20px !important;
+                    text-align: center !important;
+                    font-size: 5.5pt !important; /* Skala 70% dari 8pt */
+                    border-top: 1px solid #000000 !important;
+                    padding-top: 4px !important;
+                }
+                .pdf-wrapper img {
+                    max-width: 56px !important; /* Skala 70% dari 80px */
+                    max-height: 56px !important;
+                    object-fit: contain !important;
+                }
+            `;
+            element.appendChild(style);
+
+            // Container dokumen isi
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'pdf-wrapper';
+            contentDiv.innerHTML = getUniversalDocumentHTML();
+            element.appendChild(contentDiv);
+
+            const mapel = document.getElementById('doc-mapel').value || 'Mata_Pelajaran';
+            const rawDate = document.getElementById('doc-tanggal').value;
+            const formattedDate = rawDate ? rawDate.replace(/-/g, '') : '';
+            const filename = `Dokumen_TP_ATP_${mapel.replace(/\s+/g, '_')}_${formattedDate}.pdf`;
+
+            // Konfigurasi presisi tinggi untuk konversi html2pdf (format lembaran A4 Portrait)
+            // Mengatur margin [10, 10, 15, 10] mm, tersisa ruang cetak bersih lebar 190mm (cocok dengan kontainer 680px)
+            const opt = {
+                margin:       [10, 10, 15, 10], 
+                filename:     filename,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    logging: false,
+                    letterRendering: true,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['css', 'legacy'] }
+            };
+
+            // Eksekusi pengunduhan berkas PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast("📕 Dokumen PDF Berhasil diunduh!");
+            }).catch(err => {
+                console.error("Gagal mengekspor PDF secara langsung:", err);
+                showToast("Gagal memproses otomatis. Membuka dialog cetak browser sebagai alternatif...");
+                triggerPrint(); // Fallback ke print sistem browser jika terjadi limitasi
+            });
         }
         
         window.addEventListener('DOMContentLoaded', window.onload);
